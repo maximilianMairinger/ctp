@@ -264,3 +264,8 @@ interface InvalidValueException extends Exception {
 interface Exception extends Error {
 	message: string;
 }
+
+
+
+
+type Options = {destination: string, [key: string]: string}

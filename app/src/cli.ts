@@ -1,28 +1,16 @@
 #!/usr/bin/env node
 
-require("xrray")(Array)
+import main from "./index"
 import {argv as args} from 'yargs'
-import { error } from "./lib/logger/logger"
-
-import module from "./project/module/module";
-
-let project: {[kind: string]: (destination: string, args?: any) => void} = {
-  module: module,
-  mod: module,
-  m: module,
-  
-
-}
-
-
 
 
 let projectKind = args._.first || "module"
 
-try {
-  //@ts-ignore
-  project[projectKind](args.destination || "./", args)
-}
-catch(e) {
-  error(e)
-}
+args.destination = args.destination || "./"
+
+let options = {destination: args.destination || "./", ...args}
+delete options._
+delete options["$0"]
+
+//@ts-ignore
+main(projectKind, options)

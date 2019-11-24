@@ -1,7 +1,6 @@
 import { info, log, warn } from "./../../lib/logger/logger"
 
 
-export default function(arg: any) {
-  info("test", 2)
-  throw "desc"
+export default function(options: Options) {
+  info(options)
 }
