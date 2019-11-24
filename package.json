@@ -4,7 +4,8 @@
   "description": "",
   "main": "app/dist/index.js",
   "scripts": {
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "test": "node test/dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "typescript": "^3.5.2"
   },
   "dependencies": {
+    "leven": "^3.1.0",
     "xrray": "^4.0.4",
     "yargs": "^15.0.2"
   }

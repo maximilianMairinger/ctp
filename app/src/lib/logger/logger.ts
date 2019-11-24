@@ -1,5 +1,6 @@
 import {argv as args} from 'yargs'
 let verbose = args.verbose || args.v
+let last = ""
 
 
 export function info(...msg: any[]) {
@@ -19,5 +20,6 @@ export function error(...msg: any[]) {
 }
 
 function go(severity: 0 | 1, prefix: string, kind: string, msg: any[]) {
-  if (severity === 1 || verbose) console[kind](prefix + ":", ...msg)
+  if (severity === 1 || verbose) console[kind]((last !== kind ? prefix + ":\t" : "\t"), ...msg)
+  last = kind
 }

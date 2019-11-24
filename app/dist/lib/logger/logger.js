@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const yargs_1 = require("yargs");
 let verbose = yargs_1.argv.verbose || yargs_1.argv.v;
+let last = "";
 function info(...msg) {
     go(0, "Info", "info", msg);
 }
@@ -20,5 +21,6 @@ function error(...msg) {
 exports.error = error;
 function go(severity, prefix, kind, msg) {
     if (severity === 1 || verbose)
-        console[kind](prefix + ":", ...msg);
+        console[kind]((last !== kind ? prefix + ":\t" : "\t"), ...msg);
+    last = kind;
 }
