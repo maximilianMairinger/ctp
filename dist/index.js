@@ -40,7 +40,7 @@ function default_1(projectKind = "module", options) {
         project[p](options);
     }
     catch (e) {
-        logger_1.error(e);
+        logger_1.error(e.message || "Unknown");
     }
 }
 exports.default = default_1;

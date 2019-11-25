@@ -44,11 +44,13 @@ export default function(projectKind: string = "module", options: Options) {
 
     return 
   }
+
   info("Starting project \"" + p + "\" with the following options: ", options)
   try {
+    
     project[p](options)
   }
   catch(e) {
-    error(e)
+    error(e.message || "Unknown")
   }
 }
