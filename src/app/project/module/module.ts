@@ -4,6 +4,8 @@ import template from "../../lib/copyTemplate/copyTemplate"
 
 
 
-export default function(options: Options) {
-  template("module", options.destination)
+export default async function(options: Options) {
+  await template("module", options.destination)
+
+
 }

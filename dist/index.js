@@ -13,7 +13,7 @@ let alias = {
     m: "module",
     mad: "module"
 };
-function default_1(projectKind = "module", options) {
+async function default_1(projectKind = "module", options) {
     let p = alias[projectKind];
     if (p === undefined) {
         logger_1.error("Unknown project \"" + projectKind + "\". Did you mean: ... ?");
@@ -37,7 +37,7 @@ function default_1(projectKind = "module", options) {
     }
     logger_1.info("Starting project \"" + p + "\" with the following options: ", options);
     try {
-        project[p](options);
+        await project[p](options);
     }
     catch (e) {
         logger_1.error(e.message || "Unknown");

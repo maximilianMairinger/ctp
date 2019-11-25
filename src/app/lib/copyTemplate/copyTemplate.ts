@@ -6,15 +6,15 @@ import { log } from "../logger/logger"
 let resDir = path.join(__dirname, "../../../res/templates")
 
 
-
 export default function(which: string, to: string) {
-  return new Promise((res, rej) => {
+  return new Promise<void>((res, rej) => {
     fs.readdir(resDir, (err, ls) => {
       if (err) return rej(err)
       if (ls.includes(which)) {
         let from = path.join(resDir, which)
-        copydir(from, to, {}, () => {
-          log("DONE")
+        copydir(from, to, {}, (err) => {
+          if (err) return rej(err)
+          res()
         });
 
       }

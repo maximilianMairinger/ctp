@@ -1,6 +1,11 @@
-import {argv as args} from 'yargs'
-let verbose = args.verbose || args.v
+let verbose = false
 let last = ""
+
+export function setVerbose(to: boolean) {
+  verbose = to
+}
+
+
 
 
 export function info(...msg: any[]) {

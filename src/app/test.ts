@@ -1,6 +1,10 @@
-import { log } from "./lib/logger/logger"
+import { log, info, setVerbose } from "./lib/logger/logger"
 import main from "./index"
-import * as path from "path"
 
+setVerbose(true);
 
-main("mod", {destination: "./test_out"})
+(async () => {
+  await main("mod", {destination: "./test_out", })
+
+  info("DONE")
+})()

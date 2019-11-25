@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const yargs_1 = require("yargs");
-let verbose = yargs_1.argv.verbose || yargs_1.argv.v;
+let verbose = false;
 let last = "";
+function setVerbose(to) {
+    verbose = to;
+}
+exports.setVerbose = setVerbose;
 function info(...msg) {
     go(0, "Info", "info", msg);
 }

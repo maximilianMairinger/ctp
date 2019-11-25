@@ -5,7 +5,7 @@ import leven from "leven"
 
 import module from "./project/module/module";
 
-let project: {[kind: string]: (options: Options) => void} = {
+let project: {[kind: string]: (options: Options) => Promise<void>} = {
   module: module,
 
 }
@@ -20,7 +20,7 @@ let alias = {
 }
 
 
-export default function(projectKind: string = "module", options: Options) {
+export default async function(projectKind: string = "module", options: Options) {
   let p = alias[projectKind]
   if (p === undefined) {
     error("Unknown project \"" + projectKind + "\". Did you mean: ... ?")
@@ -48,7 +48,7 @@ export default function(projectKind: string = "module", options: Options) {
   info("Starting project \"" + p + "\" with the following options: ", options)
   try {
     
-    project[p](options)
+    await project[p](options)
   }
   catch(e) {
     error(e.message || "Unknown")
