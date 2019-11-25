@@ -1,21 +1,13 @@
 require("xrray")(Array)
 import { info, error } from "./lib/logger/logger"
 import leven from "leven"
+import alias from "./projectAlias"
 
 
 import module from "./project/module/module";
 
 let project: {[kind: string]: (options: Options) => Promise<void>} = {
   module: module,
-
-}
-
-let alias = {
-  module: "module",
-  mod: "module",
-  m: "module",
-  mad: "module"
-
 
 }
 
