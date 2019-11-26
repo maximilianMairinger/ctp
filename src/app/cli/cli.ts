@@ -3,6 +3,8 @@
 import main from "../index"
 import {argv as args} from 'yargs'
 import { setVerbose } from "../lib/logger/logger"
+import alias from "./../projectAlias"
+import moduleInq from "./inquery/module/module"
 import inq from "./inq"
 
 //@ts-ignore
@@ -20,10 +22,23 @@ delete options.v
 delete options.verbose
 
 
+let inqIndex = {
+  module: moduleInq
+}
+
+projectKind = alias[projectKind];
 
 
+(async () => {
+  options = await inq(inqIndex[projectKind], options)
 
 
+  
 
+  console.log("log", options)
+  
+  
+  await main(projectKind, options)
+  
+})()
 
-main(projectKind, options)

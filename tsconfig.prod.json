@@ -6,5 +6,8 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "declaration": true
-  }
+  },
+  "exclude": [
+    "./test"
+  ]
 }
