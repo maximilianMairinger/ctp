@@ -26,6 +26,7 @@
     "typescript": "^3.5.2"
   },
   "dependencies": {
+    "chalk": "^3.0.0",
     "copy-dir": "^1.2.0",
     "delay": "^4.3.0",
     "inquirer": "^7.0.0",
