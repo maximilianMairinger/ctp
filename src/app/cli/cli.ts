@@ -31,7 +31,7 @@ let inqueryIndex = {
 
 
 (async () => {
-  await inq(inqueryIndex[projectKind], options)
+  options = await inq(inqueryIndex[projectKind], options)
 
   await main(projectKind, options)
 })()

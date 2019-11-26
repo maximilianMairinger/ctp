@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsc -w",
     "test": "node dist/test/test.js",
-    "test-cli": "ctp module --destination ./test_out"
+    "test-cli": "ctp module --verbose --destination ./test_out"
   },
   "repository": {
     "type": "git",
