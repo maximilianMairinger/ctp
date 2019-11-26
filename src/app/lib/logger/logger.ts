@@ -26,5 +26,9 @@ export function error(...msg: any[]) {
 
 function go(severity: 0 | 1, prefix: string, kind: string, msg: any[]) {
   if (severity === 1 || verbose) console[kind]((last !== kind ? prefix + ":\t" : "\t"), ...msg)
-  last = kind
+  
+
+  let lmsg = msg.last
+  if (typeof lmsg === "string" && lmsg.substr(lmsg.length-1) === "\n") last = ""
+  else last = kind
 }

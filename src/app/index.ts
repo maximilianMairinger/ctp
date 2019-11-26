@@ -3,6 +3,7 @@ import { info, error } from "./lib/logger/logger"
 import leven from "leven"
 import alias from "./projectAlias"
 import { Validator } from "jsonschema"
+import copyTemplate from "./lib/copyTemplate/copyTemplate"
 
 let v = new Validator()
 
@@ -13,8 +14,8 @@ type Shema = ((options: Options) => Promise<void | boolean> | void | boolean) | 
 
 let projectIndex: {[projectKind: string]: {project: (options: Options) => Promise<void>, shema?: Shema}} = {
   module: {
-    project: require("./project/module/module"),
-    //shema:   require("./project/module/optionsShema")
+    project: require("./project/module/module").default,
+    //shema:   require("./project/module/optionsShema").default
   },
 
 
@@ -22,8 +23,8 @@ let projectIndex: {[projectKind: string]: {project: (options: Options) => Promis
 
 
 export default async function(projectKind: string = "module", options: Options) {
-  let p = alias[projectKind]
-  if (p === undefined) {
+  let projectName = alias[projectKind]
+  if (projectName === undefined) {
     error("Unknown project \"" + projectKind + "\". Did you mean: ... ?")
     let close = []
 
@@ -46,12 +47,13 @@ export default async function(projectKind: string = "module", options: Options) 
     return 
   }
 
-  info("Starting project \"" + p + "\" with the following options: ", options)
+  info("Starting project \"" + projectName + "\" with the following options: ", options)
 
-  let project = projectIndex[p]
+  let project = projectIndex[projectName]
   try {
-    if (project.shema) await testShema(project.shema, options, p)
-
+    if (project.shema) await testShema(project.shema, options, projectName)
+    
+    await copyTemplate(projectName, options.destination)
     await project.project(options)
   }
   catch(e) {

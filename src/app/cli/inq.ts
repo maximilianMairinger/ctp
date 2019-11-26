@@ -3,7 +3,7 @@ import * as merge from "merge-options";
 
 type genericObject = {[key: string]: any}
 
-export default async function<T = any>(questions: ((ignore: string[]) => Promise<T>) | genericObject[], mergeTo?: genericObject) {
+export default async function<T = any>(questions: ((ignore: string[]) => Promise<T>) | genericObject[] | genericObject, mergeTo?: genericObject) {
   if (typeof questions === "function") {
     if (mergeTo) {
       return merge(await questions(Object.keys(mergeTo)), mergeTo)
@@ -13,6 +13,10 @@ export default async function<T = any>(questions: ((ignore: string[]) => Promise
     }
   }
   else {
+    let wasSingle = !(questions instanceof Array)
+    if (wasSingle) questions = [questions]
+
+
     if (mergeTo) {
       let ignore = Object.keys(mergeTo)
       let rm = []
@@ -24,7 +28,11 @@ export default async function<T = any>(questions: ((ignore: string[]) => Promise
       return merge(mergeTo, inq)
     }
     else {
-      return await inquirer.prompt(questions)
+      let ans = await inquirer.prompt(questions)
+      if (wasSingle) {
+        return ans[Object.keys(ans).first]
+      }
+      else return ans
     }
   }
 }
