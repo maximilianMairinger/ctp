@@ -6,7 +6,7 @@ import alias from "./projectAlias"
 
 import module from "./project/module/module";
 
-let projectIndex: {[kind: string]: (options: Options) => Promise<void>} = {
+let project: {[kind: string]: (options: Options) => Promise<void>} = {
   module: module,
 
 }
@@ -40,7 +40,7 @@ export default async function(projectKind: string = "module", options: Options) 
   info("Starting project \"" + p + "\" with the following options: ", options)
   try {
     
-    await projectIndex[p](options)
+    await project[p](options)
   }
   catch(e) {
     error(e.message || "Unknown")
