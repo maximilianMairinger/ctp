@@ -2,10 +2,11 @@
   "name": "ctp",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/app/cli/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tsc -w",
-    "test": "node dist/test.js"
+    "test": "node dist/test/test.js",
+    "test-cli": "ctp module --destination ./test_out"
   },
   "repository": {
     "type": "git",
@@ -13,7 +14,7 @@
   },
   "author": "Maximilian Mairinger",
   "license": "ISC",
-  "bin": "./dist/app/cli.js",
+  "bin": "./dist/cli/cli.js",
   "bugs": {
     "url": "https://github.com/maximilianMairinger/ctp/issues"
   },
@@ -29,6 +30,7 @@
     "delay": "^4.3.0",
     "inquirer": "^7.0.0",
     "leven": "^3.1.0",
+    "merge-options": "^2.0.0",
     "xrray": "^4.0.4",
     "yargs": "^15.0.2"
   }

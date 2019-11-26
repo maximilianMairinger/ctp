@@ -7,6 +7,7 @@
     "allowSyntheticDefaultImports": true
   },
   "exclude": [
-    "res"
+    "res",
+    "test_out"
   ]
 }
