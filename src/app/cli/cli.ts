@@ -4,7 +4,7 @@ import main from "../index"
 import {argv as args} from 'yargs'
 import { setVerbose } from "../lib/logger/logger"
 import alias from "./../projectAlias"
-import inq from "./inq"
+import inq from "./inquery/inq"
 import { log } from "./../lib/logger/logger"
 import * as path from "path"
 require("xrray")(Array)

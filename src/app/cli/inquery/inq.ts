@@ -2,8 +2,8 @@ import * as inquirer from "inquirer"
 import * as merge from "merge-options";
 
 type genericObject = {[key: string]: any}
-
-export default async function<T = any>(questions: ((ignore: string[]) => Promise<T>) | genericObject[] | genericObject, mergeTo?: genericObject) {
+                                                                                                                                                // TODO: ignore
+export default async function<T = any>(questions: ((ignore: string[]) => Promise<T>) | genericObject[] | genericObject, mergeTo?: genericObject | string[]) {
   if (typeof questions === "function") {
     if (mergeTo) {
       return merge(await questions(Object.keys(mergeTo)), mergeTo)
