@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
-    "outDir": "./app/dist",
-    "module": "esnext",
+    "outDir": "./dist",
+    "module": "commonjs",
     "target": "esnext",
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "declaration": true
-  }
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "res"
+  ]
 }
