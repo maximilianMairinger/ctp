@@ -2,12 +2,21 @@ require("xrray")(Array)
 import { info, error } from "./lib/logger/logger"
 import leven from "leven"
 import alias from "./projectAlias"
+import { Validator } from "jsonschema"
+
+let v = new Validator()
 
 
-import module from "./project/module/module";
 
-let projectIndex: {[kind: string]: (options: Options) => Promise<void>} = {
-  module: module,
+
+type Shema = ((options: Options) => Promise<void | boolean> | void | boolean) | GenericObject
+
+let projectIndex: {[projectKind: string]: {project: (options: Options) => Promise<void>, shema?: Shema}} = {
+  module: {
+    project: require("./project/module/module"),
+    //shema:   require("./project/module/optionsShema")
+  },
+
 
 }
 
@@ -38,11 +47,26 @@ export default async function(projectKind: string = "module", options: Options) 
   }
 
   info("Starting project \"" + p + "\" with the following options: ", options)
+
+  let project = projectIndex[p]
   try {
-    
-    await projectIndex[p](options)
+    if (project.shema) await testShema(project.shema, options, p)
+
+    await project.project(options)
   }
   catch(e) {
+    if (!(e instanceof Error)) e = new Error(e)
+
     error(e.message || "Unknown")
+  }
+}
+
+async function testShema(val: Shema, options: Options, projectName: string) {
+  if (typeof val === "function") {
+    if (!(await val(options))) throw "Options did not match shema for " + projectName + "."
+  }
+  else {
+    let { errors } = v.validate(options, val)
+    if  ( errors ) throw errors
   }
 }

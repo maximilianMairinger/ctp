@@ -29,6 +29,7 @@
     "copy-dir": "^1.2.0",
     "delay": "^4.3.0",
     "inquirer": "^7.0.0",
+    "jsonschema": "^1.2.4",
     "leven": "^3.1.0",
     "merge-options": "^2.0.0",
     "xrray": "^4.0.4",
