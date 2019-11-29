@@ -1,24 +1,14 @@
 import { info, log, warn } from "./../../lib/logger/logger"
-import { promises as fs } from "fs"
-import * as path from "path"
+import replace from "./../../lib/replaceFromFile/replaceFromFile"
+import setupAt from "./../../lib/at/at"
 
-
-
-function setUpFrom(destination: string) {
-  return function from(...from) {
-    return path.join(destination, ...from)
-  }
-}
 
 
 
 
 export default async function(options: Options) {
-  const from = setUpFrom(options.destination)
+  let at = setupAt(options.destination)
 
-  let s = (await fs.readFile(from("test/src/test.ts"))).toString(); 
 
-  console.log(s);
-  
-  
+  replace(at("test/src/test.ts"), {name: options.name})  
 }

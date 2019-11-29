@@ -3,4 +3,4 @@ import main from "../index"
 
 setVerbose(true);
 
-main("module", {destination: "./test_out"})
+main("module", {destination: "./test_out", name: "testName"})

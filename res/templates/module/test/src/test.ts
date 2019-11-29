@@ -1,3 +1,4 @@
-import * as reqaf from "../../app/src/animationFrameDelta"
+import * as ${name} from "../../app/src/${name}"
 const testElem = document.querySelector("#test")
+
 
