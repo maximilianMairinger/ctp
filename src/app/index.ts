@@ -1,9 +1,10 @@
 require("xrray")(Array)
-import { info, error } from "./lib/logger/logger"
+import { info, error, log } from "./lib/logger/logger"
 import leven from "leven"
 import alias from "./projectAlias"
 import { Validator as JsonValidator } from "jsonschema"
 import copyTemplate from "./lib/copyTemplate/copyTemplate"
+import { performance } from 'perf_hooks';
 
 let jsonValidator = new JsonValidator()
 
@@ -48,6 +49,7 @@ export default async function(projectKind: string = "module", options: Options) 
   }
 
   info("Starting project \"" + projectName + "\" with the following options: ", options)
+  let startTime = performance.now()
 
   let project = projectIndex[projectName]
   try {
@@ -55,6 +57,11 @@ export default async function(projectKind: string = "module", options: Options) 
     
     await copyTemplate(projectName, options.destination)
     await project.project(options)
+
+    console.log();
+    
+
+    info("Finished project \"" + projectName + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
   }
   catch(e) {
     if (!(e instanceof Error)) e = new Error(e)
