@@ -1,10 +1,15 @@
 import * as chalk from "chalk"
 
 let verbose = false
+let testEnv = false
 let last = ""
 
 export function setVerbose(to: boolean) {
   verbose = to
+}
+
+export function setTestEnv(to: boolean) {
+  testEnv = to
 }
 
 
@@ -21,7 +26,18 @@ export function warn(...msg: any[]) {
 }
 
 export function error(...msg: any[]) {
-  go(1, "Error", "error", "red", msg)
+  let n = []
+  let err = []
+  msg.ea((m) => {
+    if (m instanceof Error) {
+      err.add(m.stack)
+      n.add(m.message)
+    }
+    else n.add(m)
+  })
+  go(1, "Error", "error", "red", n)
+
+  if (testEnv) go(1, "Error", "error", "red", err)
 }
 
 function go(severity: 0 | 1, prefix: string, kind: string, color: string, msg: any[]) {
