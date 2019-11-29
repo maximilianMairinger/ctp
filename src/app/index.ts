@@ -2,10 +2,10 @@ require("xrray")(Array)
 import { info, error } from "./lib/logger/logger"
 import leven from "leven"
 import alias from "./projectAlias"
-import { Validator } from "jsonschema"
+import { Validator as JsonValidator } from "jsonschema"
 import copyTemplate from "./lib/copyTemplate/copyTemplate"
 
-let v = new Validator()
+let jsonValidator = new JsonValidator()
 
 
 
@@ -68,7 +68,7 @@ async function testShema(val: Shema, options: Options, projectName: string) {
     if (!(await val(options))) throw "Options did not match shema for " + projectName + "."
   }
   else {
-    let { errors } = v.validate(options, val)
+    let { errors } = jsonValidator.validate(options, val)
     if  ( errors ) throw errors
   }
 }
