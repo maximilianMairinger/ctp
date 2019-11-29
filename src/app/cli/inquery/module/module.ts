@@ -1,9 +1,9 @@
 import inq from "../inq";
 
 
-export default async (ignore: string) => {
+export default async (ignore: string[]) => {
   
-  inq({name: "asd"}, ignore) 
+  await inq({name: "asd"}, ignore) 
   
 }
 
