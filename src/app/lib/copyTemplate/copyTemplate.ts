@@ -3,7 +3,7 @@ import * as fs from "fs"
 import * as copydir from "copy-dir"
 import { log } from "../logger/logger"
 
-let resDir = path.join(__dirname, "../../../res/templates")
+let resDir = path.join(__dirname, "../../../../res/templates")
 
 
 export default function(which: string, to: string) {

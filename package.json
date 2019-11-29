@@ -2,7 +2,7 @@
   "name": "ctp",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/app/index.js",
   "scripts": {
     "dev": "tsc -w",
     "test": "node dist/test/test.js",
@@ -14,7 +14,7 @@
   },
   "author": "Maximilian Mairinger",
   "license": "ISC",
-  "bin": "./dist/cli/cli.js",
+  "bin": "./dist/app/cli/cli.js",
   "bugs": {
     "url": "https://github.com/maximilianMairinger/ctp/issues"
   },
