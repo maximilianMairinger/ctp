@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import main from "../index"
+import main, { wrapErrors } from "../index"
 import {argv as args} from 'yargs'
 import { setVerbose } from "../lib/logger/logger"
 import alias from "./../projectAlias"
@@ -8,6 +8,8 @@ import inq from "./inquery/inq"
 import { log } from "./../lib/logger/logger"
 import * as path from "path"
 require("xrray")(Array)
+
+wrapErrors(true);
 
 
 import moduleInq from "./inquery/module/module"

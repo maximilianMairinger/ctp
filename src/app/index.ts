@@ -9,6 +9,10 @@ import { performance } from 'perf_hooks';
 let jsonValidator = new JsonValidator()
 
 
+let wrapErr = false
+export function wrapErrors(to: boolean) {
+  wrapErr = to
+}
 
 
 type Shema = ((options: Options) => Promise<void | boolean> | void | boolean) | GenericObject
@@ -64,9 +68,12 @@ export default async function(projectKind: string = "module", options: Options) 
     info("Finished project \"" + projectName + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
   }
   catch(e) {
-    if (!(e instanceof Error)) e = new Error(e)
+    if (wrapErr) {
+      if (!(e instanceof Error)) e = new Error(e)
 
-    error(e.message || "Unknown")
+      error(e.message || "Unknown")
+    }
+    else throw e
   }
 }
 
