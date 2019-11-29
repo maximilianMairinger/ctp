@@ -25,7 +25,15 @@ export function error(...msg: any[]) {
 }
 
 function go(severity: 0 | 1, prefix: string, kind: string, color: string, msg: any[]) {
-  if (severity === 1 || verbose) console[kind](chalk[color]((last !== kind ? prefix + ":\t" : "\t"), ...msg))
+  let strings = []
+  let notStrings = []
+  msg.ea((s) => {
+    if (typeof s === "string") strings.add(s)
+    else notStrings.add(s)
+  })
+
+
+  if (severity === 1 || verbose) console[kind](chalk[color]((last !== kind ? prefix + ":\t" : "\t"), ...strings), ...notStrings)
   
 
   let lmsg = msg.last
