@@ -27,7 +27,7 @@ export default async function(options: Options) {
 let defaultsSavePath = path.join(__dirname, "./../../../defaultCommandLineOpions.json")
 
 export async function writeDefaults(defaults: GenericObject) {
-  await fs.writeFile(defaultsSavePath, JSON.stringify(defaults))
+  await fs.writeFile(defaultsSavePath, JSON.stringify(defaults, undefined, "  "))
 }
 
 async function readDefaults() {

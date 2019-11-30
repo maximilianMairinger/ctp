@@ -11,7 +11,6 @@ export function setDestination(destination: string) {
 export default function(cmd: string) {
   if (!destinationHasBeenExplicitlySet) return error("Destination has not been explicitly set")
   
-  
   info(cmd)
 
   if (shell.exec(cmd, {silent: true, fatal: true}).code !== 0) {

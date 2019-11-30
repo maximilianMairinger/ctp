@@ -73,6 +73,8 @@ export default async function(projectKind: string = "module", options: Options) 
     info("Executing the following shell command:")
     npmSetup(options)
     gitSetup(options)
+    info("")
+    info("")
 
     info("Finished project \"" + projectName + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
   }
