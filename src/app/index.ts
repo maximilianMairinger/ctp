@@ -5,6 +5,7 @@ import alias from "./projectAlias"
 import { Validator as JsonValidator } from "jsonschema"
 import copyTemplate from "./lib/copyTemplate/copyTemplate"
 import { performance } from 'perf_hooks';
+import prepOptions from "./prepOptions"
 
 let jsonValidator = new JsonValidator()
 
@@ -52,17 +53,19 @@ export default async function(projectKind: string = "module", options: Options) 
     return 
   }
 
-  info("Starting project \"" + projectName + "\" with the following options: ", options)
   let startTime = performance.now()
-
   let project = projectIndex[projectName]
   try {
     if (project.shema) await testShema(project.shema, options, projectName)
+
+    
+    
+    prepOptions(options)
+    info("Starting project \"" + projectName + "\" with the following options: ", options)
     
     await copyTemplate(projectName, options.destination)
     await project.project(options)
 
-    console.log();
     
 
     info("Finished project \"" + projectName + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
@@ -72,6 +75,7 @@ export default async function(projectKind: string = "module", options: Options) 
       if (!(e instanceof Error)) e = new Error(e)
 
       error(e.message || "Unknown")
+      error("Exiting \"ctp " + projectKind + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
     }
     else throw e
   }

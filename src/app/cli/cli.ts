@@ -12,7 +12,7 @@ require("xrray")(Array)
 wrapErrors(true);
 
 
-import moduleInq from "./inquery/module/module"
+import generalInquery from "./generalInquery"
 
 //@ts-ignore
 setVerbose(args.v || args.verbose)
@@ -37,6 +37,7 @@ let inqueryIndex = {
 
 
 (async () => {
+  options = await inq(generalInquery, options)
   options = await inq(inqueryIndex[projectKind], options)
   if (!(await inq({name: "sure", message: "The template will now be generated at \"" + path.resolve(options.destination) + "\". Are you sure?", type: "confirm"}))) {
     log("Cancelling")
