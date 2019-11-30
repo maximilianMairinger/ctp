@@ -20,9 +20,12 @@ setVerbose(args.v || args.verbose)
 
 let projectKind = args._.first || "module"
 
-args.destination = args.destination || "./"
+//@ts-ignore
+args.destination = path.resolve(args.destination || "./")
 
-let options: any = {destination: args.destination || "./", ...args}
+
+//@ts-ignore
+let options: any = {destination: path.resolve(args.destination || "./"), ...args}
 delete options._
 delete options["$0"]
 delete options.v

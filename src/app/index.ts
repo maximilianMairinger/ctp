@@ -6,6 +6,10 @@ import { Validator as JsonValidator } from "jsonschema"
 import copyTemplate from "./lib/copyTemplate/copyTemplate"
 import { performance } from 'perf_hooks';
 import prepOptions from "./prepOptions"
+import npmSetup from "./setupCL/npmSetup"
+import gitSetup from "./setupCL/gitSetup"
+import { setDestination as setShellDestination } from "./setupCL/shell"
+import * as path from "path"
 
 let jsonValidator = new JsonValidator()
 
@@ -57,7 +61,6 @@ export default async function(projectKind: string = "module", options: Options) 
   let project = projectIndex[projectName]
   try {
     if (project.shema) await testShema(project.shema, options, projectName)
-
     
     
     prepOptions(options)
@@ -66,7 +69,10 @@ export default async function(projectKind: string = "module", options: Options) 
     await copyTemplate(projectName, options.destination)
     await project.project(options)
 
-    
+    setShellDestination(path.resolve(options.destination))
+    info("Executing the following shell command:")
+    npmSetup(options)
+    gitSetup(options)
 
     info("Finished project \"" + projectName + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
   }

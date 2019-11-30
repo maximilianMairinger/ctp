@@ -6,8 +6,6 @@ import { camelCaseToDash } from "dash-camelcase"
 
 export default async function(options: Options) {
   let defaults = await readDefaults()
-
-  console.log(options);
   
 
 
@@ -26,12 +24,12 @@ export default async function(options: Options) {
 }
 
 
-let defaultsSave = "defaultCommandLineOpions.json"
+let defaultsSavePath = path.join(__dirname, "./../../../defaultCommandLineOpions.json")
 
 export async function writeDefaults(defaults: GenericObject) {
-  await fs.writeFile(defaultsSave, JSON.stringify(defaults))
+  await fs.writeFile(defaultsSavePath, JSON.stringify(defaults))
 }
 
 async function readDefaults() {
-    return JSON.parse((await fs.readFile(defaultsSave)).toString())
+    return JSON.parse((await fs.readFile(defaultsSavePath)).toString())
 }

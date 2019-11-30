@@ -1,4 +1,5 @@
 import { camelCaseToDash, dashToCamelCase } from "dash-camelcase"
+import * as path from "path"
 
 let o: Options;
 
@@ -15,12 +16,9 @@ export default function(options: Options) {
   f("nameWithSpaces", nameWs)
 
   o.dependencies = beautifyJSON(o.dependencies, "  ", "  ")
-
-  console.log(o.keywords);
-  
   o.keywords = beautifyJSON(o.keywords, "  ", "  ")
-
-  console.log(o.keywords);
+  options.destination = path.resolve(options.destination)
+  
   
 
   let dependencyImports = ""

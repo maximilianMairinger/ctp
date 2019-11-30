@@ -13,7 +13,15 @@ wrapErrors(true);
   await fs.rmdir(destination, { recursive: true })
   
 
-  await main("module", {destination, name: "testName"})
+  await main("module", {
+    destination, 
+    name: "testName", 
+    description: "desc", 
+    keywords: "[\"keyword1\", \"keyword2\"]",
+    dependencies: "[\"xrray\",\"dash-camelcase\"]", 
+    author: "Maximilian Mairinger", 
+    githubUsername: "maximilianMairinger", 
+  })
 
   
 
