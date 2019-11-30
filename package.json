@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsc -w",
     "test": "node dist/test/test.js",
-    "test-cli": "ctp module --verbose --destination ./test_out"
+    "test-cli": "node dist/test/delTestFolder.js && ctp module --verbose --destination ./test_out"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
   "dependencies": {
     "chalk": "^3.0.0",
     "dash-camelcase": "^1.0.1",
+    "del": "^5.1.0",
     "delay": "^4.3.0",
     "fs-then-native": "^2.0.0",
     "inquirer": "^7.0.0",
@@ -36,6 +37,7 @@
     "merge-options": "^2.0.0",
     "mixin-deep": "^2.0.1",
     "recursive-copy": "^2.0.10",
+    "shelljs": "^0.8.3",
     "then-fs": "^2.0.0",
     "xrray": "^4.0.4",
     "yargs": "^15.0.2"
