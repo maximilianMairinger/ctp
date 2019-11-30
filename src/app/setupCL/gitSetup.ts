@@ -34,5 +34,13 @@ export default async function(options: Options) {
   })
 
 
+  
+  await octokit.repos.replaceTopics({
+    owner: options.githubUsername,
+    repo: options.name,
+    names: JSON.parse(options.keywords)
+  })
+
+
   exec("git push -u origin master")
 }

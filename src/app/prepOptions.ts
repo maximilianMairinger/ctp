@@ -16,7 +16,9 @@ export default function(options: Options) {
   f("nameWithSpaces", nameWs)
 
   o.dependencies = beautifyJSON(o.dependencies, "  ", "  ")
-  o.keywords = beautifyJSON(o.keywords, "  ", "  ")
+
+  o.keywords = beautifyJSON(o.keywords, "  ", "  ").toLowerCase()
+
   options.destination = path.resolve(options.destination)
   
   
