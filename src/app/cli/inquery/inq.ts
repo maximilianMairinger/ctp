@@ -6,9 +6,9 @@ type basicQuestion = GenericObject[] | GenericObject
 type Questions = basicQuestion | ((options: Options) => basicQuestion | Promise<basicQuestion>) | ((options: Options) => basicQuestion | Promise<basicQuestion>)[]
 
 
-export default async function inq<T = any>(questions: Questions, ignore?: string[] | Options)
-export default async function inq<T = any>(questions: ((options: Options) => Questions | Promise<Questions>), options: Options)
-export default async function inq<T = any>(questions: Questions | ((options: Options) => Questions | Promise<Questions>), options_ignore?: Options | string[]) {
+export default async function inq<T = any>(questions: Questions, ignore?: string[] | GenericObject)
+export default async function inq<T = any>(questions: ((options: Options) => Questions | Promise<Questions>), options: GenericObject)
+export default async function inq<T = any>(questions: Questions | ((options: Options) => Questions | Promise<Questions>), options_ignore: GenericObject | string[] = {}) {
   if (typeof questions === "function") {
     //@ts-ignore
     let ans = await questions(options_ignore)
@@ -19,17 +19,24 @@ export default async function inq<T = any>(questions: Questions | ((options: Opt
     let wasSingle = !(questions instanceof Array)
     if (wasSingle) questions = [questions]
 
+    let options: GenericObject
+    let ignore: string[]
 
-    if (!options_ignore) {
-      options_ignore = []
+    if (options_ignore instanceof Array) {
+      options = {}
+      ignore = options_ignore
     }
-    let isMerge = !(options_ignore instanceof Array)
-    //@ts-ignore
-    let ignore: string[] = isMerge ? Object.keys(options_ignore) : options_ignore
+    else {
+      options = options_ignore
+      ignore = Object.keys(options_ignore)
+    }
+
     await questions.ea(async (e, i) => {
       if (typeof e === "function") {
 
-        let questions = await e(options_ignore)
+        let questions = await e(options)
+        if (questions === undefined) return;
+        
         let wasSingle = !(questions instanceof Array)
         if (wasSingle) questions = [questions]
 
@@ -40,20 +47,20 @@ export default async function inq<T = any>(questions: Questions | ((options: Opt
         })
         questions.rmI(...rm)
         let inq = await inquirer.prompt(questions)
-        isMerge ? merge(options_ignore, inq) : inq
+        merge(options, inq)
 
         
       }
       else if (!ignore.includes(e.name)) {
         let inq = await inquirer.prompt([e])
-        isMerge ? merge(options_ignore, inq) : inq
+        merge(options, inq)
       }
     })
 
     if (wasSingle) {
-      return options_ignore[Object.keys(options_ignore).first]
+      return options[Object.keys(options).first]
     }
-    else return options_ignore
+    else return options
 
   }
 }

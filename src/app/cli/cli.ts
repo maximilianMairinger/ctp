@@ -5,7 +5,7 @@ import {argv as args} from 'yargs'
 import { setVerbose } from "../lib/logger/logger"
 import alias from "./../projectAlias"
 import inq from "./inquery/inq"
-import { log } from "./../lib/logger/logger"
+import { log, error } from "./../lib/logger/logger"
 import * as path from "path"
 require("xrray")(Array)
 
@@ -40,9 +40,9 @@ let inqueryIndex = {
   options = await inq(generalInquery, options)
   options = await inq(inqueryIndex[projectKind], options)
   if (!(await inq({name: "sure", message: "The template will now be generated at \"" + path.resolve(options.destination) + "\". Are you sure?", type: "confirm"}))) {
-    log("Cancelling")
+    return error("Aborting")
   }
-  log("\n")
+  console.log("\n")
 
   await main(projectKind, options)
 })()

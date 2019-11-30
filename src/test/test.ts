@@ -10,9 +10,7 @@ wrapErrors(true);
 (async () => {
   setVerbose(true)
   setTestEnv(true)
-  // try {
   await fs.rmdir(destination, { recursive: true })
-  // }
   
 
   await main("module", {destination, name: "testName"})
