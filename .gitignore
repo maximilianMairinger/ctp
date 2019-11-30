@@ -2,3 +2,4 @@ node_modules
 test_out/
 dist
 package-lock.json
+defaultCommandLineOpions.json

@@ -1,10 +1,10 @@
-import * as shell from "shelljs"
+import exec, { check } from "./shell"
 
 export default function(options: Options) {
-  // if (shell.which('git')) {
-  //   if (shell.exec('git commit ').code !== 0) {
-  //     shell.echo('Error: Git commit failed');
-  //     shell.exit(1);
-  //   }
-  // }
+  check('git')
+  exec("git init")
+  exec("git add -A")
+  exec('git commit -m "init"')
+  exec("git remote add origin https://github.com/" + options.githubUsername + "/" + options.name + ".git")
+  exec("git push -u origin master")
 }

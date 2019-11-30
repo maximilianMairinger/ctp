@@ -59,6 +59,8 @@ export default async function(projectKind: string = "module", options: Options) 
 
   let startTime = performance.now()
   let project = projectIndex[projectName]
+  const printError = setUpPrintError(projectKind, startTime)
+  const printLog = setUpPrintError(projectKind, startTime, log)
   try {
     if (project.shema) await testShema(project.shema, options, projectName)
     
@@ -71,23 +73,44 @@ export default async function(projectKind: string = "module", options: Options) 
 
     setShellDestination(path.resolve(options.destination))
     info("Executing the following shell command:")
-    npmSetup(options)
-    gitSetup(options)
+    try {
+      npmSetup(options)
+    }
+    catch(e) {
+      printLog(e)
+    }
+
+    try {
+      gitSetup(options)
+    }
+    catch(e) {
+      printLog(e)
+    }
+
+    printLog("testLog")
+    
     info("")
     info("")
 
     info("Finished project \"" + projectName + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
   }
   catch(e) {
+    printError(e, true)
+  }
+}
+
+function setUpPrintError(projectKind: string, startTime: number, func: Function = error) {
+  return function printError(e: any, exit: boolean = false) {
     if (wrapErr) {
       if (!(e instanceof Error)) e = new Error(e)
-
-      error(e.message || "Unknown")
-      error("Exiting \"ctp " + projectKind + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
+  
+      func(e.message || "Unknown")
+      if (exit) func("Exiting \"ctp " + projectKind + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
     }
     else throw e
   }
 }
+
 
 async function testShema(val: Shema, options: Options, projectName: string) {
   if (typeof val === "function") {

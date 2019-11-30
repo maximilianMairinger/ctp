@@ -1,5 +1,8 @@
-import exec from "./shell"
+import exec, { check } from "./shell"
 
 export default function(options: Options) {
-  exec("npm i xrray")
+  check("npm")
+  JSON.parse(options.dependencies).ea((dependency) => {
+    exec("npm i " + dependency)
+  })
 }
