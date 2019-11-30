@@ -1,4 +1,4 @@
-import * as ${name} from "../../app/src/${name}"
+import ${name} from "../../app/src/${name}"
 const testElem = document.querySelector("#test")
 
 

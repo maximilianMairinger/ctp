@@ -1,32 +1,25 @@
 {
-  "name": "animation-frame-delta",
+  "name": "${nameAsDashCase}",
   "version": "1.0.0",
-  "description": "Performant animation loop with central delta calculation.",
-  "main": "app/dist/animationFrameDelta.js",
-  "types": "app/dist/animationFrameDelta.d.ts",
+  "description": "${description}",
+  "main": "app/dist/${name}.js",
+  "types": "app/dist/${name}.d.ts",
   "scripts": {
     "build": "tsc -p ./tsconfig.prod.json",
-    "dev": "webpack --config webpack.dev.config.js"
+    "dev": "webpack --config webpack.dev.config.js",
+    "deploy": "npm run build && npm publish"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maximilianMairinger/animation-frame-delta.git"
+    "url": "git+https://github.com/${githubUsername}/${name}.git"
   },
-  "keywords": [
-    "animation",
-    "tick",
-    "frame",
-    "unsubscribe",
-    "tiny",
-    "requestAnimationFrame",
-    "delta"
-  ],
-  "author": "Maximilian Mairinger",
+  "keywords": ${keywords},
+  "author": ${author},
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/maximilianMairinger/edom/issues"
+    "url": "https://github.com/${githubUsername}/${name}/issues"
   },
-  "homepage": "https://github.com/maximilianMairinger/edom#readme",
+  "homepage": "https://github.com/${githubUsername}/${name}#readme",
   "devDependencies": {
     "@types/node": "^12.6.9",
     "@types/tween.js": "^17.2.0",

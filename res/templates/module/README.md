@@ -1,17 +1,16 @@
-# Animation frame delta
+# ${nameWithSpaces}
 
 
 
 ## Example
 
-Register a animation loop like so
+
 
 ```js
-import animFrame from "animation-frame-delta"
 
-animFrame((delta, timestamp, absoluteDelta) => {
-  console.log(delta)
-})
 ```
 
-To unsubscribe the registered listener simply call `unsubscribe(func)`
+
+## Conribute
+
+All feedback is appreciated. Create an push request or wirte an issue.
