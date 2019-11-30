@@ -268,6 +268,6 @@ interface Exception extends Error {
 
 
 
-type Options = {destination: string, [key: string]: string}
+type Options = {destination: string, [key: string]: any}
 
 type GenericObject<T = any> = {[key: string]: T}

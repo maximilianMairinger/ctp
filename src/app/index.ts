@@ -66,7 +66,9 @@ export default async function(projectKind: string = "module", options: Options) 
     
     
     prepOptions(options)
-    info("Starting project \"" + projectName + "\" with the following options: ", options)
+    let printOptions = JSON.parse(JSON.stringify(options))
+    delete printOptions.githubPassword
+    info("Starting project \"" + projectName + "\" with the following options: ", printOptions)
     
     await copyTemplate(projectName, options.destination)
     await project.project(options)
@@ -74,20 +76,18 @@ export default async function(projectKind: string = "module", options: Options) 
     setShellDestination(path.resolve(options.destination))
     info("Executing the following shell command:")
     try {
-      npmSetup(options)
+      await npmSetup(options)
     }
     catch(e) {
       printLog(e)
     }
 
     try {
-      gitSetup(options)
+      await gitSetup(options)
     }
     catch(e) {
       printLog(e)
     }
-
-    printLog("testLog")
     
     info("")
     info("")

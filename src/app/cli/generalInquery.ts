@@ -16,10 +16,16 @@ export default async function(options: Options) {
     {name: "dependencies", message: "Dependencies as json Array", default: " [\"xrray\"] "},
     {name: "author", message: "Author", default: defaults.author},
     {name: "githubUsername", message: "Github Username", default: defaults.githubUsername},
+    {name: "githubPassword", message: "Github Password", type: "password", mask: true},
+    {name: "public", message: "Create as public repo", type: "confirm"},
     
 
 
-    () => {writeDefaults(options)},
+    () => {
+      let optionsClone = JSON.parse(JSON.stringify(options))
+      delete optionsClone.githubPassword
+      writeDefaults(optionsClone)
+    },
   ]
 }
 
