@@ -1,12 +1,14 @@
 import * as inquirer from "inquirer"
-import * as merge from "merge-options";
+import * as merge from "mixin-deep";
 
-type genericObject = {[key: string]: any}
+type basicQuestion = GenericObject[] | GenericObject
+
+type Questions = basicQuestion | ((options: Options) => basicQuestion | Promise<basicQuestion>) | ((options: Options) => basicQuestion | Promise<basicQuestion>)[]
 
 
-export default async function inq<T = any>(questions: genericObject[] | genericObject, ignore?: string[] | Options)
-export default async function inq<T = any>(questions: ((options: Options) => Promise<genericObject> | genericObject | Promise<any[]> | any[]) | genericObject[] | genericObject, options: Options)
-export default async function inq<T = any>(questions: ((options: Options) => Promise<genericObject> | genericObject | Promise<any[]> | any[]) | genericObject[] | genericObject, options_ignore?: Options | string[]) {
+export default async function inq<T = any>(questions: Questions, ignore?: string[] | Options)
+export default async function inq<T = any>(questions: ((options: Options) => Questions | Promise<Questions>), options: Options)
+export default async function inq<T = any>(questions: Questions | ((options: Options) => Questions | Promise<Questions>), options_ignore?: Options | string[]) {
   if (typeof questions === "function") {
     //@ts-ignore
     let ans = await questions(options_ignore)
@@ -24,18 +26,34 @@ export default async function inq<T = any>(questions: ((options: Options) => Pro
     let isMerge = !(options_ignore instanceof Array)
     //@ts-ignore
     let ignore: string[] = isMerge ? Object.keys(options_ignore) : options_ignore
-    let rm = []
-    questions.ea((e, i) => {
-      if (ignore.includes(e.name)) rm.add(i)
+    await questions.ea(async (e, i) => {
+      if (typeof e === "function") {
+
+        let questions = await e(options_ignore)
+        let wasSingle = !(questions instanceof Array)
+        if (wasSingle) questions = [questions]
+
+        let rm = []
+        //@ts-ignore
+        questions.ea((e, i) => {
+          if (ignore.includes(e.name)) rm.add(i)
+        })
+        questions.rmI(...rm)
+        let inq = await inquirer.prompt(questions)
+        isMerge ? merge(options_ignore, inq) : inq
+
+        
+      }
+      else if (!ignore.includes(e.name)) {
+        let inq = await inquirer.prompt([e])
+        isMerge ? merge(options_ignore, inq) : inq
+      }
     })
-    questions.rmI(...rm)
-    let inq = await inquirer.prompt(questions)
-    let end = isMerge ? merge(options_ignore, inq) : inq
 
     if (wasSingle) {
-      return end[Object.keys(end).first]
+      return options_ignore[Object.keys(options_ignore).first]
     }
-    else return end
+    else return options_ignore
 
   }
 }
