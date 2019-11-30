@@ -29,8 +29,7 @@ export default async function(options: Options) {
     name: options.name,
     description: options.description,
     private: !options.public,
-
-
+    homepage: "https://www.npmjs.com/package/" + options.nameAsDashCase
   })
 
 

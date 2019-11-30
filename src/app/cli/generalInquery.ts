@@ -1,16 +1,36 @@
 import { promises as fs } from "fs"
 import * as path from "path"
 import { camelCaseToDash } from "dash-camelcase"
+import npmNameIsValid from "npm-name"
 
 
 
 export default async function(options: Options) {
   let defaults = await readDefaults()
-  
 
+  let injectIndex = 2
+  let recursiveCheckName = async () => {
+    if (options.name.substring(0,7) === "ignore/") {
+      options.name = options.name.substring(7)
+      return
+    }
 
-  return [
+    
+    let npmName = camelCaseToDash(options.name)
+
+    delete options.name
+    
+    if (!(await npmNameIsValid(npmName))) {
+      ls.inject(recursiveCheckName, injectIndex)
+      injectIndex++
+      return {name: "name", message: "\"" + npmName + "\" is already taken. Try another one. (to skip this check write \"ignore/" + npmName + "\")"}
+    }
+
+  }
+
+  let ls = [
     () => {return {name: "name", message: "Project Name", default: path.basename(options.destination)}},
+    recursiveCheckName,
     {name: "description", message: "Description"},
     () => {return {name: "keywords", message: "Keywords as json Array", default: " " + JSON.stringify(camelCaseToDash(options.name).split(/-|_/)) + " "}},
     {name: "dependencies", message: "Dependencies as json Array", default: " [\"xrray\"] "},
@@ -27,6 +47,8 @@ export default async function(options: Options) {
       writeDefaults(optionsClone)
     },
   ]
+
+  return ls
 }
 
 
