@@ -17,10 +17,8 @@ export default async function(options: Options) {
 
     
     let npmName = camelCaseToDash(options.name)
-
-    delete options.name
-    
     if (!(await npmNameIsValid(npmName))) {
+      delete options.name
       ls.inject(recursiveCheckName, injectIndex)
       injectIndex++
       return {name: "name", message: "\"" + npmName + "\" is already taken. Try another one. (to skip this check write \"ignore/" + npmName + "\")"}
