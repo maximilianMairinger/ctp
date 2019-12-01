@@ -7,7 +7,9 @@
 
 
 ```js
+import ${name} from "${name}"
 
+${name}()
 ```
 
 
