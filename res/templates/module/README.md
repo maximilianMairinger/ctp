@@ -1,6 +1,6 @@
 # ${nameWithSpaces}
 
-
+${description}
 
 ## Example
 
@@ -11,6 +11,7 @@ import ${name} from "${name}"
 
 ${name}()
 ```
+
 
 
 ## Conribute
