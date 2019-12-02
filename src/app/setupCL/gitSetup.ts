@@ -35,7 +35,7 @@ export default async function(options: Options) {
   // })
 
 
-  log(await octokit.users.getAuthenticated())
+  
 
 
   

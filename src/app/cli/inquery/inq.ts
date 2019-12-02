@@ -6,9 +6,10 @@ type basicQuestion = GenericObject[] | GenericObject
 type Questions = basicQuestion | ((options: Options) => basicQuestion | Promise<basicQuestion>) | ((options: Options) => basicQuestion | Promise<basicQuestion>)[]
 
 
+export default async function inq<T = any>(questions: string)
 export default async function inq<T = any>(questions: Questions, ignore?: string[] | GenericObject)
 export default async function inq<T = any>(questions: ((options: Options) => Questions | Promise<Questions>), options: GenericObject)
-export default async function inq<T = any>(questions: Questions | ((options: Options) => Questions | Promise<Questions>), options_ignore: GenericObject | string[] = {}) {
+export default async function inq<T = any>(questions: string | Questions | ((options: Options) => Questions | Promise<Questions>), options_ignore: GenericObject | string[] = {}) {
   if (typeof questions === "function") {
     //@ts-ignore
     let ans = await questions(options_ignore)
@@ -17,7 +18,15 @@ export default async function inq<T = any>(questions: Questions | ((options: Opt
   }
   else {
     let wasSingle = !(questions instanceof Array)
-    if (wasSingle) questions = [questions]
+    if (wasSingle) {
+      //@ts-ignore
+      if (typeof questions === "string") {
+        questions = {message: questions}
+      }
+      //@ts-ignore
+      if (questions.name === undefined) questions.name = "autofilledNameSinceThereIsJustOneQuestion"
+      questions = [questions]
+    }
 
     let options: GenericObject
     let ignore: string[]
@@ -31,6 +40,7 @@ export default async function inq<T = any>(questions: Questions | ((options: Opt
       ignore = Object.keys(options_ignore)
     }
     
+    //@ts-ignore
     await questions.ea(async (e, i) => {
       if (typeof e === "function") {
 

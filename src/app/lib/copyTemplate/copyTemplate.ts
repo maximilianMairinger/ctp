@@ -1,24 +1,14 @@
 import * as path from "path"
 import { promises as fs } from "fs"
 import { log } from "../logger/logger"
+import fileExists from "../fileExists/fileExists"
 import * as copy from "recursive-copy"
 
 let resDir = path.join(__dirname, "../../../../res/templates")
 
 
 export default async function(which: string, destination: string) {
-  let fileExists: boolean
-  try {
-    await fs.stat(destination)
-    fileExists = true
-  }
-  catch(e) {
-    // If not "file dosent exisit error" throw
-    if (e.code !== "ENOENT") throw e
-    fileExists = false
-  }
-  
-  if (fileExists) {
+  if (await fileExists(destination)) {
     if ((await fs.stat(destination)).isDirectory()) {
       if (!(await fs.readdir(destination)).empty) throw "Given destination is not empty."
     }

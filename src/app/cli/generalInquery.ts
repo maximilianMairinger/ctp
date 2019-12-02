@@ -2,7 +2,9 @@ import { promises as fs } from "fs"
 import * as path from "path"
 import { camelCaseToDash } from "dash-camelcase"
 import npmNameIsValid from "npm-name"
-import Octokit from "@octokit/rest"
+import * as Octokit from "@octokit/rest"
+import inq from "./inquery/inq"
+import { log, error } from "./../lib/logger/logger"
 
 
 
@@ -31,7 +33,7 @@ export default async function(options: Options) {
   })();
 
   let recursiveGithubAuthCheck = (() => {
-    let injectIndex = 8
+    let injectIndex = 9
     return async () => {
       if (options.githubPassword === "") {
         return
@@ -43,21 +45,32 @@ export default async function(options: Options) {
           username: options.githubUsername,
           password: options.githubPassword,
           async on2fa() {
-            return req({name: "2fa", message: "Two-factor authentication Code"});
+            return await inq("Two-factor authentication Code");
           }
         }
       });
 
-      function ask2fa() {
-        return
+      let authFaild = false
+      try {
+        // to check authentification
+        await octokit.users.getAuthenticated()
       }
-  
+      catch(e) {
+        authFaild = true
+        if (e.message !== "Bad credentials") error("Unknown error while authenticating.")
+      }
+
       
-      if (true) {
+
+      
+      if (authFaild) {
         delete options.githubPassword
-        ls.inject(recursiveCheckName, injectIndex)
+        ls.inject(recursiveGithubAuthCheck, injectIndex)
         injectIndex++
-        return {name: "name", message: "Auth faild. Github Password (to neglect github sync press ENTER)"}
+        return {name: "githubPassword", message: "Github auth faild. Github Password", type: "password", mask: true}
+      }
+      else {
+        options.authedOctokit = octokit
       }
   
     }
@@ -74,17 +87,9 @@ export default async function(options: Options) {
     {name: "dependencies", message: "Dependencies as json Array", default: " [\"xrray\"] "},
     {name: "author", message: "Author", default: defaults.author},
     {name: "githubUsername", message: "Github Username", default: defaults.githubUsername},
-    {name: "githubPassword", message: "Github Password", type: "password", mask: true},
-    {name: "githubPassword", message: "Github Password", type: "password", mask: true},
+    {name: "githubPassword", message: "Github Password (to neglect github sync press ENTER)", type: "password", mask: true},
+    recursiveGithubAuthCheck,
     {name: "public", message: "Create as public repo", type: "confirm"},
-    
-
-
-    async () => {
-      let optionsClone = JSON.parse(JSON.stringify(options))
-      delete optionsClone.githubPassword
-      await writeDefaults(optionsClone)
-    },
   ]
 
   return ls
