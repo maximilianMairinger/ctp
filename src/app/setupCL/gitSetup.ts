@@ -1,7 +1,7 @@
 import exec, { check } from "./shell"
 import * as Octokit from "@octokit/rest"
 import req from "./../cli/inquery/inq"
-import { info } from "../lib/logger/logger"
+import { info, log } from "../lib/logger/logger"
 
 
 export default async function(options: Options) {
@@ -23,14 +23,19 @@ export default async function(options: Options) {
     }
   });
 
-  info("Creating Repo")
 
-  await octokit.repos.createForAuthenticatedUser({
-    name: options.name,
-    description: options.description,
-    private: !options.public,
-    homepage: "https://www.npmjs.com/package/" + options.nameAsDashCase
-  })
+
+  // info("Creating Repo")
+
+  // await octokit.repos.createForAuthenticatedUser({
+  //   name: options.name,
+  //   description: options.description,
+  //   private: !options.public,
+  //   homepage: "https://www.npmjs.com/package/" + options.nameAsDashCase
+  // })
+
+
+  log(await octokit.users.getAuthenticated())
 
 
   

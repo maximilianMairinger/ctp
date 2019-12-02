@@ -1,3 +1,10 @@
 {
-  
+  "destination": "./test_out",
+  "name": "test_out",
+  "description": "",
+  "keywords": " [\"test\",\"out\"] ",
+  "dependencies": " [\"xrray\"] ",
+  "author": "Ich",
+  "githubUsername": "maximilianMairinger",
+  "public": false
 }
