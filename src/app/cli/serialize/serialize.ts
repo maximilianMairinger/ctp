@@ -12,69 +12,6 @@ import doesFileExists from "./../../lib/fileExists/fileExists"
   
 // })
 
-
-
-
-
-
-
-export default Serialize
-export class Serialize {
-  private fileName: string;
-  private fileRdy: Promise<void>
-  constructor(private name: string = "Unamed") {
-    if (takenNamesIndex[name] === undefined) {
-      takenNamesIndex[name] = 0
-      this.fileName = name
-    }
-    else {
-      takenNamesIndex[name]++
-      let potentualName = " (" + takenNamesIndex[name] + ")"
-      
-      while (takenNamesIndex[potentualName] !== undefined) {
-        takenNamesIndex[name]++
-        potentualName = " (" + takenNamesIndex[name] + ")"
-      }
-      
-      this.fileName = potentualName
-    }
-   
-    this.fileRdy = fs.writeFile(path.join(dir, this.fileName), "{\n  \n}")
-  }
-}
-
-let takenNamesIndex: {[name: string]: number} = {}
-
-let dir = path.join(__dirname, "store")
-
-let init = doesFileExists(dir).then(async (does) => {
-  if (does) {
-    let files = await fs.readdir(dir)
-    files.ea((file) => {
-      takenNamesIndex[file] = 0
-    })
-  }
-})
-
-
-declare module "./serialize" {
-  interface Serialize {
-    wirte(): Promise<void>
-    read(): Promise<GenericObject>
-  }
-}
-
-let serProto = Serialize.prototype
-initThenCall(init, async function write() {
-  
-}, serProto)
-
-initThenCall(init, async function read() {
-  await fs.readFile(this.)
-}, serProto)
-
-
-
 const notYetInited = Symbol("Not yet Inited")
 
 function initThenCall<T, Params extends Array<T>, Return>(init: (() => void | Promise<void>) | Promise<void> | undefined, call: (...params: Params) => Return, attatchTo?: GenericObject) {
@@ -94,38 +31,38 @@ function initThenCall<T, Params extends Array<T>, Return>(init: (() => void | Pr
     else bothProms = wrappedPromise
   }
   //@ts-ignore
-  else bothProms = initProm
+  else if (initPromIsInstanceOfPromise) bothProms = initProm
 
   if (initPromIsInstanceOfPromise) {
     //@ts-ignore
-    instantFunc = async (...params: Params): Ret => {
+    instantFunc = async function (...params: Params): Ret {
       await bothProms
-      return await call(...params)
+      return await call.call(this, ...params)
     }
   }
   else {
     instantFunc = call
   }
 
+  Object.defineProperty(instantFunc, 'name', {value: call.name, writable: false});
   instantFunc[notYetInited] = bothProms
 
 
   if (attatchTo !== undefined) {
     let name = call.name
+
     if (name === "" || name === undefined) throw new Error("Cannot attatch anonymous function")
+
+    let hasAttatchedToPrototype = attatchTo[name] !== undefined && !attatchTo.hasOwnProperty(name)
+
     attatchTo[name] = instantFunc
 
-    if (hasWrappedPromise) {
-      wrappedPromise.then(() => {
-        initThenCall(undefined, call, attatchTo)
-      })
-    }
-    else if (initPromIsInstanceOfPromise) {
-      //@ts-ignore
-      initProm.then(() => {
-        attatchTo[name] = call
-      })
-    }
+    if (initPromIsInstanceOfPromise) bothProms.then(() => {
+      if (attatchTo[name] === instantFunc) {
+        if (hasAttatchedToPrototype) delete attatchTo[name]
+        else attatchTo[name] = call
+      }
+    })
 
     
 
@@ -138,113 +75,82 @@ function initThenCall<T, Params extends Array<T>, Return>(init: (() => void | Pr
 
 
 
-// let abc: any = {}
-// //
-// initThenCall(delay(1000), function www() {
-//   console.log("CALLED")
-// }, abc)
-
-// //@ts-ignore
-// initThenCall(delay(500), abc.www, abc)
-
-// //@ts-ignore
-// abc.www()
-
-// console.log("qwer")
 
 
 
 
 
-
-// TEST
-
-
-
-// import delay from "delay"
-
-// const notYetInited = Symbol("Not yet Inited")
-
-// function initThenCall<T, Params extends Array<T>, Return>(init: (() => void | Promise<void>) | Promise<void> | undefined, call: (...params: Params) => Return, attatchTo?: GenericObject) {
-//   let initProm = typeof init === "function" ? init() : init
-
-//   type Ret = typeof initProm extends Promise<any> ? Return extends Promise<any> ? Return : Promise<Return> : typeof call
-
-//   let instantFunc: Ret
-//   let initPromIsInstanceOfPromise = initProm instanceof Promise
-
-//   let wrappedPromise = call[notYetInited]
-//   let hasWrappedPromise = wrappedPromise !== undefined
-
-//   let bothProms: Promise<any>;
-//   if (hasWrappedPromise) {
-//     if (initPromIsInstanceOfPromise) bothProms = Promise.all([initProm, wrappedPromise])
-//     else bothProms = wrappedPromise
-//   }
-//   //@ts-ignore
-//   else bothProms = initProm
-
-//   if (initPromIsInstanceOfPromise) {
-//     //@ts-ignore
-//     instantFunc = async (...params: Params): Ret => {
-//       debugger
-//       console.log(hasWrappedPromise && initPromIsInstanceOfPromise);
+export class Serialize {
+  private fileName: string;
+  constructor(private name: string = "Unamed") {
+    if (takenNamesIndex[name] === undefined) {
+      takenNamesIndex[name] = 1
+      this.fileName = name
+    }
+    else {
+      takenNamesIndex[name]++
+      let potentualName = name + " (" + takenNamesIndex[name] + ")"
       
-//       await bothProms
-//       return await call(...params)
-//     }
-//   }
-//   else {
-//     instantFunc = call
-//   }
+      while (takenNamesIndex[potentualName] !== undefined) {
+        takenNamesIndex[name]++
+        potentualName = name + " (" + takenNamesIndex[name] + ")"
+      }
 
-//   Object.defineProperty(instantFunc, 'name', {value: call.name, writable: false});
-//   instantFunc[notYetInited] = bothProms
-
-
-//   if (attatchTo !== undefined) {
-//     let name = call.name
-//     if (name === "" || name === undefined) throw new Error("Cannot attatch anonymous function")
-//     attatchTo[name] = instantFunc
-
-//     if (hasWrappedPromise && !arguments[3]) {
-//       wrappedPromise.then(() => {
-//         //@ts-ignore
-//         initThenCall(undefined, call, attatchTo, true)
-//       })
-//     }
-//     else if (initPromIsInstanceOfPromise) {
-//       //@ts-ignore
-//       initProm.then(() => {
-//         attatchTo[name] = call
-//       })
-//     }
-
+      takenNamesIndex[potentualName] = 1
+      this.fileName = potentualName
+    }
     
-
+    //@ts-ignore
+    let fileCreation = this.mkdir()
     
-    
-//   }
+   
+    initThenCall(fileCreation, this.read, this)
+    initThenCall(fileCreation, this.write, this)
+  }
 
-//   else return instantFunc
-// }
+}
 
+export default Serialize
 
+let takenNamesIndex: {[name: string]: number} = {}
 
-// let abc: any = {}
-// //
-// initThenCall(delay(1000).then(() => {console.log("1000")}), function www() {
-//   console.log("CALLED")
-// }, abc)
-
-// delay(500).then(() => {console.log("500")}).then(() => {
-//   initThenCall(delay(1000).then(() => {console.log("1500")}), abc.www, abc)
-
-//   //@ts-ignore
-//   abc.www()
-// })
+const dir = path.join("./", "data_store")
 
 
-// delay(3000).then(() => {
-//   abc.www()
-// })
+let init = doesFileExists(dir).then(async (does) => {
+  if (does) {
+    let files = await fs.readdir(dir)
+    files.forEach((file) => {
+      takenNamesIndex[file] = 1
+    })
+  }
+  else {
+    await fs.mkdir(dir)
+  }
+})
+
+
+declare module "./serialize" {
+  interface Serialize {
+    write(data: any): Promise<void>
+    read(): Promise<GenericObject>
+  }
+}
+
+const extention = ".json"
+let serProto = Serialize.prototype
+initThenCall(init, async function write(ob: any) {  
+  await fs.writeFile(path.join(dir, this.fileName + extention), JSON.stringify(ob, undefined, "  "))
+}, serProto)
+
+
+initThenCall(init, async function read() {
+  return JSON.parse((await fs.readFile(path.join(dir, this.fileName + extention))).toString())
+}, serProto)
+
+initThenCall(init, function mkdir() {
+  return fs.writeFile(path.join(dir, this.fileName + extention), "{\n  \n}")
+}, serProto)
+
+
+

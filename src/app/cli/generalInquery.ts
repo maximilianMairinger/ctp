@@ -5,11 +5,14 @@ import npmNameIsValid from "npm-name"
 import * as Octokit from "@octokit/rest"
 import inq from "./inquery/inq"
 import { log, error } from "./../lib/logger/logger"
+import Serialize from "./serialize/serialize"
 
+
+const serialize = new Serialize("cliDefaults");
 
 
 export default async function(options: Options) {
-  let defaults = await readDefaults()
+  let defaults = await serialize.read()
 
 
   let recursiveCheckName = (() => {
@@ -90,18 +93,10 @@ export default async function(options: Options) {
     {name: "githubPassword", message: "Github Password (to neglect github sync press ENTER)", type: "password", mask: true},
     recursiveGithubAuthCheck,
     {name: "public", message: "Create as public repo", type: "confirm"},
+    async () => {
+      await serialize.write(options)
+    }
   ]
 
   return ls
-}
-
-
-let defaultsSavePath = path.join(__dirname, "./../../../defaultCommandLineOpions.json")
-
-export async function writeDefaults(defaults: GenericObject) {
-  await fs.writeFile(defaultsSavePath, JSON.stringify(defaults, undefined, "  "))
-}
-
-async function readDefaults() {
-    return JSON.parse((await fs.readFile(defaultsSavePath)).toString())
 }
