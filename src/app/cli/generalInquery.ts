@@ -36,7 +36,7 @@ export default async function(options: Options) {
   })();
 
   let recursiveGithubAuthCheck = (() => {
-    let injectIndex = 9
+    let injectIndex = 11
     return async () => {
       if (options.githubPassword === "") {
         return
