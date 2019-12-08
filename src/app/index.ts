@@ -105,7 +105,7 @@ function setUpPrintError(projectKind: string, startTime: number, func: Function 
       if (!(e instanceof Error)) e = new Error(e)
   
       func(e.message || "Unknown")
-      if (exit) func("Exiting \"ctp " + projectKind + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
+      if (exit) func("Exiting \"ctp " + projectKind + "\" after " + (Math.round((performance.now() - startTime)) / 100) + " seconds.")
     }
     else throw e
   }

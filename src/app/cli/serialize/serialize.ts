@@ -114,7 +114,7 @@ export default Serialize
 
 let takenNamesIndex: {[name: string]: number} = {}
 
-const dir = path.join("./", "data_store")
+const dir = path.join(__dirname, "../../../../", "data_store")
 
 
 let init = doesFileExists(dir).then(async (does) => {

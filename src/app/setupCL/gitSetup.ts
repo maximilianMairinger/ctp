@@ -13,38 +13,38 @@ export default async function(options: Options) {
   
 
 
-  let octokit = new Octokit({
-    auth: {
-      username: options.githubUsername,
-      password: options.githubPassword,
-      async on2fa() {
-        return req({name: "2fa", message: "Two-factor authentication Code"});
+  if (options.githubPassword !== "") {
+
+
+    let octokit = new Octokit({
+      auth: {
+        username: options.githubUsername,
+        password: options.githubPassword,
+        async on2fa() {
+          return req({name: "2fa", message: "Two-factor authentication Code"});
+        }
       }
-    }
-  });
-
-
-
-  // info("Creating Repo")
-
-  // await octokit.repos.createForAuthenticatedUser({
-  //   name: options.name,
-  //   description: options.description,
-  //   private: !options.public,
-  //   homepage: "https://www.npmjs.com/package/" + options.nameAsDashCase
-  // })
-
+    });
+  
+  
+    info("Publishing Repo...")
+  
+    await octokit.repos.createForAuthenticatedUser({
+      name: options.name,
+      description: options.description,
+      private: !options.public,
+      homepage: "https://www.npmjs.com/package/" + options.nameAsDashCase
+    })
+  
+    await octokit.repos.replaceTopics({
+      owner: options.githubUsername,
+      repo: options.name,
+      names: JSON.parse(options.keywords)
+    })
+  
+  
+    exec("git push -u origin master")
+  }
 
   
-
-
-  
-  await octokit.repos.replaceTopics({
-    owner: options.githubUsername,
-    repo: options.name,
-    names: JSON.parse(options.keywords)
-  })
-
-
-  exec("git push -u origin master")
 }

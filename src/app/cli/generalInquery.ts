@@ -79,6 +79,61 @@ export default async function(options: Options) {
     }
   })();
   
+  
+
+  let recursiveCheckJSONOf = (name: string, injectIndex: number, message: string = "This is not valid JSON", additionalCheck?: (parsed: any) => boolean, additionalPostParsing?: (parsed: any) => any) => {
+    return () => {
+      let isOK = false
+      let parsed: GenericObject
+      try {
+        let got = options[name]
+        if (!got.includes("{") && !got.includes("}") && !got.includes("[") && !got.includes("]")) {
+          if (got.substring(0, 1) !== "\"" && got.substring(got.length-1) !== "\"") got = "\"" + got + "\""
+        } 
+
+
+        parsed = JSON.parse(got)
+        if (additionalCheck !== undefined) if (additionalCheck(parsed)) isOK = true
+      }
+      catch(e) {}
+
+
+
+      if (!isOK) {
+        delete options[name]
+        ls.inject(recursiveCheckName, injectIndex)
+        injectIndex++
+        return {name, message}
+      }
+      else {
+        if (additionalPostParsing !== undefined) options[name] = JSON.stringify(additionalPostParsing(options[name]))
+      }
+  
+    }
+  };
+
+
+  function recursiveCheckJSONStringArrayOf(name: string, indjectIndex: number, message = "Invalid. Must be JSON string array or a string") {
+    return recursiveCheckJSONOf(name, indjectIndex, message, (parsed) => {
+      if (!(parsed instanceof Array)) {
+        if (typeof parsed === "string") return true
+        return false
+      }
+      for (let i = 0; i < parsed.length; i++) {
+        const elem = parsed[i];
+        if (typeof elem !== "string") return false
+      }
+
+      return true;
+    }, (parsed) => {
+      if (!(parsed instanceof Array) && typeof parsed === "string") return [parsed]
+      return parsed
+    })
+  }
+
+  let recursiveCheckKeywords = recursiveCheckJSONStringArrayOf("keywords", 5)
+  let recursiveCheckDependencies = recursiveCheckJSONStringArrayOf("dependencies", 7)
+
 
   
 
@@ -87,13 +142,18 @@ export default async function(options: Options) {
     recursiveCheckName,
     {name: "description", message: "Description"},
     () => {return {name: "keywords", message: "Keywords as json Array", default: " " + JSON.stringify(camelCaseToDash(options.name).split(/-|_/)) + " "}},
+    recursiveCheckKeywords,
     {name: "dependencies", message: "Dependencies as json Array", default: " [\"xrray\"] "},
+    recursiveCheckDependencies,
     {name: "author", message: "Author", default: defaults.author},
     {name: "githubUsername", message: "Github Username", default: defaults.githubUsername},
     {name: "githubPassword", message: "Github Password (to neglect github sync press ENTER)", type: "password", mask: true},
     recursiveGithubAuthCheck,
-    {name: "public", message: "Create as public repo", type: "confirm"},
+    () => {if (options.githubPassword !== "") return {name: "public", message: "Create as public repo", type: "confirm"}},
     async () => {
+      let optionsWithoutSensitiveInformations = JSON.parse(JSON.stringify(options))
+
+      delete optionsWithoutSensitiveInformations.githubPassword
       await serialize.write(options)
     }
   ]

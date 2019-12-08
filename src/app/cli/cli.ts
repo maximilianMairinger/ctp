@@ -15,7 +15,9 @@ wrapErrors(true);
 import generalInquery from "./generalInquery"
 
 //@ts-ignore
-setVerbose(args.v || args.verbose)
+let verb: boolean = args.v === undefined && args.verbose === undefined ? true : args.v === undefined ? args.verbose : args.v
+
+setVerbose(verb)
 
 
 let projectKind = args._.first || "module"
