@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/app/index.js",
   "scripts": {
+    "build": "tsc",
     "dev": "tsc -w",
     "test": "node dist/test/test.js",
     "test-cli": "node dist/test/delTestFolder.js && ctp module --verbose --destination ./test_out"
