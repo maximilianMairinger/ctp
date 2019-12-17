@@ -1,5 +1,5 @@
 import * as shell from "shelljs"
-import { error, info } from "./../lib/logger/logger"
+import { warn, error, info } from "./../lib/logger/logger"
 
 let destinationHasBeenExplicitlySet = false
 
@@ -18,7 +18,7 @@ export default function(cmd: string) {
   info(cmd)
 
   if (shell.exec(cmd, {silent: true, fatal: true}).code !== 0) {
-    error("Error while executing the following command")
-    error(cmd)
+    warn("Error while executing the following command")
+    warn(cmd)
   }
 }
