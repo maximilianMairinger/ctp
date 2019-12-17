@@ -56,8 +56,8 @@ wrapErrors(true)
 
 ### CLI
 
-All inqueried options can be given as command line arguaments as well. Only two options (namely `verbose` and `destination`) will not be inqueried if not given. Those have the defaults `verbose: false` and `destination: [current dir]`.
+All inqueried options can be given as command line arguaments as well. Only two options (namely `verbose` and `destination`) will not be inqueried if not given. Those have the defaults `verbose: true` and `destination: [current dir]`.
 
 ## Contribute
 
-All feedback is appreciated. Write an issue or even add a template by creating a pull request.
+All feedback is appreciated. Write an issue or add a template by creating a pull request.
