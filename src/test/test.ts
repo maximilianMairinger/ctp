@@ -17,10 +17,10 @@ wrapErrors(true);
     destination, 
     name: "testName", 
     description: "desc", 
-    keywords: "[\"keyword1\", \"keyword2\"]",
-    dependencies: "[\"xrray\",\"dash-camelcase\"]", 
+    keywords: ["keyword1", "keyword2"],
+    dependencies: ["xrray", "animation-frame-delta"],
     author: "Maximilian Mairinger", 
-    githubUsername: "maximilianMairinger", 
+    githubUsername: "maximilianMairinger",
   })
 
   
