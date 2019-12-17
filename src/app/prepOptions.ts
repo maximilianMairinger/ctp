@@ -1,5 +1,6 @@
 import { camelCaseToDash, dashToCamelCase } from "dash-camelcase"
 import * as path from "path"
+import * as cc from "change-case"
 
 let o: Options;
 
@@ -23,7 +24,7 @@ export default function(options: Options) {
   let dependencyImports = ""
   console.log(options.dependencies)
   options.dependencies.ea((e) => {
-    if (e !== "xrray") dependencyImports += "import " + e + " from " + e + "\n"
+    if (e !== "xrray") dependencyImports += "import " + cc.camelCase(e) + " from " + e + "\n"
     else dependencyImports += "require(\"xrray\")(Array)\n"
   })
 

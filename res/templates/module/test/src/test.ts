@@ -1,4 +1,4 @@
-import ${name} from "../../app/src/${name}"
+import ${name} from "${nameAsDashCase}"
 const testElem = document.querySelector("#test")
 
-
+${name}()

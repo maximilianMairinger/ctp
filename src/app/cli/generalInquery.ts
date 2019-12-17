@@ -5,7 +5,6 @@ import isNpmNameValid from "npm-name"
 import * as Octokit from "@octokit/rest"
 import inq from "./inquery/inq"
 import { log, error, warn } from "./../lib/logger/logger"
-import Serialize from "./serialize/serialize"
 import { camelCase } from "change-case"
 import serializeInquery from "./serializeInquery"
 
