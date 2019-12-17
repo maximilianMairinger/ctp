@@ -26,7 +26,6 @@ export default function(options: Options) {
   
 
   let dependencyImports = ""
-  console.log(options.dependencies)
   options.dependencies.ea((e) => {
     if (e !== "xrray") dependencyImports += "import " + cc.camelCase(e) + " from " + e + "\n"
     else dependencyImports += "require(\"xrray\")(Array)\n"
