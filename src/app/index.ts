@@ -59,18 +59,12 @@ export default async function(projectKind: string = "module", options: Options) 
 
   let startTime = performance.now()
   let project = projectIndex[projectName]
-  const printError = setUpPrintError(projectKind, startTime)
-  const printLog = setUpPrintError(projectKind, startTime, log)
+  const traceError = setupTrace(projectKind, startTime)
+  const traceLog = setupTrace(projectKind, startTime, log)
   try {
     if (project.shema) await testShema(project.shema, options, projectName)
-    
-    
     prepOptions(options)
-    let printOptions = JSON.parse(JSON.stringify(options))
-    delete printOptions.githubPassword
-    info("Starting project \"" + projectName + "\" with the following options: ", printOptions)
 
-    return
 
     await copyTemplate(projectName, options.destination)
     await project.project(options)
@@ -81,14 +75,14 @@ export default async function(projectKind: string = "module", options: Options) 
       await npmSetup(options)
     }
     catch(e) {
-      printLog(e)
+      traceLog(e)
     }
 
     try {
       await gitSetup(options)
     }
     catch(e) {
-      printLog(e)
+      traceLog(e)
     }
     
     info("")
@@ -97,11 +91,11 @@ export default async function(projectKind: string = "module", options: Options) 
     info("Finished project \"" + projectName + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
   }
   catch(e) {
-    printError(e, true)
+    traceError(e, true)
   }
 }
 
-function setUpPrintError(projectKind: string, startTime: number, func: Function = error) {
+function setupTrace(projectKind: string, startTime: number, func: Function = error) {
   return function printError(e: any, exit: boolean = false) {
     if (wrapErr) {
       if (e instanceof Error && e.message === undefined) e.message = "Unknown"
