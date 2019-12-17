@@ -174,7 +174,7 @@ export default async function(options: Options) {
       () => {if (options.githubPassword !== "") return {name: "public", message: "Create as public repo", type: "confirm"}}
     ]
     return ls
-  })
+  }, ["githubPassword", "authedOctokit"])
 
   
 }
