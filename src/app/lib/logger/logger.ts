@@ -22,10 +22,14 @@ export function log(...msg: any[]) {
 }
 
 export function warn(...msg: any[]) {
-  go(0, "Warning", "warn", "yellow", msg)
+  go(0, "Warn", "warn", "yellow", msg)
 }
 
 export function error(...msg: any[]) {
+  go(1, "Error", "error", "red", msg)
+}
+
+function go(severity: 0 | 1, prefix: string, kind: string, color: string, msg: any[]) {
   let n = []
   let err = []
   msg.ea((m) => {
@@ -35,11 +39,7 @@ export function error(...msg: any[]) {
     }
     else n.add(m)
   })
-  go(1, "Error", "error", "red", n)
-  if (testEnv) go(1, "Error", "error", "red", err)
-}
 
-function go(severity: 0 | 1, prefix: string, kind: string, color: string, msg: any[]) {
   let strings = []
   let notStrings = []
   msg.ea((s) => {
@@ -49,6 +49,7 @@ function go(severity: 0 | 1, prefix: string, kind: string, color: string, msg: a
 
 
   if (severity === 1 || verbose) console[kind](chalk[color]((last !== kind ? prefix + ":\t" : "\t"), ...strings), ...notStrings)
+  if (testEnv && !err.empty) console.log(...err)
   
 
   let lmsg = msg.last
