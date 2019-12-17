@@ -69,7 +69,9 @@ export default async function(projectKind: string = "module", options: Options) 
     let printOptions = JSON.parse(JSON.stringify(options))
     delete printOptions.githubPassword
     info("Starting project \"" + projectName + "\" with the following options: ", printOptions)
-    
+
+    return
+
     await copyTemplate(projectName, options.destination)
     await project.project(options)
 
@@ -102,9 +104,9 @@ export default async function(projectKind: string = "module", options: Options) 
 function setUpPrintError(projectKind: string, startTime: number, func: Function = error) {
   return function printError(e: any, exit: boolean = false) {
     if (wrapErr) {
-      if (!(e instanceof Error)) e = new Error(e)
+      if (e instanceof Error && e.message === undefined) e.message = "Unknown"
   
-      func(e.message || "Unknown")
+      func(e)
       if (exit) func("Exiting \"ctp " + projectKind + "\" after " + (Math.round((performance.now() - startTime)) / 100) + " seconds.")
     }
     else throw e
