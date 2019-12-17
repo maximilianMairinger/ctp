@@ -18,6 +18,10 @@ export default function(options: Options) {
 
 
   options.destination = path.resolve(options.destination)
+
+  options.keywords.ea((e, i) => {
+    options.keywords[i] = e.toLowerCase()
+  })
   
   
 
