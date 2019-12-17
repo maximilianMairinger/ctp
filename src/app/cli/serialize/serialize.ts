@@ -1,16 +1,8 @@
 import * as path from "path"
 import { promises as fs } from "fs"
 import doesFileExists from "./../../lib/fileExists/fileExists"
+import fileExisits from "./../../lib/fileExists/fileExists"
 
-
-// export const read = init(() => {
-  
-// })
-
-
-// export const write = init(() => {
-  
-// })
 
 const notYetInited = Symbol("Not yet Inited")
 
@@ -140,6 +132,8 @@ declare module "./serialize" {
 const extention = ".json"
 let serProto = Serialize.prototype
 initThenCall(init, async function write(ob: any) {  
+  console.log("writing", ob);
+  
   await fs.writeFile(path.join(dir, this.fileName + extention), JSON.stringify(ob, undefined, "  "))
 }, serProto)
 
@@ -149,7 +143,12 @@ initThenCall(init, async function read() {
 }, serProto)
 
 initThenCall(init, function mkdir() {
-  return fs.writeFile(path.join(dir, this.fileName + extention), "{\n  \n}")
+  return new Promise((res) => {
+    let filePath = path.join(dir, this.fileName + extention)
+    if (!fileExisits(filePath)) res(fs.writeFile(path.join(dir, this.fileName + extention), "{\n  \n}"))
+    else res()
+  })
+  
 }, serProto)
 
 

@@ -1,162 +1,174 @@
 import { promises as fs } from "fs"
 import * as path from "path"
 import { camelCaseToDash } from "dash-camelcase"
-import npmNameIsValid from "npm-name"
+import npmNameValid from "npm-name"
 import * as Octokit from "@octokit/rest"
 import inq from "./inquery/inq"
-import { log, error } from "./../lib/logger/logger"
+import { log, error, warn } from "./../lib/logger/logger"
 import Serialize from "./serialize/serialize"
-
-
-const serialize = new Serialize("cliDefaults");
-
+import { camelCase } from "change-case"
+import serializeInquery from "./serializeInquery"
 
 export default async function(options: Options) {
-  let defaults = await serialize.read()
+  
 
 
-  let recursiveCheckName = (() => {
-    let injectIndex = 2
-    return async () => {
-      if (options.name.substring(0,7) === "ignore/") {
-        options.name = options.name.substring(7)
-        return
+  return serializeInquery("generalInqueryDefaults", (defaults) => {
+    let recursiveCheckName = (() => {
+      let injectIndex = 2
+      return async () => {
+        if (options.name.substring(0,7) === "ignore/") {
+          options.name = options.name.substring(7)
+          return
+        }
+    
+        
+        let npmName = camelCaseToDash(options.name)
+        let npmNameisValid: any
+        try {
+          npmNameisValid = !await npmNameValid(npmName)
+        }
+        catch(e) {
+          warn("Unable to check if npm package is taken")
+        }
+        if (npmNameisValid) {
+          delete options.name
+          ls.inject(recursiveCheckName, injectIndex)
+          injectIndex++
+          return {name: "name", message: "\"" + npmName + "\" is already taken. Try another one. (to skip this check write \"ignore/" + npmName + "\")"}
+        }
+    
       }
+    })();
   
-      
-      let npmName = camelCaseToDash(options.name)
-      if (!(await npmNameIsValid(npmName))) {
-        delete options.name
-        ls.inject(recursiveCheckName, injectIndex)
-        injectIndex++
-        return {name: "name", message: "\"" + npmName + "\" is already taken. Try another one. (to skip this check write \"ignore/" + npmName + "\")"}
+    let recursiveGithubAuthCheck = (() => {
+      let injectIndex = 11
+      return async () => {
+        if (options.githubPassword === "") {
+          return
+        }
+  
+  
+        let octokit = new Octokit({
+          auth: {
+            username: options.githubUsername,
+            password: options.githubPassword,
+            async on2fa() {
+              return await inq("Two-factor authentication Code");
+            }
+          }
+        });
+  
+        let authFaild = false
+        try {
+          // to check authentification
+          await octokit.users.getAuthenticated()
+        }
+        catch(e) {
+          authFaild = true
+          if (e.message !== "Bad credentials") error("Unknown error while authenticating.")
+        }
+  
+        
+  
+        
+        if (authFaild) {
+          delete options.githubPassword
+          ls.inject(recursiveGithubAuthCheck, injectIndex)
+          injectIndex++
+          return {name: "githubPassword", message: "Optional: Github auth faild. Github Password", type: "password", mask: true}
+        }
+        else {
+          options.authedOctokit = octokit
+        }
+    
       }
+    })();
   
+  
+    function injectRecursively<T>(func: T): T {
+      let f = (...a) => {
+        //@ts-ignore
+        let end = func(...a)
+        if (end) {
+          ls.inject(f, ls.lastIndexOf(f) + 1)
+        }
+  
+        return end
+      }
+      //@ts-ignore
+      return f
     }
-  })();
-
-  let recursiveGithubAuthCheck = (() => {
-    let injectIndex = 11
-    return async () => {
-      if (options.githubPassword === "") {
-        return
-      }
-
-
-      let octokit = new Octokit({
-        auth: {
-          username: options.githubUsername,
-          password: options.githubPassword,
-          async on2fa() {
-            return await inq("Two-factor authentication Code");
+    
+    
+  
+    let recursiveCheckList = (name: string, typeCheck: string = "string", additionalCheck?: (parsed: any) => boolean) => {
+      return injectRecursively(() => {
+        let parsed: GenericObject
+        try {
+          let got: string = options[name]
+          if (got === "") parsed = []
+          else parsed = got.replace(" ", "").replace("\n", "").split(",")
+  
+          
+          parsed.ea((e) => {
+            if (typeof e !== typeCheck) throw new Error("Not all entries are of type " + typeCheck)
+          })
+  
+          if (typeCheck === "string") {
+            parsed.ea((e) => {
+              if (e === "") throw new Error("Empty fields are not allowed")
+            })
+          }
+          
+          if (additionalCheck !== undefined) {
+            let checkRes = additionalCheck(parsed)
+            if (checkRes) throw new Error()
+  
           }
         }
-      });
-
-      let authFaild = false
-      try {
-        // to check authentification
-        await octokit.users.getAuthenticated()
-      }
-      catch(e) {
-        authFaild = true
-        if (e.message !== "Bad credentials") error("Unknown error while authenticating.")
-      }
-
-      
-
-      
-      if (authFaild) {
-        delete options.githubPassword
-        ls.inject(recursiveGithubAuthCheck, injectIndex)
-        injectIndex++
-        return {name: "githubPassword", message: "Github auth faild. Github Password", type: "password", mask: true}
-      }
-      else {
-        options.authedOctokit = octokit
-      }
+        catch(e) {
+          if (!e.message) return {name, message: "Invalid list"}
+          else return {name, message: "Invalid list: " + e.message}
+        }
   
-    }
-  })();
+        options[name] = parsed
+      })
+    };
   
   
-
-  let recursiveCheckJSONOf = (name: string, injectIndex: number, message: string = "This is not valid JSON", additionalCheck?: (parsed: any) => boolean, additionalPostParsing?: (parsed: any) => any) => {
-    return () => {
-      let isOK = false
-      let parsed: GenericObject
-      try {
-        let got = options[name]
-        if (!got.includes("{") && !got.includes("}") && !got.includes("[") && !got.includes("]")) {
-          if (got.substring(0, 1) !== "\"" && got.substring(got.length-1) !== "\"") got = "\"" + got + "\""
-        } 
-
-
-        parsed = JSON.parse(got)
-        if (additionalCheck !== undefined) if (additionalCheck(parsed)) isOK = true
-      }
-      catch(e) {}
-
-
-
-      if (!isOK) {
-        delete options[name]
-        ls.inject(recursiveCheckName, injectIndex)
-        injectIndex++
-        return {name, message}
-      }
-      else {
-        if (additionalPostParsing !== undefined) options[name] = JSON.stringify(additionalPostParsing(options[name]))
-      }
+    let recursiveCheckKeywords = recursiveCheckList("keywords")
+    let recursiveCheckDependencies = recursiveCheckList("dependencies")
   
-    }
-  };
-
-
-  function recursiveCheckJSONStringArrayOf(name: string, indjectIndex: number, message = "Invalid. Must be JSON string array or a string") {
-    return recursiveCheckJSONOf(name, indjectIndex, message, (parsed) => {
-      if (!(parsed instanceof Array)) {
-        if (typeof parsed === "string") return true
-        return false
-      }
-      for (let i = 0; i < parsed.length; i++) {
-        const elem = parsed[i];
-        if (typeof elem !== "string") return false
-      }
-
-      return true;
-    }, (parsed) => {
-      if (!(parsed instanceof Array) && typeof parsed === "string") return [parsed]
-      return parsed
-    })
-  }
-
-  let recursiveCheckKeywords = recursiveCheckJSONStringArrayOf("keywords", 5)
-  let recursiveCheckDependencies = recursiveCheckJSONStringArrayOf("dependencies", 7)
-
+  
+    
+  
+    let ls = [
+      () => {return {name: "name", message: "Project Name", default: path.basename(options.destination)}},
+      recursiveCheckName,
+      {name: "description", message: "Description"},
+      () => {
+        let def = ""
+        camelCaseToDash(options.name).split(/-|_/).ea((e) => {
+          def += e + ", "
+        })
+        def = def.substr(0, def.length-2)
+        
+        return {name: "keywords", message: "Optional: Keywords", default: def}
+      },
+      recursiveCheckKeywords,
+      {name: "dependencies", message: "Optional: Dependencies"},
+      recursiveCheckDependencies,
+      {name: "author", message: "Author", default: defaults.author},
+      () => {
+        return {name: "githubUsername", message: "Github Username", default: defaults.githubUsername || camelCase(options.author) || undefined}
+      },
+      {name: "githubPassword", message: "Optional: Github Password", type: "password", mask: true},
+      recursiveGithubAuthCheck,
+      () => {if (options.githubPassword !== "") return {name: "public", message: "Create as public repo", type: "confirm"}}
+    ]
+    return ls
+  })
 
   
-
-  let ls = [
-    () => {return {name: "name", message: "Project Name", default: path.basename(options.destination)}},
-    recursiveCheckName,
-    {name: "description", message: "Description"},
-    () => {return {name: "keywords", message: "Keywords as json Array", default: " " + JSON.stringify(camelCaseToDash(options.name).split(/-|_/)) + " "}},
-    recursiveCheckKeywords,
-    {name: "dependencies", message: "Dependencies as json Array", default: " [\"xrray\"] "},
-    recursiveCheckDependencies,
-    {name: "author", message: "Author", default: defaults.author},
-    {name: "githubUsername", message: "Github Username", default: defaults.githubUsername},
-    {name: "githubPassword", message: "Github Password (to neglect github sync press ENTER)", type: "password", mask: true},
-    recursiveGithubAuthCheck,
-    () => {if (options.githubPassword !== "") return {name: "public", message: "Create as public repo", type: "confirm"}},
-    async () => {
-      let optionsWithoutSensitiveInformations = JSON.parse(JSON.stringify(options))
-
-      delete optionsWithoutSensitiveInformations.githubPassword
-      await serialize.write(options)
-    }
-  ]
-
-  return ls
 }
