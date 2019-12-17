@@ -1,7 +1,7 @@
 //Copy this to your global.d.ts if you attatch this to Array.
 //When not change Array to the given constrctor (and copy it to the used file)
 
-interface Array<T> {
+interface Array<T> extends Xrray.innerExtention<T> {
 	/**
 	 * True if empty
 	 */
@@ -9,11 +9,11 @@ interface Array<T> {
 	/**
 	 * Last element
 	 */
-	readonly last: T;
+	last: T;
 	/**
 	 * First element
 	 */
-	readonly first: T;
+	first: T;
 	/**
 	 * length without empty slots
 	 */
@@ -241,33 +241,29 @@ interface Array<T> {
 	 * Finds the closest element of an numeric array to given to
 	 */
 	nearest: T extends number ? (to: number) => number : typeof undefined
-}
-
-interface IndexOutOfBoundsException extends Exception {
-	index: number;
-	array: any[];
-}
-
-interface InvalidInputException extends Exception {
+	
 
 }
 
-interface InvalidConstructorException extends Exception {
+declare namespace Xrray {
+	export interface innerExtention<T>{
+		/*
+		 * Steps into step of all entries
+		 */
+		inner<Key extends keyof T, Val = T[Key]>(step: UnionToIntersection<Key>): Val
+		/*
+		 * Steps into step of all entries
+		 */
+		Inner<Key extends keyof T, Val = T[Key]>(step: UnionToIntersection<Key>): Val
+	}
 
+	//https://stackoverflow.com/a/50375286/10226440
+	type UnionToIntersection<U> = 
+  (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
 }
-
-interface InvalidValueException extends Exception {
-	value: any;
-	array: any[];
-}
-
-interface Exception extends Error {
-	message: string;
-}
-
-
 
 
 type Options = {destination: string, [key: string]: any}
 
 type GenericObject<T = any> = {[key: string]: T}
+

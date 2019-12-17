@@ -31,6 +31,7 @@
   "dependencies": {
     "@octokit/rest": "^16.35.0",
     "chalk": "^3.0.0",
+    "change-case": "^4.1.0",
     "dash-camelcase": "^1.0.1",
     "del": "^5.1.0",
     "delay": "^4.3.0",
@@ -46,7 +47,7 @@
     "recursive-copy": "^2.0.10",
     "shelljs": "^0.8.3",
     "then-fs": "^2.0.0",
-    "xrray": "^4.0.4",
+    "xrray": "^4.2.0",
     "yargs": "^15.0.2"
   }
 }
