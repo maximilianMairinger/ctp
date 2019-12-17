@@ -22,7 +22,7 @@ export function log(...msg: any[]) {
 }
 
 export function warn(...msg: any[]) {
-  go(0, "Warn", "warn", "yellow", msg)
+  go(0, "Warning", "warn", "yellow", msg)
 }
 
 export function error(...msg: any[]) {
@@ -36,7 +36,6 @@ export function error(...msg: any[]) {
     else n.add(m)
   })
   go(1, "Error", "error", "red", n)
-
   if (testEnv) go(1, "Error", "error", "red", err)
 }
 
