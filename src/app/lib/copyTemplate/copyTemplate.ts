@@ -20,7 +20,7 @@ export default async function(which: string, destination: string) {
   let ls = await fs.readdir(resDir)
   if (ls.includes(which)) {
     let from = path.join(resDir, which)
-    await copy(from, destination)
+    await copy(from, destination, {dot: true})
   }
   else throw "Trying to copy invalid template: \"" + which + "\". Cannot be found within " + ls.toString()
 }
