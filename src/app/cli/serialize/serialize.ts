@@ -131,8 +131,6 @@ declare module "./serialize" {
 const extention = ".json"
 let serProto = Serialize.prototype
 initThenCall(init, async function write(ob: any) {  
-  console.log("writing", ob);
-  
   await fs.writeFile(path.join(dir, this.fileName + extention), JSON.stringify(ob, undefined, "  "))
 }, serProto)
 
