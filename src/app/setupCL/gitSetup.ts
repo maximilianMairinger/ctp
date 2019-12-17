@@ -1,7 +1,7 @@
 import exec, { check } from "./shell"
 import * as Octokit from "@octokit/rest"
 import req from "./../cli/inquery/inq"
-import { info, log } from "../lib/logger/logger"
+import { info, log, warn } from "../lib/logger/logger"
 
 
 export default async function(options: Options) {
@@ -12,39 +12,44 @@ export default async function(options: Options) {
   exec("git remote add origin https://github.com/" + options.githubUsername + "/" + options.name + ".git")
   
 
+  if (options.authedOctokit !== undefined) {
+    let { authedOctokit: octokit } = options
+    try {
+      info("Publishing repo")
+    
+      await octokit.repos.createForAuthenticatedUser({
+        name: options.name,
+        description: options.description,
+        private: !options.public,
+        homepage: "https://www.npmjs.com/package/" + options.nameAsDashCase
+      })
 
-  if (options.githubPassword !== "") {
+      try {
+        info("Setting topics")
 
-
-    let octokit = new Octokit({
-      auth: {
-        username: options.githubUsername,
-        password: options.githubPassword,
-        async on2fa() {
-          return req({name: "2fa", message: "Two-factor authentication Code"});
-        }
+        await octokit.repos.replaceTopics({
+          owner: options.githubUsername,
+          repo: options.name,
+          names: options.keywords
+        })
+      
+        
       }
-    });
-  
-  
-    info("Publishing Repo...")
-  
-    await octokit.repos.createForAuthenticatedUser({
-      name: options.name,
-      description: options.description,
-      private: !options.public,
-      homepage: "https://www.npmjs.com/package/" + options.nameAsDashCase
-    })
-  
-    await octokit.repos.replaceTopics({
-      owner: options.githubUsername,
-      repo: options.name,
-      names: options.keywords
-    })
-  
-  
-    exec("git push -u origin master")
-  }
+      catch(e) {
+        warn("Failed to set topics because:")
+        warn(e)
+      }
 
+
+      exec("git push -u origin master")
+    }
+    catch(e) {
+      warn("Faild to publish repo because:")
+      warn(e)
+    }
+    
+    
+  }
+  else info("Skipping github sync. No valid authentication method available.")
   
 }

@@ -1,4 +1,3 @@
-import { promises as fs } from "fs"
 
 
 const keysIdentifier: {start: string, end: string}[] = [
