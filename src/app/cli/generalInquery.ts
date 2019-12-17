@@ -1,7 +1,7 @@
 import { promises as fs } from "fs"
 import * as path from "path"
 import { camelCaseToDash } from "dash-camelcase"
-import npmNameValid from "npm-name"
+import isNpmNameValid from "npm-name"
 import * as Octokit from "@octokit/rest"
 import inq from "./inquery/inq"
 import { log, error, warn } from "./../lib/logger/logger"
@@ -24,14 +24,18 @@ export default async function(options: Options) {
     
         
         let npmName = camelCaseToDash(options.name)
-        let npmNameisValid: any
-        try {
-          npmNameisValid = !await npmNameValid(npmName)
+        let npmNameisValid: boolean = false
+        if (npmName === projectFolderName) npmNameisValid = await projectFolderNameIsValidNpmName
+        else {
+          try {
+            npmNameisValid = await isNpmNameValid(npmName)
+          }
+          catch(e) {
+            warn("Unable to check if npm package is taken")
+          }
         }
-        catch(e) {
-          warn("Unable to check if npm package is taken")
-        }
-        if (npmNameisValid) {
+        
+        if (!npmNameisValid) {
           delete options.name
           ls.inject(recursiveCheckName, injectIndex)
           injectIndex++
@@ -141,10 +145,13 @@ export default async function(options: Options) {
     let recursiveCheckDependencies = recursiveCheckList("dependencies")
   
   
-    
+    let projectFolderName = camelCaseToDash(path.basename(options.destination))
+
+    let projectFolderNameIsValidNpmName = isNpmNameValid(projectFolderName)
+
   
     let ls = [
-      () => {return {name: "name", message: "Project Name", default: path.basename(options.destination)}},
+      () => {return {name: "name", message: "Project Name", default: projectFolderName}},
       recursiveCheckName,
       {name: "description", message: "Description"},
       () => {
