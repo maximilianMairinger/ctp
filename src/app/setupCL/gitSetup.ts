@@ -36,8 +36,7 @@ export default async function(options: Options) {
         
       }
       catch(e) {
-        warn("Failed to set topics because:")
-        warn(e)
+        warn("Failed to set topics")
       }
 
 
@@ -45,7 +44,6 @@ export default async function(options: Options) {
     }
     catch(e) {
       warn("Faild to publish repo because:")
-      warn(e)
     }
     
     
