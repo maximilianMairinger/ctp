@@ -2,7 +2,7 @@
 
 Select an template type, answere simple setup questions, start working!
 
- > WARNING: THIS PROJECT IS STILL UNDER HEAVY DEVELOPMENT, AND NOT PROPERLY TESTED YET.
+> Please not that Create typescript project is currently under development and not yet suited for production
 
 ## Get started
 
