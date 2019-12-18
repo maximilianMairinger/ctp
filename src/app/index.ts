@@ -33,6 +33,12 @@ let projectIndex: {[projectKind: string]: {project: (options: Options) => Promis
 
 
 export default async function(projectKind: string = "module", options: Options) {
+  if (options.__projectKind === undefined) options.__projectKind = projectKind
+  else {
+    error("Invalid option \"__projectKind\" given. This is a reserved keyword.")
+    error("Aborting")
+    return
+  }
   let projectName = alias[projectKind]
   if (projectName === undefined) {
     error("Unknown project \"" + projectKind + "\". Did you mean: ... ?")
