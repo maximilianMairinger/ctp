@@ -24,7 +24,7 @@ export default async function(options: Options) {
         
         let npmName = camelCaseToDash(options.name)
         let npmNameisValid: boolean = false
-        if (npmName === projectFolderName) npmNameisValid = await projectFolderNameIsValidNpmName
+        if (npmName === projectFolderNpmName) npmNameisValid = await projectFolderNameIsValidNpmName
         else {
           try {
             npmNameisValid = await isNpmNameValid(npmName)
@@ -144,9 +144,10 @@ export default async function(options: Options) {
     let recursiveCheckDependencies = recursiveCheckList("dependencies")
   
   
-    let projectFolderName = camelCaseToDash(path.basename(options.destination))
+    let projectFolderName = path.basename(options.destination)
+    let projectFolderNpmName = camelCaseToDash(projectFolderName)
 
-    let projectFolderNameIsValidNpmName = isNpmNameValid(projectFolderName)
+    let projectFolderNameIsValidNpmName = isNpmNameValid(projectFolderNpmName)
 
   
     let ls = [
