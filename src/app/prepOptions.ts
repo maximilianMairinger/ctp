@@ -19,6 +19,9 @@ export default function(options: Options) {
 
   options.destination = path.resolve(options.destination)
 
+  let lastCharOfDescription = options.description.charAt(options.destination.length-1)
+  if (lastCharOfDescription !== "." && lastCharOfDescription !== " ") options.description += "." 
+
   options.keywords.ea((e, i) => {
     options.keywords[i] = e.toLowerCase()
   })
