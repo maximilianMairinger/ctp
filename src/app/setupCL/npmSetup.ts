@@ -7,4 +7,6 @@ export default function(options: Options) {
   options.dependencies.ea((dependency) => {
     exec("npm i " + dependency)
   })
+
+  exec("npm publish")
 }
