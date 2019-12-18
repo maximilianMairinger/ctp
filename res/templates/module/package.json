@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc -p ./tsconfig.prod.json",
     "dev": "webpack --config webpack.dev.config.js",
-    "deploy": "npm run build && npm publish"
+    "deploy": "npm run build && npm publish",
+    "test": "node ./test/dist/test-bundle"
   },
   "repository": {
     "type": "git",
