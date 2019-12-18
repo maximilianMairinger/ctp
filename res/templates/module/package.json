@@ -1,6 +1,6 @@
 {
   "name": "${nameAsDashCase}",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "${description}",
   "main": "app/dist/${name}.js",
   "types": "app/dist/${name}.d.ts",
