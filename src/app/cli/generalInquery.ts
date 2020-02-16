@@ -111,7 +111,10 @@ export default async function(options: Options) {
         try {
           let got: string = options[name]
           if (got === "") parsed = []
-          else parsed = got.split(" ").join("").split(",")
+          else {
+            if (got.includes(",")) parsed = got.split(" ").join("").split(",")
+            else parsed = got.split(" ")
+          }
   
           
           parsed.ea((e) => {
