@@ -71,25 +71,20 @@ export default async function(projectKind: string = "module", options: Options) 
     if (project.shema) await testShema(project.shema, options, projectName)
     prepOptions(options)
 
-
+    info("Copying template \"" + projectName + "\".")
     await copyTemplate(projectName, options.destination)
     await project.project(options)
 
     setShellDestination(path.resolve(options.destination))
     info("Executing the following shell command:")
     try {
+      await gitSetup(options)
       await npmSetup(options)
     }
     catch(e) {
       traceLog(e)
     }
 
-    try {
-      await gitSetup(options)
-    }
-    catch(e) {
-      traceLog(e)
-    }
     
     info("")
     info("")
