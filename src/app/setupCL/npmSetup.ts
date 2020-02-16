@@ -8,5 +8,5 @@ export default function(options: Options) {
     exec("npm i " + dependency)
   })
 
-  exec("npm publish")
+  if (options.public) exec("npm publish")
 }

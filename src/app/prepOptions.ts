@@ -12,7 +12,7 @@ export default function(options: Options) {
   let cam = camelCaseToDash(options.name)
   f("nameAsDashCase", cam)
 
-  let nameWs = cam.split("-").join(" ")
+  let nameWs = cam.split("-").join("_").split("_").join(" ")
   nameWs = nameWs.charAt(0).toUpperCase() + nameWs.substr(1)
   f("nameWithSpaces", nameWs)
 
@@ -30,11 +30,13 @@ export default function(options: Options) {
 
   let dependencyImports = ""
   options.dependencies.ea((e) => {
-    if (e !== "xrray") dependencyImports += "import " + cc.camelCase(e) + " from " + e + "\n"
-    else dependencyImports += "require(\"xrray\")(Array)\n"
+    dependencyImports += "import " + cc.camelCase(e) + " from " + e + "\n"
   })
 
   f("dependencyImports", dependencyImports)
+
+
+  if (!options.githubPassword) options.public = false
 }
 
 
