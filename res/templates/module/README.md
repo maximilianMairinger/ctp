@@ -16,6 +16,6 @@ ${name}()
 
 
 
-## Conribute
+## Contribute
 
 All feedback is appreciated. Create a pull request or write an issue.
