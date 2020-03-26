@@ -30,7 +30,7 @@ export default function(options: Options) {
 
   let dependencyImports = ""
   options.dependencies.ea((e) => {
-    dependencyImports += "import " + cc.camelCase(e) + " from " + e + "\n"
+    dependencyImports += "import " + cc.camelCase(e) + " from \"" + e + "\"\n"
   })
 
   f("dependencyImports", dependencyImports)
