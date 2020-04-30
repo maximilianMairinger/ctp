@@ -1,18 +1,9 @@
-import { info, log, warn } from "./../../lib/logger/logger"
-import replaceDir from "./../../lib/replaceDir/replaceDir"
-import setupAt from "./../../lib/at/at"
+import npmSetup from "../../setupCL/npmSetup"
 
-
-
-
+export * from "./shema"
 
 export default async function(options: Options) {
-  let at = setupAt(options.destination)
-
-  await replaceDir(at, options)
-
-
-
+  await npmSetup(options)
 }
 
 

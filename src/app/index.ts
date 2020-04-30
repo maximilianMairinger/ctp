@@ -6,10 +6,11 @@ import { Validator as JsonValidator } from "jsonschema"
 import copyTemplate from "./lib/copyTemplate/copyTemplate"
 import { performance } from 'perf_hooks';
 import prepOptions from "./prepOptions"
-import npmSetup from "./setupCL/npmSetup"
 import gitSetup from "./setupCL/gitSetup"
 import { setDestination as setShellDestination } from "./setupCL/shell"
 import * as path from "path"
+import replaceDir from "./lib/replaceDir/replaceDir"
+import at from "./lib/at/at"
 
 let jsonValidator = new JsonValidator()
 
@@ -22,13 +23,9 @@ export function wrapErrors(to: boolean) {
 
 type Shema = ((options: Options) => Promise<void | boolean> | void | boolean) | GenericObject
 
-let projectIndex: {[projectKind: string]: {project: (options: Options) => Promise<void>, shema?: Shema}} = {
-  module: {
-    project: require("./project/module/module").default,
-    //shema:   require("./project/module/optionsShema").default
-  },
-
-
+let projectIndex: {[projectKind: string]: {default: (options: Options) => Promise<void>, shema?: Shema}} = {
+  module: require("./project/module/module"),
+  app: require("./project/app/app")
 }
 
 
@@ -70,20 +67,28 @@ export default async function(projectKind: string = "module", options: Options) 
   try {
     if (project.shema) await testShema(project.shema, options, projectName)
     prepOptions(options)
+        
+    
+
+    
 
     info("Copying template \"" + projectName + "\".")
     await copyTemplate(projectName, options.destination)
-    await project.project(options)
+    await replaceDir(at(options.destination), options)
 
+
+    info("Executing in shell:")
     setShellDestination(path.resolve(options.destination))
-    info("Executing the following shell command:")
-    try {
-      await gitSetup(options)
-      await npmSetup(options)
-    }
-    catch(e) {
-      traceLog(e)
-    }
+    await gitSetup(options)
+
+    info("")
+    info("-------------")
+    info("")
+
+    await project.default(options)
+
+    
+
 
     
     info("")
@@ -97,7 +102,7 @@ export default async function(projectKind: string = "module", options: Options) 
 }
 
 function setupTrace(projectKind: string, startTime: number, func: Function = error) {
-  return function printError(e: any, exit: boolean = false) {
+  return function print(e: any, exit: boolean = false) {
     if (wrapErr) {
       if (e instanceof Error && e.message === undefined) e.message = "Unknown"
   

@@ -1,6 +1,4 @@
-export default {
-  
-}
+export default undefined
 
 
 
