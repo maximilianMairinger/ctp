@@ -1,0 +1,25 @@
+name: CD
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+
+  CD:
+    runs-on: ubuntu-latest
+
+    steps: 
+    - uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        script: |
+          cd /var/www/html/labauth.maximilian.mairinger.com
+          git pull
+          source ~/.nvm/nvm.sh
+          nvm use 14.0.0
+          pm2 reload ecosystem.config.js

@@ -1,5 +1,6 @@
 ./test
-
+./repl
+src
 
 
 ./tsconfig.prod.json

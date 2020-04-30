@@ -1,0 +1,28 @@
+{
+	"dir" : "ltr",
+	"lang" : "English",
+	"name" : "${nameWithSapces}",
+	"scope" : "/",
+	"start_url": "/",
+
+	"display" : "standalone",
+	"short_name" : "LA",
+	"theme_color" : "white",
+	"description" : "LabAuth is a registration tool for the lab on the TGM",
+	"orientation" : "landscape",
+	"background_color" : "white",
+	"icons" : [
+		{
+			"src": "./res/img/labAuth_logo_180x180.png",
+			"sizes": "180x180",
+			"type": "image/png"
+		},
+		{
+			"src": "./res/img/labAuth_logo_1000x1000.png",
+			"sizes": "1000x1000",
+			"type": "image/png"
+		}		
+	],
+	"screenshots" : [],
+	"generated" : "true"
+}
