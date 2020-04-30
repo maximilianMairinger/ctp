@@ -1,6 +1,6 @@
 import exec, { check } from "./shell"
 
-export default function(options: Options) {
+export default async function(options: Options) {
   check("npm")
   
   exec("npm i")

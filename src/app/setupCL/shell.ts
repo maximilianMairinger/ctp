@@ -9,7 +9,7 @@ export function setDestination(destination: string) {
 }
 
 export function check(program: string) {
-  if (!shell.which(program)) throw "Unable to use " + program + ". All commands relyent on this programm will not be executed."
+  if (!shell.which(program)) throw "Unable to use " + program + ". All commands reliant on this programm will not be executed."
 }
 
 export default function(cmd: string) {
