@@ -11,7 +11,7 @@ export const pre = (options) => {
   let projectFolderName = path.basename(options.destination)
   
   return [
-    () => {return {name: "name", message: "Project Name (camelCase)", default: projectFolderName}},
+    {name: "name", message: "Project Name (camelCase)", default: projectFolderName}
   ]
 }
 

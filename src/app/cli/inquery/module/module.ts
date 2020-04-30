@@ -46,7 +46,7 @@ export const pre = (options: any) => {
 
 
     ls.add(
-      () => {return {name: "name", message: "Project Name (camelCase)", default: projectFolderName}},
+      {name: "name", message: "Project Name (camelCase)", default: projectFolderName},
       recursiveCheckNpmName,
     )
 

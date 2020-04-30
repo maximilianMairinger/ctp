@@ -84,9 +84,7 @@ export default async function(options: Options) {
       {name: "dependencies", message: "Optional: Dependencies"},
       recursiveCheckDependencies,
       {name: "author", message: "Author", default: defaults.author},
-      () => {
-        return {name: "githubUsername", message: "Github Username", default: defaults.githubUsername || camelCase(options.author) || undefined}
-      },
+      {name: "githubUsername", message: "Github Username", default: defaults.githubUsername || camelCase(options.author) || undefined},
       {name: "githubPassword", message: "Optional: Github Password", type: "password", mask: true},
       recursiveGithubAuthCheck,
       () => {if (options.githubPassword !== "") return {name: "public", message: "Create as public repo", type: "confirm"}}
