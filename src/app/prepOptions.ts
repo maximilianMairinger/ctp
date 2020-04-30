@@ -6,11 +6,13 @@ import * as cc from "change-case"
 
 export default function init(o: Options): void {
   const index = {
-    name: () => dashToCamelCase(o.name),
-    nameAsDashCase: () => camelCaseToDash(o.name),
-    nameWithSpaces: () => {
+    name: () => {
+      let name = dashToCamelCase(o.name)
+      o.nameAsDashCase = camelCaseToDash(o.name)
       let nameWs = o.nameAsDashCase.split("-").join("_").split("_").join(" ")
-      return nameWs.charAt(0).toUpperCase() + nameWs.substr(1)
+      o.nameWithSpaces = nameWs.charAt(0).toUpperCase() + nameWs.substr(1)
+      o.nameAsHumanized = o.nameWithSpaces
+      return name
     },
     destination: () => path.resolve(o.destination),
     description: () => {
@@ -28,18 +30,21 @@ export default function init(o: Options): void {
         o.keywords[i] = e.toLowerCase()
       })
     },
-    dependencyImports: () => {
-      let dependencyImports = ""
+    dependencies: () => {
+      o.dependencyImports = ""
       o.dependencies.ea((e) => {
-        dependencyImports += "import " + cc.camelCase(e) + " from \"" + e + "\"\n"
+        o.dependencyImports += "import " + cc.camelCase(e) + " from \"" + e + "\"\n"
       })
-      return dependencyImports
-    },
-    public: () => (!o.githubPassword && o.public === undefined) ? false : o.public
+    }
+  }
+
+  if (!o.githubPassword && o.public === undefined) {
+    o.public = false
   }
 
   for (let k in o) {
-    o[k] = index[k]()
+    let res = index[k]()
+    if (res !== undefined) o[k] = res
   }
 
 }
