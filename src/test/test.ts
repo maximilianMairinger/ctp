@@ -1,7 +1,6 @@
-import { log, info, setVerbose, setTestEnv } from "../app/lib/logger/logger"
+import { setVerbose, setTestEnv } from "../app/lib/logger/logger"
 import main, { wrapErrors } from "../app/index"
 import { promises as fs } from "fs"
-import delay from "delay"
 const destination = "./test_out";
 
 wrapErrors(true);

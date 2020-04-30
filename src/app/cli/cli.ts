@@ -13,6 +13,7 @@ wrapErrors(true);
 
 
 import generalInquery from "./generalInquery"
+import { setOptions } from "./lib/lib"
 
 //@ts-ignore
 let verb: boolean = args.v === undefined && args.verbose === undefined ? true : args.v === undefined ? args.verbose : args.v
@@ -37,13 +38,15 @@ delete options.verbose
 projectKind = alias[projectKind]
 
 let inqueryIndex = {
-  module: require("./inquery/module/module").default
+  module: require("./inquery/module/module")
 };
 
+setOptions(options);
 
 (async () => {
+  options = await inq(inqueryIndex[projectKind].pre, options)
   options = await inq(generalInquery, options)
-  options = await inq(inqueryIndex[projectKind], options)
+  options = await inq(inqueryIndex[projectKind].post, options)
   if (!(await inq({name: "sure", message: "The template will now be generated at \"" + path.resolve(options.destination) + "\". Are you sure?", type: "confirm"}))) {
     return error("Aborting")
   }
