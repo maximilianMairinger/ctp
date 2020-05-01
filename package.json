@@ -45,6 +45,7 @@
     "npm-name": "^6.0.0",
     "recursive-copy": "^2.0.10",
     "shelljs": "^0.8.4",
+    "ssh2-promise": "^0.1.6",
     "then-fs": "^2.0.0",
     "xrray": "^4.6.5",
     "yargs": "^15.3.1"
