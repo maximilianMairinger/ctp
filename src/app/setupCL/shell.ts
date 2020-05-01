@@ -17,8 +17,11 @@ export default function(cmd: string) {
   
   info(cmd)
 
-  if (shell.exec(cmd, {silent: true, fatal: true}).code !== 0) {
+  let res = shell.exec(cmd, {silent: true, fatal: true})
+
+  if (res.code !== 0) {
     warn("Error while executing the following command")
     warn(cmd)
+    warn(res.stderr)
   }
 }
