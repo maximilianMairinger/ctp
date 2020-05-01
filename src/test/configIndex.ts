@@ -13,7 +13,7 @@ export const index = {
     name: "testApp", 
     description: "This is an app description", 
     keywords: ["keyword123", "keyword456"],
-    dependencies: ["tweenSvg"],
+    dependencies: ["tweenSvgPath"],
     author: "Maximilian Mairinger", 
     githubUsername: "maximilianMairinger",
   }
