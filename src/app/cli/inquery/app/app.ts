@@ -10,9 +10,16 @@ import * as path from "path"
 export const pre = (options) => {
   let projectFolderName = path.basename(options.destination)
   
-  return [
-    {name: "name", message: "Project Name (camelCase)", default: projectFolderName}
-  ]
+  return serializeInquery("app", (defaults) => 
+    [
+      {name: "name", message: "Project Name (camelCase)", default: projectFolderName},
+      {name: "remote", message: "Remote server ip", default: defaults.remote},
+      {name: "remoteUser", message: "Remote username", default: defaults.remoteUser},
+      {name: "remoteSSHKeyPath", message: "Remote ssh key path", default: defaults.remoteSSHKeyPath},
+      {name: "isRemoteSSHKeyEncrypted", message: "Is it encrypted via passphrase?", type: "confirm", default: defaults.isRemoteSSHKeyEncrypted},
+      () => options.isRemoteSSHKeyEncrypted ? {name: "remoteSSHKeyPassphrase", message: "Passphrase for remote ssh key"} : undefined
+    ]
+  , ["remoteSSHKeyPassphrase"])
 }
 
 export const post = [
