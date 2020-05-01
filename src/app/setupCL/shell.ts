@@ -20,8 +20,8 @@ export default function(cmd: string) {
   let res = shell.exec(cmd, {silent: true, fatal: true})
 
   if (res.code !== 0) {
-    warn("Error while executing the following command")
-    warn(cmd)
-    warn(res.stderr)
+    warn("Error while executing the command above")
+    info("Stacktrace:")
+    info(res.stderr)
   }
 }
