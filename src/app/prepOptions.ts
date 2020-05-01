@@ -12,6 +12,11 @@ export default function init(o: Options): void {
       let nameWs = o.nameAsDashCase.split("-").join("_").split("_").join(" ")
       o.nameWithSpaces = nameWs.charAt(0).toUpperCase() + nameWs.substr(1)
       o.nameAsHumanized = o.nameWithSpaces
+      o.nameAsShort = ""
+      o.nameWithSpaces.split(" ").ea((e) => {
+        o.nameAsShort += e[0]
+      })
+      o.nameAsShort = o.nameAsShort.toUpperCase()
       return name
     },
     destination: () => path.resolve(o.destination),
