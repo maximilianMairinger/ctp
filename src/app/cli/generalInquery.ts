@@ -1,6 +1,6 @@
 import * as path from "path"
 import { camelCaseToDash } from "dash-camelcase"
-import * as Octokit from "@octokit/rest"
+import { Octokit } from "@octokit/rest"
 import inq from "./inquery/inq"
 import { error, warn } from "./../lib/logger/logger"
 import { camelCase } from "change-case"
