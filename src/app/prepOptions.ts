@@ -26,9 +26,12 @@ export default function init(o: Options): void {
       return lastCharOfDescription !== "." ? desc + "." : desc
     },
     keywords: () => {
+      //@ts-ignore
+      (o.keywords as string[]).inner("toLowerCase", [])
       o.keywords.ea((e, i) => {
         o.keywords[i] = e.toLowerCase()
       })
+      o.keywordsAsJSON = JSON.stringify(o.keywords, undefined, "  ")
     },
     dependencies: () => {
       o.dependencyImports = ""

@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/${githubUsername}/${name}.git"
   },
-  "keywords": $<exec-code>return JSON.stringify(keywords, undefined, "  ")$</exec-code>,
+  "keywords": ${keywordsAsJSON},
   "author": "${author}",
   "license": "ISC",
   "bugs": {
