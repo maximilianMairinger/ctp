@@ -51,7 +51,7 @@ export default function interpolate (source: string, replaceIndex: {[key in stri
     let start = localStart + a
 
     if (localStart === -1) break
-    if (source[start-1] === escapeCharSeq) {
+    if (source[localStart-1] === escapeCharSeq) {
       res = spliceString(res, start, 1, "")
       source = source.substr(localStart + 1)
       a = start
