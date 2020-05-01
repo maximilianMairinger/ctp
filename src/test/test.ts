@@ -3,7 +3,9 @@ import main, { wrapErrors } from "../app/index"
 import { promises as fs } from "fs"
 const destination = "./test_out";
 
-wrapErrors(true);
+
+if (!process.env.CI) wrapErrors(true);
+
 
 
 (async () => {
