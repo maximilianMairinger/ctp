@@ -23,32 +23,30 @@
   "devDependencies": {
     "@types/inquirer": "^6.5.0",
     "@types/node": "^12.6.9",
-    "@types/npm-name": "^5.2.1",
     "@types/shelljs": "^0.8.6",
     "@types/yargs": "^13.0.3",
     "typescript": "^3.5.2"
   },
   "dependencies": {
-    "@octokit/rest": "^16.35.0",
-    "chalk": "^3.0.0",
+    "@octokit/rest": "^17.6.0",
+    "chalk": "^4.0.0",
     "change-case": "^4.1.0",
     "dash-camelcase": "^1.0.1",
     "del": "^5.1.0",
     "delay": "^4.3.0",
     "fs-then-native": "^2.0.0",
-    "inquirer": "^7.0.0",
+    "inquirer": "^7.1.0",
     "install": "^0.13.0",
-    "jsonschema": "^1.2.4",
+    "jsonschema": "^1.2.6",
     "leven": "^3.1.0",
-    "licofi": "^1.0.1",
+    "licofi": "^1.1.2",
     "merge-options": "^2.0.0",
     "mixin-deep": "^2.0.1",
-    "npm": "^6.13.1",
-    "npm-name": "^5.5.0",
+    "npm-name": "^6.0.0",
     "recursive-copy": "^2.0.10",
-    "shelljs": "^0.8.3",
+    "shelljs": "^0.8.4",
     "then-fs": "^2.0.0",
-    "xrray": "^4.2.0",
-    "yargs": "^15.0.2"
+    "xrray": "^4.6.5",
+    "yargs": "^15.3.1"
   }
 }
