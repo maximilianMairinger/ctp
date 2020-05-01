@@ -13,12 +13,12 @@ jobs:
     steps: 
     - uses: appleboy/ssh-action@master
       with: 
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        passphrase: ${{ secrets.PASSPHRASE }}
+        host: $${{ secrets.HOST }}
+        username: $${{ secrets.USERNAME }}
+        key: $${{ secrets.KEY }}
+        passphrase: $${{ secrets.PASSPHRASE }}
         script: |
-          cd /var/www/html/labauth.maximilian.mairinger.com
+          cd /var/www/html/${name}.${domain}
           git pull
           source ~/.nvm/nvm.sh
           nvm use 14.0.0

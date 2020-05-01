@@ -19,9 +19,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Logfro/labRegistrationFrontend.git"
+    "url": "git+https://github.com/${githubUsername}/${name}.git"
   },
-  "author": "Maximilian Mairinger",
+  "author": "${author}",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-json": "^4.0.3",
@@ -71,7 +71,6 @@
     "yargs": "^15.3.1"
   },
   "dependencies": {
-    "extended-dom": "^3.1.9",
-    "xrray": "^4.6.5"
+    "extended-dom": "^3.1.9"
   }
 }
