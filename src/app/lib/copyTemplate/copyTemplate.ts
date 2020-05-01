@@ -2,7 +2,7 @@ import * as path from "path"
 import { promises as fs } from "fs"
 import { log } from "../logger/logger"
 import fileExists from "../fileExists/fileExists"
-import * as copy from "recursive-copy"
+import copy from "recursive-copy"
 
 let resDir = path.join(__dirname, "../../../../res/templates")
 

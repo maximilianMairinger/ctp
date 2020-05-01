@@ -1,5 +1,5 @@
 import npmSetup from "../../setupCL/npmSetup"
-import * as SSH from "ssh2-promise"
+import SSH from "ssh2-promise"
 
 export * from "./schema"
 

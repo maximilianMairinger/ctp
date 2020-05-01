@@ -1,6 +1,6 @@
 import { setVerbose, setTestEnv } from "../app/lib/logger/logger"
 import main, { wrapErrors } from "../app/index"
-import * as del from "del"
+import del from "del"
 import { index as configIndex } from "./configIndex"
 import * as yargs from "yargs"
 import * as path from "path"
