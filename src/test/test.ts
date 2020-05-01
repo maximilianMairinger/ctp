@@ -7,23 +7,27 @@ const destination = "./test_out";
 if (!process.env.CI) wrapErrors(true);
 
 
-
-(async () => {
-  setVerbose(true)
-  setTestEnv(true)
-  await fs.rmdir(destination, { recursive: true })
+try {
+  (async () => {
+    setVerbose(true)
+    setTestEnv(true)
+    await fs.rmdir(destination, { recursive: true })
+    
   
-
-  await main("module", {
-    destination, 
-    name: "testName", 
-    description: "desc", 
-    keywords: ["keyword1", "keyword2"],
-    dependencies: ["xrray", "animation-frame-delta"],
-    author: "Maximilian Mairinger", 
-    githubUsername: "maximilianMairinger",
-  })
-
+    await main("module", {
+      destination, 
+      name: "testName", 
+      description: "desc", 
+      keywords: ["keyword1", "keyword2"],
+      dependencies: ["xrray", "animation-frame-delta"],
+      author: "Maximilian Mairinger", 
+      githubUsername: "maximilianMairinger",
+    })
   
-
-})()
+    
+  
+  })()
+}
+catch(e) {
+  throw e
+}
