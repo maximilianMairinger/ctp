@@ -1,7 +1,8 @@
 import { setVerbose, setTestEnv } from "../app/lib/logger/logger"
 import main, { wrapErrors } from "../app/index"
-import { promises as fs } from "fs"
+import * as del from "del"
 const destination = "./test_out";
+import * as path from "path"
 
 
 if (!process.env.CI) wrapErrors(true);
@@ -11,7 +12,7 @@ try {
   (async () => {
     setVerbose(true)
     setTestEnv(true)
-    await fs.rmdir(destination, { recursive: true })
+    await del(destination)
     
   
     await main("module", {
@@ -29,5 +30,6 @@ try {
   })()
 }
 catch(e) {
+  console.log()
   throw e
 }

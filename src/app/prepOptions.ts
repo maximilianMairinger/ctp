@@ -46,8 +46,13 @@ export default function init(o: Options): void {
   }
 
   for (let k in o) {
-    let res = index[k]()
-    if (res !== undefined) o[k] = res
+    let f = index[k]
+    if (f !== undefined) {
+      let res = index[k]()
+      if (res !== undefined) o[k] = res
+    }
+    
+    
   }
 
 }
