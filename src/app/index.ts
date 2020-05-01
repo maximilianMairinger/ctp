@@ -9,7 +9,7 @@ import prepOptions from "./prepOptions"
 import gitSetup from "./setupCL/gitSetup"
 import { setDestination as setShellDestination } from "./setupCL/shell"
 import * as path from "path"
-import replaceDir from "./lib/replaceDir/replaceDir"
+import replaceDir from "./lib/interpolateDir/interpolateDir"
 import at from "./lib/at/at"
 
 let jsonValidator = new JsonValidator()

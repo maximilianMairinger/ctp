@@ -1,6 +1,6 @@
 import { promises as fs } from "fs"
-import replace from "../replace/replace"
-import replaceFromFile from "../refactorFile/refactorFile"
+import replace from "../interpolate/interpolate"
+import replaceFromFile from "../refactorFile/interpolateFile"
 import setupAt from "../at/at"
 
 export default async function replaceDir(at: (path: string) => string, options: Options) {
