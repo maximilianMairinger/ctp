@@ -1,12 +1,12 @@
 import exec, { check } from "./shell"
 
-export default async function(options: Options) {
+export default async function(dependencies: string[], publish: boolean = false) {
   check("npm")
   
   exec("npm i")
-  options.dependencies.ea((dependency) => {
+  dependencies.ea((dependency) => {
     exec("npm i " + dependency)
   })
 
-  if (options.public) exec("npm publish")
+  if (publish) exec("npm publish")
 }
