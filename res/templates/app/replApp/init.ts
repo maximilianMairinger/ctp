@@ -8,6 +8,6 @@ let { post, get } = ajaon();
 
 
 (async () => {
-  let res = await post("cardAuth")
+  let res = await post("call")
   console.log(res)
 })()
