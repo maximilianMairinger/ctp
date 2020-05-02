@@ -28,7 +28,7 @@
     "typescript": "^3.5.2"
   },
   "dependencies": {
-    "@octokit/rest": "^17.6.0",
+    "@octokit/rest": "^16.43.1",
     "chalk": "^4.0.0",
     "change-case": "^4.1.0",
     "dash-camelcase": "^1.0.1",
