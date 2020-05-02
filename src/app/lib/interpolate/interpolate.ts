@@ -42,7 +42,11 @@ const closeCharSeq = "}"
 const escapeCharSeq = "$"
 
 
-export default function interpolate (source: string, replaceIndex: {[key in string]: string}) {
+export default function interpolate (source: string, _replaceIndex: {[key in string]: string}) {
+  let replaceIndex = {}
+  for (let key in _replaceIndex) {
+    replaceIndex[key] = _replaceIndex[key] + ""
+  }
   let res = source
   let a = 0
 
