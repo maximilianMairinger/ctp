@@ -1,5 +1,6 @@
 import * as inquirer from "inquirer"
-import * as merge from "mixin-deep";
+
+import * as propOptions from "./../../prepOptions"
 
 type basicQuestion = GenericObject[] | GenericObject
 
@@ -13,10 +14,10 @@ export default async function inq<T = any>(questions: string | Questions | ((opt
   if (typeof questions === "function") {
     //@ts-ignore
     let ans = await questions(options_ignore)
-    if (ans instanceof Array) return await inq(ans, options_ignore)
-    else return ans
+    return await inq(ans, options_ignore)
   }
   else {
+    
     let wasSingle = !(questions instanceof Array)
     if (wasSingle) {
       //@ts-ignore
@@ -39,20 +40,26 @@ export default async function inq<T = any>(questions: string | Questions | ((opt
       options = options_ignore
       ignore = Object.keys(options_ignore)
     }
+
+    let quests = questions as any[]
     
-    //@ts-ignore
-    await questions.ea(async (e, i) => {
+
+    await quests.ea(async (e, i) => {
       if (typeof e === "function") {
 
-        let questions = await e(options)
-        if (questions === undefined) return;
-        await inq(questions, options)
-
-        
+        let newquestions = await e(options)
+        if (newquestions === undefined) return;
+        if (!(newquestions instanceof Array)) newquestions = [newquestions]
+        i++
+        newquestions.ea((q: any) => {
+          quests.inject(q, i)
+          i++
+        })
       }
       else if (!ignore.includes(e.name)) {
-        let inq = await inquirer.prompt([e])
-        merge(options, inq)
+        let ans = await inquirer.prompt([e]) as any
+
+        await propOptions.prep(ans)
       }
     })
 

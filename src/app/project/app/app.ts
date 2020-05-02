@@ -1,5 +1,6 @@
 import npmSetup from "../../setupCL/npmSetup"
 import SSH from "ssh2-promise"
+import { error, info, log } from "../../lib/logger/logger"
 
 export * from "./schema"
 
@@ -7,17 +8,11 @@ export * from "./schema"
 export default async function(options: Options) {
   //await npmSetup(options.dependencies)
 
-  let ssh = new SSH({
-    host: options.remote,
-    username: options.remoteUser,
-    idententy: options.remoteSSHKeyPath,
-    passphrase: options.remoteSSHKeyPassphrase
-  })
-  
+  let ssh = options.remoteSSHClient
 
-  await ssh.connect()
-  let who = ssh.exec("whoami")
-  console.log(who)
+  
+  let who = await ssh.exec("whoami")
+  log(who)
   
 
 

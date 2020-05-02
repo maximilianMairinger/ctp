@@ -1,36 +1,55 @@
 import serializeInquery from "../../serializeInquery";
 import { constructInjectRecursively } from "../../lib/lib";
-import { warn } from "../../../lib/logger/logger";
-import isNpmNameValid from "npm-name"
-import { camelCaseToDash } from "dash-camelcase";
 import * as path from "path"
 
 
 
-export const pre = (options) => {
-  let projectFolderName = path.basename(options.destination)
-  
-  return serializeInquery("app", (defaults) => 
-    [
-      {name: "name", message: "Project Name (camelCase)", default: projectFolderName},
-      {name: "remote", message: "Remote server ip", default: defaults.remote},
-      {name: "remoteUser", message: "Remote username", default: defaults.remoteUser},
-      {name: "remoteSSHKeyPath", message: "Remote ssh key path", default: defaults.remoteSSHKeyPath},
-      {name: "isRemoteSSHKeyEncrypted", message: "Is it encrypted via passphrase?", type: "confirm", default: defaults.isRemoteSSHKeyEncrypted},
-      () => options.isRemoteSSHKeyEncrypted ? {name: "remoteSSHKeyPassphrase", message: "Passphrase for remote ssh key"} : undefined
-    ]
-  , ["remoteSSHKeyPassphrase"])
+export const pre = (options: any) => {
+  const projectFolderName = path.basename(options.destination)
+
+  return [{name: "name", message: "Project name", default: projectFolderName}]
 }
 
-export const post = [
+
+
+
+
+export const post = (options: any) => {
+  const ls = []
+
   
-]
 
+  const injectRecursively = constructInjectRecursively(ls)
 
-// export default [
-//   // github name & main files name, default is foldername
+  const recursivelyCheckSSHKeyPath = injectRecursively(() => {
+    if (!options.isRemoteSSHKeyPathValid) {
+      return {name: "remoteSSHKeyPath", message: "Sorry, path invalid. Remote ssh key path"}
+    }
+  })
 
-//   // handle when folder is not found
-//   {name: "name", message: "Project name"},
-//   {name: "npmName", message: "Npm name"},
-// ]
+  const recursivelyCheckPassphrase = injectRecursively(() => {
+    if (!options.isSSHRemoteValid) {
+      return {name: "remoteSSHKeyPassphrase", message: "Sorry. Optional: Passphrase for remote ssh key", type: "password", mask: true}
+    }
+  })
+
+  const projectFolderName = path.basename(options.destination)
+  
+  return serializeInquery("appPost", (defaults) => {
+    return ls.add(
+      {name: "name", message: "Project name", default: projectFolderName},
+      
+      
+      
+      {name: "remote", message: "Remote server ip", default: true},
+      () => options.gotRemote ? [
+        {name: "remoteUser", message: "Remote username", default: defaults.remoteUser},
+        {name: "remoteSSHKeyPath", message: "Remote ssh key path", default: defaults.remoteSSHKeyPath},
+        recursivelyCheckSSHKeyPath,
+        {name: "remoteSSHKeyPassphrase", message: "Optional: Passphrase for remote ssh key", type: "password", mask: true},
+        recursivelyCheckPassphrase
+      ] : undefined,
+
+    )
+  }, ["remoteUser", "remoteSSHKeyPath"])
+}

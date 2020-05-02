@@ -4,6 +4,7 @@ import { warn } from "../../../lib/logger/logger";
 import isNpmNameValid from "npm-name"
 import { camelCaseToDash } from "dash-camelcase";
 import * as path from "path"
+import { set as setOption } from "./../../../prepOptions"
 
 
 
@@ -17,20 +18,19 @@ export const pre = (options: any) => {
 
   let projectFolderNameIsValidNpmName = isNpmNameValid(projectFolderNpmName)
 
-  return serializeInquery("modulePre", () => {
+  return () => {
     let recursiveCheckNpmName = injectRecursively(async () => {
       if (options.name.substring(0, 7) === "ignore/") {
-        options.name = options.name.substring(7)
+        setOption("name", options.name.substring(7))
         return
       }
   
       
-      let npmName = camelCaseToDash(options.name)
       let npmNameisValid: boolean = false
-      if (npmName === projectFolderNpmName) npmNameisValid = await projectFolderNameIsValidNpmName
+      if (options.nameAsDashCase === projectFolderNpmName) npmNameisValid = await projectFolderNameIsValidNpmName
       else {
         try {
-          npmNameisValid = await isNpmNameValid(npmName)
+          npmNameisValid = await isNpmNameValid(options.nameAsDashCase)
         }
         catch(e) {
           warn("Unable to check if npm package is taken")
@@ -39,19 +39,19 @@ export const pre = (options: any) => {
       
       if (!npmNameisValid) {
         delete options.name
-        return {name: "name", message: "\"" + npmName + "\" is already taken. Try another one. (to skip this check write \"ignore/" + npmName + "\")"}
+        return {name: "name", message: "\"" + options.nameAsDashCase + "\" is already taken. Try another one. (to skip this check write \"ignore/" + options.nameAsDashCase + "\")"}
       }
   
     })
 
 
     ls.add(
-      {name: "name", message: "Project Name (camelCase)", default: projectFolderName},
+      {name: "name", message: "Project name", default: projectFolderName},
       recursiveCheckNpmName,
     )
 
     return ls
-  })
+  }
 }
 
 export const post = [

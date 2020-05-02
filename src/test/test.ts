@@ -1,4 +1,4 @@
-import { setVerbose, setTestEnv } from "../app/lib/logger/logger"
+import { setTestEnv } from "../app/lib/logger/logger"
 import main, { wrapErrors } from "../app/index"
 import del from "del"
 import { index as configIndex } from "./configIndex"
@@ -6,15 +6,12 @@ import * as yargs from "yargs"
 import * as path from "path"
 import { promises as fs } from "fs"
 const args = yargs.argv
-const destination = "./test_out"
-
-
+import { destination } from "./destination"
 
 
 
 if (!process.env.CI) wrapErrors(true);
 
-setVerbose(true)
 setTestEnv(true)
 
 const modsToBeRun: string[] = args._.length === 0 ? Object.keys(configIndex) : args._

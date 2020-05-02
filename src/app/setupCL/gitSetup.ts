@@ -1,6 +1,5 @@
 import exec, { check } from "./shell"
-import * as Octokit from "@octokit/rest"
-import req from "./../cli/inquery/inq"
+import { Octokit } from "@octokit/rest"
 import { info, log, warn } from "../lib/logger/logger"
 
 
@@ -13,7 +12,7 @@ export default async function(options: Options) {
   
 
   if (options.authedOctokit !== undefined) {
-    let { authedOctokit: octokit } = options
+    let { octokit } = options as {octokit: Octokit, destination: string}
     try {
       info("Publishing repo")
     

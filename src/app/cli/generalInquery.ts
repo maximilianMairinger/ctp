@@ -5,7 +5,7 @@ import inq from "./inquery/inq"
 import { error, warn } from "./../lib/logger/logger"
 import { camelCase } from "change-case"
 import serializeInquery from "./serializeInquery"
-import { constructInjectRecursively, recursiveCheckList } from "./lib/lib"
+import { constructInjectRecursively, constructRecursiveCheckList } from "./lib/lib"
 
 export default async function(options: Options) {
   const ls = []
@@ -13,53 +13,20 @@ export default async function(options: Options) {
 
 
   const injectRecursively = constructInjectRecursively(ls)
-  
+  const recursiveCheckList = constructRecursiveCheckList(injectRecursively)
   
 
 
-  return serializeInquery("generalInqueryDefaults", (defaults) => {
-    let recursiveGithubAuthCheck = injectRecursively(() => {
-      return async () => {
-        if (options.githubPassword === "") {
-          return
-        }
-  
-  
-        let octokit = new Octokit({
-          auth: {
-            username: options.githubUsername,
-            password: options.githubPassword,
-            async on2fa() {
-              return await inq("Two-factor authentication Code");
-            }
-          }
-        });
-  
-        let authFaild = false
-        try {
-          // to check authentification
-          await octokit.users.getAuthenticated()
-        }
-        catch(e) {
-          authFaild = true
-          if (e.message !== "Bad credentials") error("Unknown error while authenticating.")
-        }
-  
-        
-  
-        
-        if (authFaild) {
-          delete options.githubPassword
-          return {name: "githubPassword", message: "Optional: Github auth faild. Github Password", type: "password", mask: true}
-        }
-        else {
-          options.authedOctokit = octokit
-        }
-    
+  return serializeInquery("generalInquery", (defaults) => {
+
+
+    let recursiveGithubAuthCheck = injectRecursively(async () => {
+      if (options.authFaild) {
+        return {name: "githubPassword", message: "Optional: Sorry. Github Password", type: "password", mask: true}
       }
     })
 
-  
+    
   
   
     let recursiveCheckKeywords = recursiveCheckList("keywords")
@@ -78,19 +45,19 @@ export default async function(options: Options) {
         })
         def = def.substr(0, def.length-2)
         
-        return {name: "keywords", message: "Optional: Keywords", default: def}
+        return {name: "keywordsString", message: "Optional: Keywords", default: def}
       },
       recursiveCheckKeywords,
-      {name: "dependencies", message: "Optional: Dependencies"},
+      {name: "dependenciesString", message: "Optional: Dependencies"},
       recursiveCheckDependencies,
-      {name: "author", message: "Author", default: defaults.author},
-      {name: "githubUsername", message: "Github Username", default: defaults.githubUsername || camelCase(options.author) || undefined},
+      {name: "author", message: "Author", default: true},
+      () => {return {name: "githubUsername", message: "Github Username", default: defaults.githubUsername || camelCase(options.author) || undefined}},
       {name: "githubPassword", message: "Optional: Github Password", type: "password", mask: true},
       recursiveGithubAuthCheck,
-      () => {if (options.githubPassword !== "") return {name: "public", message: "Create as public repo", type: "confirm"}}
+      () => {if (options.public) return {name: "public", message: "Create as public repo", type: "confirm"}}
     )
     return ls
-  }, ["githubPassword", "authedOctokit"])
+  }, ["githubUsername"])
 
   
 }
