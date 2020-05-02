@@ -103,9 +103,6 @@ export const index = {
     await set("gotRemote", !!o.remote, true)
   },
   async remoteSSHKeyPassphrase() {
-    console.log("uuuuuuuk")
-
-
 
     let ssh = new SSH({
       host: o.remote,
@@ -113,8 +110,6 @@ export const index = {
       privateKey : o.remoteSSHKey,
       passphrase: o.remoteSSHKeyPassphrase
     })
-
-    
   
     info("Connect to SSH remote at " + o.remote)
     
@@ -125,7 +120,8 @@ export const index = {
       error("SSH: Unable to connect to " + o.remote + ": ")
       error(await e.message)
       info(e)
-      set("isSSHRemoteValid", false, false)
+      set("isSSHRemoteValid", false, true)
+      ssh.close()
       return
     }
     set("remoteSSHClient", ssh, true)
