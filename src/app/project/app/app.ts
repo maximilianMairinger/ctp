@@ -15,5 +15,5 @@ export default async function(options: Options) {
   log(who)
   
 
-
+  ssh.close()
 }
