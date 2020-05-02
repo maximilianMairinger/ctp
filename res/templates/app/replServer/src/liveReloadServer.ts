@@ -88,13 +88,13 @@ ${swInjection}}
   let port = args.port
   
   if (port === undefined) {
-    port = 6000
+    port = 5500
   }
 
   app.listen(port)
 
   if (!args.port) {
-    console.log("Serving on port 6000")
+    console.log("Serving on port 5500")
   }
 
 

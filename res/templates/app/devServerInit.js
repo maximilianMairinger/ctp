@@ -60,6 +60,7 @@ let appEntryPath = path.join(appDir, appEntryFileName);
   }
   catch(e) {
     console.error(e)
+    return
   }
   
   let server = nodemon({
