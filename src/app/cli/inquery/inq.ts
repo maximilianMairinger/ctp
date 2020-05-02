@@ -59,7 +59,7 @@ export default async function inq<T = any>(questions: string | Questions | ((opt
       else if (!ignore.includes(e.name)) {
         let ans = await inquirer.prompt([e]) as any
 
-        await propOptions.prep(ans)
+        if (!wasSingle) await propOptions.prep(ans)
       }
     })
 
