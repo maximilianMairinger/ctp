@@ -2,7 +2,8 @@ import { camelCaseToDash, dashToCamelCase } from "dash-camelcase"
 import * as path from "path"
 import * as cc from "change-case"
 import { promises as fs } from "fs"
-import * as Octokit  from "@octokit/rest"
+import { Octokit }  from "@octokit/rest"
+import { createAppAuth } from "@octokit/auth-app"
 import inq from "./cli/inquery/inq"
 import { error, info, log } from "./lib/logger/logger"
 import SSH from "ssh2-promise"
@@ -77,6 +78,7 @@ export const index = {
 
 
     let octokit = new Octokit({
+      authStrategy: createAppAuth,
       auth: {
         username: o.githubUsername,
         password: o.githubPassword,
