@@ -18,14 +18,14 @@ const modsToBeRun: string[] = args._.length === 0 ? Object.keys(configIndex) : a
 
 del(destination)
 .then(() => fs.mkdir(destination))
-.then(() => {
+.then(async () => {
   for (let i = 0; i < modsToBeRun.length; i++) {
     const modName = modsToBeRun[i];
     let config = configIndex[modName]
     config.destination = path.join(destination, modName)
     
     try {
-      main(modName, configIndex[modName])
+      await main(modName, configIndex[modName])
     }
     catch(e) {
       throw e
