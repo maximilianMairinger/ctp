@@ -68,8 +68,11 @@ export const index = {
     }
     return pth
   },
-  async githubPassword() {
-    if (o.githubPassword === "") {
+  async useStoredGithubPersonalAccessToken() {
+    set("githubPersonalAccessToken", o.githubPersonalAccessTokenTemp)
+  },
+  async githubPersonalAccessToken() {
+    if (o.githubPersonalAccessToken === "") {
       set("public", false)
       await set("githubAuthFaild", false, true)
       return
@@ -77,7 +80,7 @@ export const index = {
 
 
     let octokit = new Octokit({
-      auth: o.githubPersonalAccessToken[o.githubUsername]
+      auth: o.githubPersonalAccessToken
     });
 
     let authFaild = false
@@ -87,8 +90,8 @@ export const index = {
     }
     catch(e) {
       authFaild = true
-      error("Error while authenticating.")
-      error(e.message)
+      // error("Error while authenticating.")
+      // error(e.message)
     }
 
     await set("octokit", octokit, true)
@@ -112,9 +115,9 @@ export const index = {
       await ssh.connect()
     }
     catch (e) {
-      error("SSH: Unable to connect to " + o.remote + ": ")
-      error(await e.message)
-      info(e)
+      // error("SSH: Unable to connect to " + o.remote + ": ")
+      // error(await e.message)
+      // info(e)
       set("isSSHRemoteValid", false, true)
       ssh.close()
       return
