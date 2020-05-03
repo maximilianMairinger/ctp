@@ -6,6 +6,8 @@ import { setDestination as setShellDestination } from "./../../setupCL/shell"
 import path from "path"
 import gitSetup from "../../setupCL/gitSetup"
 import * as global from "./../../global"
+import naclUtil from "tweetnacl-util"
+import sodium from "tweetsodium"
 
 export * from "./schema"
 
@@ -13,12 +15,12 @@ export * from "./schema"
 export default async function(options: Options) {
 
   
-  let octokit = options.octokit
+  let octokit = options.octokit as Octokit
 
   let publish = false
 
   if (octokit) {
-    let { octokit } = options as {octokit: Octokit, destination: string}
+
     try {
       info("Publishing repo")
     
@@ -79,6 +81,46 @@ export default async function(options: Options) {
   }
   else info("Skipping github sync. No valid authentication method available.")
 
+  
+
+  if (publish) {
+
+    let req = await octokit.actions.getPublicKey({
+      owner: options.githubUsername,
+      repo: options.name
+    })
+  
+    const { key_id, key } = req.data
+    const publicKey = naclUtil.decodeBase64(key)
+  
+    function encrypt(message: string) {
+      const encoder = new TextEncoder()
+      const messageBytes = encoder.encode(message)
+    
+      return sodium.seal(messageBytes, publicKey)
+    }
+  
+    function setSecret(name: string, secret: string) {
+      return octokit.actions.createOrUpdateSecretForRepo({
+        owner: options.githubUsername,
+        repo: options.name,
+        name: name,
+        key_id,
+        encrypted_value: naclUtil.encodeBase64(encrypt(secret))
+      })
+    }
+  
+
+    await Promise.all([
+      setSecret("HOST", options.remote),
+      setSecret("USERNAME", options.remoteUser),
+      setSecret("KEY", options.remoteSSHKey),
+      setSecret("PASSPHRASE", options.remoteSSHKeyPassphrase)
+    ])
+
+  }
+
+
 
   await gitSetup(options, publish)
 
@@ -97,3 +139,6 @@ export default async function(options: Options) {
   
   
 }
+
+
+
