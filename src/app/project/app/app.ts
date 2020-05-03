@@ -16,6 +16,7 @@ export default async function(options: Options) {
 
   
   let octokit = options.octokit as Octokit
+  let ssh = options.remoteSSHClient
 
   let publish = false
 
@@ -28,7 +29,7 @@ export default async function(options: Options) {
         name: options.name,
         description: options.description,
         private: !options.public,
-        homepage: `https://${options.publishDomain}`
+        homepage: `https://${options.publishDomain.toLowerCase()}`
       })
 
       publish = true
@@ -119,25 +120,42 @@ export default async function(options: Options) {
     ])
 
   }
+  else if (ssh) ssh.close()
 
 
 
   await gitSetup(options, publish)
 
 
-  let ssh = options.remoteSSHClient
-  if (ssh) {
-    let who = await ssh.exec("whoami")
-    log(who)
-    
+  if (publish) {
+    // create dev branch
+
+    let masterRef = (await octokit.git.getRef({
+      owner: options.githubUsername,
+      repo: options.name,
+      ref: "heads/master"
+    })).data.object
+
+    octokit.git.createRef({
+      owner: options.githubUsername,
+      repo: options.name,
+      ref: `refs/heads/dev`,
+      sha: masterRef.sha
+    })
+  }
+
+
   
+  if (ssh) {
+    await ssh.exec(`cd ~/nginxCdSetup`)
+    await ssh.exec(`npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
+    
+
     ssh.close()
   }
   else info("Skipping remote CD setup. No valid authentication method available.")
-  //await npmSetup(options.dependencies)
 
-  
-  
+  await npmSetup(options.dependencies)
 }
 
 
