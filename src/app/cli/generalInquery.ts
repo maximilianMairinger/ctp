@@ -73,7 +73,7 @@ export default async function(options: Options) {
           options.githubPersonalAccessTokenStore[options.githubUsername] = options.githubPersonalAccessToken
         }
       },
-      () => {if (options.public) return {name: "public", message: "Create as public repo", type: "confirm"}}
+      () => {if (!options.githubPersonalAccessToken) return {name: "public", message: "Create as public repo", type: "confirm"}}
     )
     return ls
   }, ["githubUsername", "githubPersonalAccessTokenStore"])
