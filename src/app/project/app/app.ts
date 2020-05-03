@@ -152,15 +152,8 @@ export default async function(options: Options) {
 
 
     if (ssh) {
-      info("ssh: cd ~/nginxCdSetup")
-      await ssh.exec(`cd ~/nginxCdSetup`)
-      info("ssh: source ~/.nvm/nvm.sh")
-      await ssh.exec(`source ~/.nvm/nvm.sh`)
-      info("ssh: nvm use 14.0.0")
-      await ssh.exec(`nvm use 14.0.0`)
-      info(`ssh: npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
-      await ssh.exec(`npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
-      
+      info("ssh")
+      await ssh.exec(`cd ~/nginxCdSetup && source ~/.nvm/nvm.sh && nvm use 14.0.0 && npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
 
       ssh.close()
     }
