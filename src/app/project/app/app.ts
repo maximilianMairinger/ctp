@@ -5,13 +5,14 @@ import { Octokit } from "@octokit/rest"
 import { setDestination as setShellDestination } from "./../../setupCL/shell"
 import path from "path"
 import gitSetup from "../../setupCL/gitSetup"
+import * as global from "./../../global"
 
 export * from "./schema"
 
 
 export default async function(options: Options) {
 
-  let ssh = options.remoteSSHClient
+  
   let octokit = options.octokit
 
   let publish = false
@@ -49,8 +50,29 @@ export default async function(options: Options) {
       
     }
     catch(e) {
-      warn("Faild to publish repo")
-      warn(e.message)
+      
+      try {
+        let res = await octokit.repos.listCommits({
+          owner: options.githubUsername,
+          repo: options.name,
+        });
+
+        
+        if (res.data.empty) publish = true
+        else warn("Unable to publish repo. Remote already exists and is a non empty repositotry.")
+      }
+      catch(e) {
+        if (e.message === "Git Repository is empty.") {
+          publish = true
+        }
+        else {
+          warn("Faild to publish repo")
+          warn(e.message)
+        }
+      }
+
+
+      
     }
     
     
@@ -58,16 +80,20 @@ export default async function(options: Options) {
   else info("Skipping github sync. No valid authentication method available.")
 
 
-  info("Executing in shell:")
   await gitSetup(options, publish)
 
 
+  let ssh = options.remoteSSHClient
+  if (ssh) {
+    let who = await ssh.exec("whoami")
+    log(who)
+    
+  
+    ssh.close()
+  }
+  else info("Skipping remote CD setup. No valid authentication method available.")
   //await npmSetup(options.dependencies)
 
   
-  let who = await ssh.exec("whoami")
-  log(who)
   
-
-  ssh.close()
 }
