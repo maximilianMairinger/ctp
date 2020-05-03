@@ -29,7 +29,7 @@ export const post = (options: any) => {
 
   const recursivelyCheckPassphrase = injectRecursively(() => {
     if (!options.isSSHRemoteValid) {
-      return {name: "remoteSSHKeyPassphrase", message: "Sorry. Optional: Passphrase for remote ssh key", type: "password", mask: true}
+      return {name: "remoteSSHKeyPassphrase", message: "Sorry. Passphrase for remote ssh key", type: "password", mask: true}
     }
   })
 
