@@ -77,7 +77,6 @@ export default async function(projectKind: string = "module", options: Options) 
 
     info("Executing in shell:")
     setShellDestination(path.resolve(options.destination))
-    await gitSetup(options)
 
     info("")
     info("-------------")
@@ -86,7 +85,7 @@ export default async function(projectKind: string = "module", options: Options) 
     await project.default(options)
 
     
-
+    await gitSetup(options)
 
     
     info("")
