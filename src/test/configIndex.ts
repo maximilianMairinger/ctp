@@ -18,9 +18,8 @@ export const index = {
     dependencies: ["tweenSvgPath"],
     author: "Maximilian Mairinger", 
     githubUsername: "maximilianMairinger",
-    remote: "161.35.76.169",
-    remoteUser: "root",
-    remoteSSHKey: fs.readFileSync("/mnt/c/Users/Maximilian Mairinger/Desktop/droplet/digitalOceanMain"),
-    
+    // remote: "0.0.0.0",
+    // remoteUser: "user",
+    // remoteSSHKey: fs.readFileSync("/path/to/privateKey"),
   }
 }
