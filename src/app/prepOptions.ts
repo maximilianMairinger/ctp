@@ -124,6 +124,9 @@ export const index = {
     }
     set("remoteSSHClient", ssh, true)
     set("isSSHRemoteValid", true, true)
+  },
+  async publishDomain() {
+    set("baseDomain", o.publishDomain.split(".").rmI(0).join("."))
   }
 }
 

@@ -47,9 +47,18 @@ export const post = (options: any) => {
         {name: "remoteSSHKeyPath", message: "Remote ssh key path", default: defaults.remoteSSHKeyPath},
         recursivelyCheckSSHKeyPath,
         {name: "remoteSSHKeyPassphrase", message: "Optional: Passphrase for remote ssh key", type: "password", mask: true},
-        recursivelyCheckPassphrase
+        recursivelyCheckPassphrase,
+        () => {
+          if (defaults.baseDomain !== undefined) {
+            return {name: "publishDomain", message: "Publish to domain", default: `${options.name}.${defaults.baseUrl}`}
+          }
+          else {
+            return {name: "publishDomain", message: "Publish to domain (e.g. projectName.example.com)"}
+          }
+          
+        },
       ] : undefined,
 
     )
-  }, ["remoteUser", "remoteSSHKeyPath"])
+  }, ["remoteUser", "remoteSSHKeyPath", "baseDomain"])
 }
