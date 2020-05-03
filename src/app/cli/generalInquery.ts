@@ -52,12 +52,27 @@ export default async function(options: Options) {
       recursiveCheckDependencies,
       {name: "author", message: "Author", default: true},
       () => {return {name: "githubUsername", message: "Github Username", default: defaults.githubUsername || camelCase(options.author) || undefined}},
+      () => {
+        if (defaults.githubPersonalAccessToken && defaults.githubPersonalAccessToken[options.githubUsername]) {}
+        else {
+          return {name: "githubPersonalAccessTokenTemp", message: "Optional: Github personal access token"}
+        }
+      },
+      () => options.githubPersonalAccessTokenTemp ? {name: "savePersonalAccessToken", message: "Save personal access token", type: "confirm"} : undefined,
+      () => {
+        if (options.savePersonalAccessToken) {
+          if (!options.githubPersonalAccessToken) {
+            options.githubPersonalAccessToken = {}
+          }
+          options.githubPersonalAccessToken[options.githubUsername] = options.githubPersonalAccessTokenTemp
+        }
+      },
       {name: "githubPassword", message: "Optional: Github Password", type: "password", mask: true},
       recursiveGithubAuthCheck,
       () => {if (options.public) return {name: "public", message: "Create as public repo", type: "confirm"}}
     )
     return ls
-  }, ["githubUsername"])
+  }, ["githubUsername", "githubPersonalAccessToken"])
 
   
 }

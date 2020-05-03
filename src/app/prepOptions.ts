@@ -77,7 +77,7 @@ export const index = {
 
 
     let octokit = new Octokit({
-      auth: o.githubPersonalAccessToken
+      auth: o.githubPersonalAccessToken[o.githubUsername]
     });
 
     let authFaild = false
