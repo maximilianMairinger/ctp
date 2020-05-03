@@ -1,4 +1,5 @@
-const lang = require("./../../res/lang/ger.json")
+// const lang = require("./../../res/lang/ger.json")
+const lang = {}
 
 const bracketOpen = "[";
 const bracketClose = "]";
