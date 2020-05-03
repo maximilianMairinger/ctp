@@ -40,7 +40,7 @@ export const index = {
       lastCharOfDescription = desc.charAt(desc.length-1)
     }
 
-    return lastCharOfDescription !== "." ? desc + "." : desc
+    return lastCharOfDescription !== "." && desc !== "" ? desc + "." : desc
   },
   async keywords() {
     //@ts-ignore
