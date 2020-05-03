@@ -42,6 +42,14 @@ export const post = (options: any) => {
       
       
       {name: "remote", message: "Optional: Remote server ip", default: true},
+      () => {
+        if (!options.remote) {
+          options.remote = defaults.remote
+          options.remoteUser = defaults.remoteUser
+          options.remoteSSHKeyPath = defaults.remoteSSHKeyPath
+          options.baseDomain = defaults.baseDomain
+        }
+      },
       () => options.gotRemote ? [
         {name: "remoteUser", message: "Remote username", default: defaults.remoteUser},
         {name: "remoteSSHKeyPath", message: "Remote ssh key path", default: defaults.remoteSSHKeyPath},
@@ -50,7 +58,7 @@ export const post = (options: any) => {
         recursivelyCheckPassphrase,
         () => {
           if (defaults.baseDomain !== undefined) {
-            return {name: "publishDomain", message: "Publish to domain", default: `${options.name}.${defaults.baseUrl}`}
+            return {name: "publishDomain", message: "Publish to domain", default: `${options.name}.${defaults.baseDomain}`}
           }
           else {
             return {name: "publishDomain", message: "Publish to domain (e.g. projectName.example.com)"}
