@@ -15,7 +15,7 @@ export function check(program: string) {
 export default function(cmd: string) {
   if (!destinationHasBeenExplicitlySet) return error("Destination has not been explicitly set")
   
-  info(cmd)
+  info(`shell: ${cmd}`)
 
   let res = shell.exec(cmd, {silent: true, fatal: true})
 
