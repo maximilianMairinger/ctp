@@ -75,17 +75,9 @@ export default async function(projectKind: string = "module", options: Options) 
     await replaceDir(at(options.destination), options)
 
 
-    info("Executing in shell:")
     setShellDestination(path.resolve(options.destination))
 
-    info("")
-    info("-------------")
-    info("")
-
     await project.default(options)
-
-    
-    await gitSetup(options)
 
     
     info("")

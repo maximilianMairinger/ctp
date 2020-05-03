@@ -3,14 +3,19 @@ import * as global from "./../../global"
 import { Octokit } from "@octokit/rest"
 import { info } from "../../lib/logger/logger"
 import { warn } from "console"
+import gitSetup from "../../setupCL/gitSetup"
 export * from "./schema"
 
 
 export default async function(options: Options) {
-  await npmSetup(options.dependencies, options.public)
+  
 
-  if (options.octokit !== undefined) {
-    let { octokit } = options as {octokit: Octokit, destination: string}
+  let octokit = options.octokit
+
+  let publish = false
+
+  if (octokit !== undefined) {
+    
     try {
       info("Publishing repo")
     
@@ -24,16 +29,18 @@ export default async function(options: Options) {
       try {
         info("Setting topics")
 
-        await octokit.repos.replaceTopics({
+        await octokit.repos.replaceAllTopics({
           owner: options.githubUsername,
           repo: options.name,
           names: options.keywords
         })
-      
+
+        publish = true
         
       }
       catch(e) {
         warn("Failed to set topics")
+        warn(e.message)
       }
 
 
@@ -47,6 +54,13 @@ export default async function(options: Options) {
     
   }
   else info("Skipping github sync. No valid authentication method available.")
+
+
+
+  info("Executing in shell:")
+  await gitSetup(options, publish)
+
+  await npmSetup(options.dependencies, options.public)
 }
 
 
