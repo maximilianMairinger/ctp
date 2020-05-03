@@ -66,7 +66,7 @@ export default async function(options: Options) {
       recursiveGithubAuthCheck,
       () => !!options.githubPersonalAccessToken ? {name: "savePersonalAccessToken", message: "Save personal access token", type: "confirm"} : undefined,
       () => {
-        if (options.savePersonalAccessToken || options.useStoredGithubPersonalAccessToken === true) {
+        if (options.savePersonalAccessToken || options.useStoredGithubPersonalAccessToken !== undefined) {
           if (!options.githubPersonalAccessTokenStore) {
             options.githubPersonalAccessTokenStore = {}
           }
