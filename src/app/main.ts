@@ -86,7 +86,7 @@ export default async function(projectKind: string = "module", options: Options) 
     info("Finished project \"" + projectName + "\" after " + (Math.round((performance.now() - startTime)) / 1000) + " seconds.")
   }
   catch(e) {
-    traceError(e, true)
+    traceError(e.toString(), true)
   }
 }
 
