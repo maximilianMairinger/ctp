@@ -56,7 +56,7 @@ export default async function(options: Options) {
         if (!options.githubPersonalAccessToken) {
           if (defaults.githubPersonalAccessTokenStore && defaults.githubPersonalAccessTokenStore[options.githubUsername]) {
             options.githubPersonalAccessTokenTemp = defaults.githubPersonalAccessTokenStore[options.githubUsername]
-            return {name: "useStoredGithubPersonalAccessToken", message: "Use stored personal acess token for github", type: "confirm"}
+            return {name: "useStoredGithubPersonalAccessToken", message: "Use stored personal access token for github", type: "confirm"}
           }
           else {
             return {name: "githubPersonalAccessToken", message: "Optional: Github personal access token", type: "password", mask: true}
