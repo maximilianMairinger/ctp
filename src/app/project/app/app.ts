@@ -128,7 +128,7 @@ export default async function(options: Options) {
 
 
   if (publish) {
-    // create dev branch
+    // create dev branch and set it as default
 
     let masterRef = (await octokit.git.getRef({
       owner: options.githubUsername,
@@ -136,24 +136,40 @@ export default async function(options: Options) {
       ref: "heads/master"
     })).data.object
 
-    octokit.git.createRef({
+    await octokit.git.createRef({
       owner: options.githubUsername,
       repo: options.name,
       ref: `refs/heads/dev`,
       sha: masterRef.sha
     })
+
+
+    await octokit.repos.update({
+      owner: options.githubUsername,
+      repo: options.name,
+      default_branch: "dev"
+    })
+
+
+    if (ssh) {
+      info("ssh: cd ~/nginxCdSetup")
+      await ssh.exec(`cd ~/nginxCdSetup`)
+      info("ssh: source ~/.nvm/nvm.sh")
+      await ssh.exec(`source ~/.nvm/nvm.sh`)
+      info("ssh: nvm use 14.0.0")
+      await ssh.exec(`nvm use 14.0.0`)
+      info(`ssh: npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
+      await ssh.exec(`npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
+      
+
+      ssh.close()
+    }
+    else info("Skipping remote CD setup. No valid authentication method available.")
   }
 
 
   
-  if (ssh) {
-    await ssh.exec(`cd ~/nginxCdSetup`)
-    await ssh.exec(`npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
-    
-
-    ssh.close()
-  }
-  else info("Skipping remote CD setup. No valid authentication method available.")
+  
 
   await npmSetup(options.dependencies)
 }
