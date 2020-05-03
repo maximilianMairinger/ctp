@@ -3,7 +3,6 @@ import * as path from "path"
 import * as cc from "change-case"
 import { promises as fs } from "fs"
 import { Octokit }  from "@octokit/rest"
-import { createAppAuth } from "@octokit/auth-app"
 import inq from "./cli/inquery/inq"
 import { error, info, log } from "./lib/logger/logger"
 import SSH from "ssh2-promise"
@@ -78,14 +77,7 @@ export const index = {
 
 
     let octokit = new Octokit({
-      authStrategy: createAppAuth,
-      auth: {
-        username: o.githubUsername,
-        password: o.githubPassword,
-        async on2fa() {
-          return o.github2Factor || await inq("Two-factor authentication code");
-        }
-      }
+      auth: o.githubPersonalAccessToken
     });
 
     let authFaild = false
@@ -95,7 +87,8 @@ export const index = {
     }
     catch(e) {
       authFaild = true
-      if (e.message !== "Bad credentials") error("Unknown error while authenticating.")
+      error("Error while authenticating.")
+      error(e.message)
     }
 
     await set("octokit", octokit, true)
