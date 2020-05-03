@@ -64,7 +64,7 @@ export default async function(options: Options) {
         }
       },
       recursiveGithubAuthCheck,
-      () => options.useStoredGithubPersonalAccessToken === undefined ? {name: "savePersonalAccessToken", message: "Save personal access token", type: "confirm"} : undefined,
+      () => !!options.githubPersonalAccessToken ? {name: "savePersonalAccessToken", message: "Save personal access token", type: "confirm"} : undefined,
       () => {
         if (options.savePersonalAccessToken || options.useStoredGithubPersonalAccessToken === true) {
           if (!options.githubPersonalAccessTokenStore) {
@@ -73,7 +73,7 @@ export default async function(options: Options) {
           options.githubPersonalAccessTokenStore[options.githubUsername] = options.githubPersonalAccessToken
         }
       },
-      () => {if (!options.githubPersonalAccessToken) return {name: "public", message: "Create as public repo", type: "confirm"}}
+      () => {if (!!options.githubPersonalAccessToken) return {name: "public", message: "Create as public repo", type: "confirm"}}
     )
     return ls
   }, ["githubUsername", "githubPersonalAccessTokenStore"])

@@ -41,7 +41,7 @@ export const post = (options: any) => {
       
       
       
-      {name: "remote", message: "Remote server ip", default: true},
+      {name: "remote", message: "Optional: Remote server ip", default: true},
       () => options.gotRemote ? [
         {name: "remoteUser", message: "Remote username", default: defaults.remoteUser},
         {name: "remoteSSHKeyPath", message: "Remote ssh key path", default: defaults.remoteSSHKeyPath},
