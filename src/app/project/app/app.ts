@@ -152,7 +152,7 @@ export default async function(options: Options) {
 
 
 
-    
+
     if (ssh) {
 
 
@@ -161,23 +161,23 @@ export default async function(options: Options) {
         await ssh.exec(`cd ~/nginxCdSetup && source ~/.nvm/nvm.sh && nvm use 14.0.0 && npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
       }
       catch(e) {
-        error("ERROR")
-        
-        error(e.toString())
+        warn("Warning from ssh")
+        warn(e.toString())
       }
 
-      
-      info("done ssh")
       ssh.close()
     }
     else info("Skipping remote CD setup. No valid authentication method available.")
+
+    
   }
+    
 
 
   
   
 
-  // await npmSetup(options.dependencies)
+  await npmSetup(options.dependencies)
 }
 
 
