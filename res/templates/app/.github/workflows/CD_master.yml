@@ -39,6 +39,7 @@ jobs:
           git pull
           source ~/.nvm/nvm.sh
           nvm use 14.0.0
+          wait-on ecosystem.config.js
           npm i
           npm run build --if-present
           pm2 reload ecosystem.config.js
