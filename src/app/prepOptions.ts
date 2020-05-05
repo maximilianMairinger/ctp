@@ -74,6 +74,7 @@ export const index = {
   async githubPersonalAccessToken() {
     if (o.githubPersonalAccessToken === "") {
       set("public", false)
+      o.useStoredGithubPersonalAccessToken = false
       await set("githubAuthFaild", false, true)
       return
     }
