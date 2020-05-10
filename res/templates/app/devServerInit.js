@@ -9,7 +9,7 @@ const del = require("del")
 
 // configureable
 const serverEntryFileName = "server.js"
-const appEntryFileName = "${ name }"
+const appEntryFileName = "${ name }.js"
 
 
 
@@ -81,13 +81,13 @@ let appEntryPath = path.join(appDir, appEntryFileName);
   console.log("")
   console.log("")
 
-  if (gotPort !== wantedPort) console.log(`Port ${wantedPort} was occupied, falling back to: ${gotPort}.\n----------------------------------------------\n`)
-  else console.log(`Serving on port ${gotPort}.\n---------------------\n`)
+  if (gotPort !== wantedPort) console.log(`Port $${wantedPort} was occupied, falling back to: $${gotPort}.\n----------------------------------------------\n`)
+  else console.log(`Serving on port $${gotPort}.\n---------------------\n`)
 
   
   
   console.log("Starting Browser")
-  open(`http://127.0.0.1:${gotPort}`)
+  open(`http://127.0.0.1:$${gotPort}`)
   
   
   
