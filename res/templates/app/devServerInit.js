@@ -9,7 +9,7 @@ const del = require("del")
 
 // configureable
 const serverEntryFileName = "server.js"
-const appEntryFileName = "app/app.js"
+const appEntryFileName = "${ name }"
 
 
 
@@ -41,17 +41,14 @@ let appEntryPath = path.join(appDir, appEntryFileName);
     del(serverDir).then(() => console.log("Deleted \"" + serverDir + "\"."))
   ])
 
-  
+  console.log("")
+  console.log("")
+  console.log("Waiting for build to finish, before starting the server...")
 
 
   await waitOn({
     resources: [serverEntryPath, appEntryPath]
   })
-
-
-  console.log("")
-  console.log("")
-  console.log("Waiting for build to finish, before starting the server...")
 
 
   let gotPort;
