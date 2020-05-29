@@ -1,29 +1,6 @@
 
 
 
-function findFirstChar(s: string) {
-  for (let i = 0; i < s.length; i++) {
-    if (s[i] !== " ") {
-      return i
-    }
-  }
-  return 0
-}
-
-function revString(s: string) {
-  let rev = ""
-  for (const k of s) {
-    rev = k + rev
-  }
-  return rev
-}
-
-function stripSpaceFromLeftAndRight(s: string) {
-  let begin = findFirstChar(s)
-  let rev = revString(s)
-  let end = s.length - findFirstChar(rev)
-  return s.substring(begin, end)
-}
 
 function spliceString(str: string, index: number, count: number, add: string) {
   if (index < 0) {
@@ -65,7 +42,7 @@ export default function interpolate (source: string, _replaceIndex: {[key in str
     if (localEnd === -1) break
     let end = localEnd + a
     let inner = source.substring(localStart + openCharSeq.length, localEnd - closeCharSeq.length)
-    let key = stripSpaceFromLeftAndRight(inner)
+    let key = inner.trim()
     let insert = replaceIndex[key] === undefined ? key : replaceIndex[key]
     let omit = end - start
     res = spliceString(res, start, omit, insert)
