@@ -9,7 +9,7 @@ const del = require("del")
 
 // configureable
 const serverEntryFileName = "server.js"
-const appEntryFileName = "app/app.js"
+const appEntryFileName = "${ name }.js"
 
 
 
@@ -41,17 +41,14 @@ let appEntryPath = path.join(appDir, appEntryFileName);
     del(serverDir).then(() => console.log("Deleted \"" + serverDir + "\"."))
   ])
 
-  
+  console.log("")
+  console.log("")
+  console.log("Waiting for build to finish, before starting the server...")
 
 
   await waitOn({
     resources: [serverEntryPath, appEntryPath]
   })
-
-
-  console.log("")
-  console.log("")
-  console.log("Waiting for build to finish, before starting the server...")
 
 
   let gotPort;
@@ -84,13 +81,13 @@ let appEntryPath = path.join(appDir, appEntryFileName);
   console.log("")
   console.log("")
 
-  if (gotPort !== wantedPort) console.log(`Port ${wantedPort} was occupied, falling back to: ${gotPort}.\n----------------------------------------------\n`)
-  else console.log(`Serving on port ${gotPort}.\n---------------------\n`)
+  if (gotPort !== wantedPort) console.log(`Port $${wantedPort} was occupied, falling back to: $${gotPort}.\n----------------------------------------------\n`)
+  else console.log(`Serving on port $${gotPort}.\n---------------------\n`)
 
   
   
   console.log("Starting Browser")
-  open(`http://127.0.0.1:${gotPort}`)
+  open(`http://127.0.0.1:$${gotPort}`)
   
   
   
