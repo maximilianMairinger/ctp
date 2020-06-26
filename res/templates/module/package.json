@@ -6,7 +6,9 @@
   "types": "app/dist/${name}.d.ts",
   "scripts": {
     "build": "tsc -p ./tsconfig.prod.json",
-    "dev": "webpack --config webpack.dev.config.js",
+    "dev": "npm run ${defaultDevScript}",
+    "devWeb": "rollup --config rollup.web.dev.config.js -w",
+    "devServer": "rollup --config rollup.server.dev.config.js -w",
     "deploy": "npm run build && npm publish",
     "test": "node ./test/dist/test-bundle"
   },
