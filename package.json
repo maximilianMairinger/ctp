@@ -7,7 +7,9 @@
     "build": "tsc",
     "dev": "tsc -w",
     "test": "node dist/test/test.js",
-    "testCli": "node dist/test/delTestFolder.js && ctp app --verbose --destination ./test_out"
+    "testCli": "npm run testCliApp",
+    "testCliMod": "node dist/test/delTestFolder.js && ctp mod --verbose --destination ./test_out",
+    "testCliApp": "node dist/test/delTestFolder.js && ctp app --verbose --destination ./test_out"
   },
   "repository": {
     "type": "git",
