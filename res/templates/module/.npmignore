@@ -6,3 +6,4 @@ src
 ./tsconfig.prod.json
 ./webpack.common.config.js
 ./webpack.dev.config.js
+./webpack.dev.config.js
