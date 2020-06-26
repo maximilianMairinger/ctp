@@ -1,4 +1,5 @@
 import * as prepOptions from "./../../prepOptions"
+import { set } from "./../../prepOptions";
 
 
 let options: any;
@@ -31,7 +32,7 @@ type InjectRecursivelyFunc = ReturnType<typeof constructInjectRecursively>
 export function constructRecursiveCheckList(ls: unknown[] | InjectRecursivelyFunc) {
   const injectRecursively = (ls instanceof Function ? ls : constructInjectRecursively(ls)) as InjectRecursivelyFunc
 
-  return function recursiveCheckList(name: string, typeCheck: string = "string", additionalCheck?: (parsed: any) => boolean) {
+  return function recursiveCheckList(name: string, typeCheck: "number" | "string" | "boolean" = "string", additionalCheck?: (parsed: any) => boolean) {
     const rawName = name + "String"
     return injectRecursively(() => {
       
@@ -66,7 +67,7 @@ export function constructRecursiveCheckList(ls: unknown[] | InjectRecursivelyFun
         else return {rawName, message: "Invalid list: " + e.message}
       }
   
-      options[name] = parsed
+      set(name, parsed)
     })
   }
   
