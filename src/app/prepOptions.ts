@@ -79,7 +79,6 @@ export const index = {
       return
     }
 
-
     let octokit = new Octokit({
       auth: o.githubPersonalAccessToken
     });
@@ -128,24 +127,31 @@ export const index = {
   },
   async publishDomain() {
     set("baseDomain", o.publishDomain.split(".").rmI(0).join("."))
+  },
+  web() {
+    set("defaultDevScript", o.web ? "devWeb" : "devServer")
   }
 }
 
   
 
-export async function set(key: string, to: any, force = false) {
+export async function set(key: string, to: any, force = false, notify: boolean = true) {
   if (force) {
     o[key] = to
-    if (index[key] !== undefined) {
-      let res = await index[key]()
-      if (res !== undefined) o[key] = res
+    if (notify) {
+      if (index[key] !== undefined) {
+        let res = await index[key]()
+        if (res !== undefined) o[key] = res
+      }
     }
   }
   else if (o[key] === undefined) {
     o[key] = to
-    if (index[key] !== undefined) {
-      let res = await index[key]()
-      if (res !== undefined) o[key] = res
+    if (notify) {
+      if (index[key] !== undefined) {
+        let res = await index[key]()
+        if (res !== undefined) o[key] = res
+      }
     }
   }
 }
