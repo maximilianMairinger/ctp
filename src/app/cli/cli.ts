@@ -44,7 +44,6 @@ let inqueryIndex = {
 };
 
 setOptions(options);
-console.log("set", options);
 
 (async () => {
   options = await inq(inqueryIndex[projectKind].pre, options)
