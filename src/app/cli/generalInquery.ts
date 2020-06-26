@@ -6,6 +6,7 @@ import { error, warn } from "./../lib/logger/logger"
 import { camelCase } from "change-case"
 import serializeInquery from "./serializeInquery"
 import { constructInjectRecursively, constructRecursiveCheckList } from "./lib/lib"
+import { set } from "../prepOptions"
 
 export default async function(options: Options) {
   const ls = []
@@ -56,10 +57,21 @@ export default async function(options: Options) {
         if (!options.githubPersonalAccessToken) {
           if (defaults.githubPersonalAccessTokenStore && defaults.githubPersonalAccessTokenStore[options.githubUsername]) {
             options.githubPersonalAccessTokenTemp = defaults.githubPersonalAccessTokenStore[options.githubUsername]
-            return {name: "useStoredGithubPersonalAccessToken", message: "Use stored personal access token for github", type: "confirm"}
+            return {name: "useStoredGithubPersonalAccessToken", message: "Use stored personal access token for github (Y/n or set new one)", type: "password", mask: true}
           }
           else {
             return {name: "githubPersonalAccessToken", message: "Optional: Github personal access token", type: "password", mask: true}
+          }
+        }
+      },
+      () => {
+        if (options.githubPersonalAccessToken === undefined) {
+          let ac = options.useStoredGithubPersonalAccessToken.toLowerCase()
+          if (ac === "yes" || ac === "y" || ac === "") set("useStoredGithubPersonalAccessToken", true, true)
+          else if (ac === "no" || ac === "n") set("useStoredGithubPersonalAccessToken", false, true)
+          else {
+            set("githubPersonalAccessToken", options.useStoredGithubPersonalAccessToken, true)
+            set("useStoredGithubPersonalAccessToken", false, true)
           }
         }
       },

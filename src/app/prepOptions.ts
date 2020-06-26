@@ -69,7 +69,7 @@ export const index = {
     return pth
   },
   async useStoredGithubPersonalAccessToken() {
-    if (o.useStoredGithubPersonalAccessToken) set("githubPersonalAccessToken", o.githubPersonalAccessTokenTemp)
+    if (typeof o.useStoredGithubPersonalAccessToken === "boolean" && o.useStoredGithubPersonalAccessToken) set("githubPersonalAccessToken", o.githubPersonalAccessTokenTemp)
   },
   async githubPersonalAccessToken() {
     if (o.githubPersonalAccessToken === "") {
