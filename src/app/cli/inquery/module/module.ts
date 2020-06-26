@@ -48,6 +48,7 @@ export const pre = (options: any) => {
     ls.add(
       {name: "name", message: "Project name", default: projectFolderName},
       recursiveCheckNpmName,
+      () => {return {name: "web", message: "Is " + options.name + " web based (Y) or server side (n)", type: "confirm"}}
     )
 
     return ls

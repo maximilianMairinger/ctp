@@ -1,8 +1,7 @@
 import npmSetup from "../../setupCL/npmSetup"
 import * as global from "./../../global"
 import { Octokit } from "@octokit/rest"
-import { info } from "../../lib/logger/logger"
-import { warn } from "console"
+import { info, warn } from "../../lib/logger/logger"
 import gitSetup from "../../setupCL/gitSetup"
 export * from "./schema"
 
