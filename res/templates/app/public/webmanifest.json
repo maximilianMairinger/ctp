@@ -1,24 +1,24 @@
 {
 	"dir" : "ltr",
 	"lang" : "English",
-	"name" : "${nameAsHumanized}",
+	"name" : "$[nameAsHumanized]",
 	"scope" : "/",
 	"start_url": "/",
 
 	"display" : "standalone",
-	"short_name" : "${nameAsShort}",
+	"short_name" : "$[nameAsShort}",
 	"theme_color" : "white",
-	"description" : "${description}",
+	"description" : "$[description]",
 	"orientation" : "portrait-primary",
 	"background_color" : "white",
 	"icons" : [
 		{
-			"src": "./res/img/${name}_logo_180x180.png",
+			"src": "./res/img/$[name]_logo_180x180.png",
 			"sizes": "180x180",
 			"type": "image/png"
 		},
 		{
-			"src": "./res/img/${name}_logo_1000x1000.png",
+			"src": "./res/img/$[name]_logo_1000x1000.png",
 			"sizes": "1000x1000",
 			"type": "image/png"
 		}		

@@ -5,7 +5,7 @@ module.exports = () => {
     return {
         entry: './replApp/replApp.ts',
         output: {
-            filename: 'dist/${name}.js',
+            filename: 'dist/$[name].js',
             chunkFilename: 'dist/[name].js',
             path: path.resolve(path.dirname(''), "public"),
             publicPath: "/"

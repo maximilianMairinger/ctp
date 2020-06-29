@@ -1,6 +1,6 @@
-# ${nameWithSpaces}
+# $[nameWithSpaces]
 
-${description}
+$[description]
 
 ## Contribute
 

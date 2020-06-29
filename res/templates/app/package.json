@@ -19,9 +19,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/${githubUsername}/${name}.git"
+    "url": "git+https://github.com/$[githubUsername]/$[name].git"
   },
-  "author": "${author}",
+  "author": "$[author]",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-json": "^4.0.3",

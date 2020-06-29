@@ -9,7 +9,7 @@ const port = args.port === undefined ? 6051 : args.port
 
 
 const url = 'mongodb://localhost:27017';
-const dbName = '${name}';
+const dbName = '$[name]';
 
 
 
