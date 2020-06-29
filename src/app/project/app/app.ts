@@ -86,7 +86,7 @@ export default async function(options: Options) {
 
   if (publish) {
 
-    let req = await octokit.actions.getPublicKey({
+    let req = await octokit.actions.getRepoPublicKey({
       owner: options.githubUsername,
       repo: options.name
     })
