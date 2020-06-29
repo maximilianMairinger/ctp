@@ -49,7 +49,7 @@ export default async function(options: Options) {
         return {name: "keywordsString", message: "Optional: Keywords", default: def}
       },
       recursiveCheckKeywords,
-      {name: "dependenciesString", message: "Optional: Dependencies"},
+      {name: "dependenciesString", message: "Dependencies: (None)"},
       recursiveCheckDependencies,
       {name: "author", message: "Author", default: true},
       () => {return {name: "githubUsername", message: "Github Username", default: defaults.githubUsername || camelCase(options.author) || undefined}},
