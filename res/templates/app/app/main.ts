@@ -1,4 +1,4 @@
-import Site from "./_element/site/site"
+import Site from "./_component/site/site"
 
 export default function() {
   let site = new Site()

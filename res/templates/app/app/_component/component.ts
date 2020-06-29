@@ -1,4 +1,3 @@
-import interpolateHTMLWithLang from "../lib/interpolateHTMLWithLang";
 import lang from "./../lib/lang"
 import { DataBase, Data } from "josm";
 
