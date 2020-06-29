@@ -1,20 +1,24 @@
-# ${nameWithSpaces}
+# [nameWithSpaces]
 
-${description}
+$[description]
 
-> Please not that ${nameWithSpaces} is currently under development and not yet suited for production
+> Please not that $[nameWithSpaces] is currently under development and not yet suited for production
 
-## Example
+## Usage
 
 
 
 ```js
-import ${name} from "${nameAsDashCase}"
+import $[name] from "$[nameAsDashCase]"
 
-${name}()
+$[name]()
 ```
 
+## Installation
 
+```shell
+ $ npm i $[nameAsDashCase]
+```
 
 ## Contribute
 

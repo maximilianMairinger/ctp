@@ -1,4 +1,4 @@
-${dependencyImports}
+$[dependencyImports]
 
 export default function() {
   

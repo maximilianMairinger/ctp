@@ -1,12 +1,12 @@
 {
-  "name": "${nameAsDashCase}",
+  "name": "$[nameAsDashCase]",
   "version": "0.0.1",
-  "description": "${description}",
-  "main": "app/dist/${name}.js",
-  "types": "app/dist/${name}.d.ts",
+  "description": "$[description]",
+  "main": "app/dist/$[name].js",
+  "types": "app/dist/$[name].d.ts",
   "scripts": {
     "build": "tsc -p ./tsconfig.prod.json",
-    "dev": "npm run ${defaultDevScript}",
+    "dev": "npm run $[defaultDevScript]",
     "devWeb": "rollup --config rollup.web.dev.config.js -w",
     "devServer": "rollup --config rollup.server.dev.config.js -w",
     "deploy": "npm run build && npm publish",
@@ -14,28 +14,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/${githubUsername}/${name}.git"
+    "url": "git+https://github.com/$[githubUsername]/$[name].git"
   },
-  "keywords": ${keywordsAsJSON},
-  "author": "${author}",
+  "keywords": $[keywordsAsJSON],
+  "author": "$[author]",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/${githubUsername}/${name}/issues"
+    "url": "https://github.com/$[githubUsername]/$[name]/issues"
   },
-  "homepage": "https://github.com/${githubUsername}/${name}#readme",
+  "homepage": "https://github.com/${githubUsername}/$[name]#readme",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^8.1.0",
+    "@rollup/plugin-typescript": "^5.0.0",
     "@types/node": "^13.13.4",
-    "css-loader": "^3.5.3",
-    "cssnano": "^4.1.10",
-    "postcss-loader": "^3.0.0",
-    "terser-webpack-plugin": "^2.3.6",
-    "to-string-loader": "^1.1.6",
-    "ts-loader": "^7.0.2",
-    "typescript": "^3.8.3",
-    "url-loader": "^4.1.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-inject-plugin": "^1.5.4",
-    "webpack-merge": "^4.2.2"
+    "rollup": "^2.18.1",
+    "typescript": "^3.9.5"
   }
 }

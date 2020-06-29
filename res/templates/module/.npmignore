@@ -1,9 +1,12 @@
 ./test
 ./repl
 src
+./index.html
 
 
 ./tsconfig.prod.json
-./webpack.common.config.js
-./webpack.dev.config.js
-./webpack.dev.config.js
+./tsconfig.dev.json
+./rollup.sever.common.config.js
+./rollup.web.common.config.js
+./rollup.sever.dev.config.js
+./rollup.web.dev.config.js
