@@ -5,6 +5,8 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "declaration": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
     "skipLibCheck": true
   }
 }

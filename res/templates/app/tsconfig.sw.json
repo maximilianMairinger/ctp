@@ -5,6 +5,7 @@
     "moduleResolution": "classic",
     "allowJs": true,
     "sourceMap": true,
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
   "include": [
