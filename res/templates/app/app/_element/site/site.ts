@@ -1,6 +1,6 @@
-import Element from "../element"
+import Component from "../component"
 
-export default class Site extends Element {
+export default class Site extends Component {
 
   constructor() {
     super()

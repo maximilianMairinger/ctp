@@ -2,10 +2,10 @@ import interpolateHTMLWithLang from "../lib/interpolateHTMLWithLang";
 
 export default abstract class Component extends HTMLElement {
   protected sr: ShadowRoot;
-  protected elementBody: HTMLElement
+  protected componentBody: HTMLElement
 
   private mostInnerComponentbody: HTMLElement | ShadowRoot
-  constructor(private elementBodyExtention?: HTMLElement | false) {
+  constructor(private componentBodyExtention?: HTMLElement | false) {
     super();
     this.sr = this.attachShadow({mode: "open"});
 
@@ -20,23 +20,23 @@ export default abstract class Component extends HTMLElement {
 
   protected rerender() {
     this.sr.html("")
-    if (this.elementBodyExtention !== false) {
-      this.elementBody = ce("element-body")
-      if (this.elementBodyExtention === undefined) {
-        this.mostInnerComponentbody = this.elementBody  
+    if (this.componentBodyExtention !== false) {
+      this.componentBody = ce("component-body")
+      if (this.componentBodyExtention === undefined) {
+        this.mostInnerComponentbody = this.componentBody  
       }
       else {
-        this.mostInnerComponentbody = this.elementBodyExtention
-        this.elementBody.apd(this.mostInnerComponentbody)
+        this.mostInnerComponentbody = this.componentBodyExtention
+        this.componentBody.apd(this.mostInnerComponentbody)
       }
 
-      this.sr.html("<!--General styles--><style>" + require('./element.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>")
-      this.sr.append(this.elementBody)
+      this.sr.html("<!--General styles--><style>" + require('./component.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>")
+      this.sr.append(this.componentBody)
       this.mostInnerComponentbody.innerHTML = interpolateHTMLWithLang(this.pug())
     }
     else {
       this.mostInnerComponentbody = this.sr
-      this.sr.html("<!--General styles--><style>" + require('./element.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>" + interpolateHTMLWithLang(this.pug()))
+      this.sr.html("<!--General styles--><style>" + require('./component.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>" + interpolateHTMLWithLang(this.pug()))
     }
   }
 
@@ -66,9 +66,9 @@ export default abstract class Component extends HTMLElement {
 
 
 /*
-import Element from "./../element";
+import Component from "./../component";
 
-export default class Example extends Element {
+export default class Example extends Component {
   constructor() {
     super()
 
