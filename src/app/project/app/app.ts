@@ -102,7 +102,7 @@ export default async function(options: Options) {
     }
   
     function setSecret(name: string, secret: string) {
-      return octokit.actions.createOrUpdateSecretForRepo({
+      return octokit.actions.createOrUpdateRepoSecret({
         owner: options.githubUsername,
         repo: options.name,
         secret_name: name,
