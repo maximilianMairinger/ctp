@@ -1,67 +1,62 @@
 import interpolateHTMLWithLang from "../lib/interpolateHTMLWithLang";
+import lang from "./../lib/lang"
+import { DataBase, Data } from "josm";
+
+type PrimElem = string | number | boolean | Element
+type Token = string | string[]
+
 
 export default abstract class Component extends HTMLElement {
   protected sr: ShadowRoot;
   protected componentBody: HTMLElement
 
-  private mostInnerComponentbody: HTMLElement | ShadowRoot
-  constructor(private componentBodyExtention?: HTMLElement | false) {
+  constructor(componentBodyExtention?: HTMLElement | false) {
     super();
     this.sr = this.attachShadow({mode: "open"});
 
     
-    
-    
-
-    this.rerender()
-
-    
-  }
-
-  protected rerender() {
-    this.sr.html("")
-    if (this.componentBodyExtention !== false) {
-      this.componentBody = ce("component-body")
-      if (this.componentBodyExtention === undefined) {
-        this.mostInnerComponentbody = this.componentBody  
+    if (componentBodyExtention !== false) {
+      //@ts-ignore
+      let realElementBody = this.elementBody = ce("component-body")
+      if (componentBodyExtention !== undefined) {
+        //@ts-ignore
+        this.elementBody = componentBodyExtention
+        //@ts-ignore
+        realElementBody.apd(componentBodyExtention)
       }
-      else {
-        this.mostInnerComponentbody = this.componentBodyExtention
-        this.componentBody.apd(this.mostInnerComponentbody)
-      }
+
 
       this.sr.html("<!--General styles--><style>" + require('./component.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>")
-      this.sr.append(this.componentBody)
-      this.mostInnerComponentbody.innerHTML = interpolateHTMLWithLang(this.pug())
+      this.sr.append(realElementBody)
+      this.componentBody.html(this.pug(), lang)
     }
     else {
-      this.mostInnerComponentbody = this.sr
-      this.sr.html("<!--General styles--><style>" + require('./component.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>" + interpolateHTMLWithLang(this.pug()))
+      //@ts-ignore
+      this.elementBody = this.sr
+      this.sr.html("<!--General styles--><style>" + require('./component.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>").apd(this.pug(), lang)
     }
+
   }
 
-  private attributeChangedCallback(attrName: string, oldVal: string, newVal: string) {
-    this[attrName] = newVal
-  }
-
-  public abstract stl(): string;
-  public abstract pug(): string;
-  /**
-   * Appends to ShadowRoot
-   */
-  public sra(...elems: HTMLElement[]): void {
-    elems.ea((e) => {
-      this.sr.append(e);
-    });
+  protected attributeChangedCallback(attrName: string, oldVal: string, newVal: string) {
+    this[attrName](newVal)
   }
 
   public q(qs?: string) {
-    return this.mostInnerComponentbody.childs(qs)
+    return this.componentBody.childs(qs)
   }
-  public apd(...elems: Element[]) {
-    this.mostInnerComponentbody.append(...elems)
+
+
+  public apd(...elems: PrimElem[]): this
+  public apd(to: PrimElem | PrimElem[], library?: {[key in string]: string | Data<string>;} | DataBase, customTokens?: {open?: Token; close?: Token; escape?: Token;}): this
+  public apd(...a: any): this {
+    this.componentBody.apd(...a)
     return this
   }
+
+
+  public abstract stl(): string;
+  public abstract pug(): string;
 }
 
 
