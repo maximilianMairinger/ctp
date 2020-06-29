@@ -14,8 +14,8 @@ function spliceString(str: string, index: number, count: number, add: string) {
 }
 
 
-const openCharSeq = "${"
-const closeCharSeq = "}"
+const openCharSeq = "$["
+const closeCharSeq = "]"
 const escapeCharSeq = "$"
 
 
