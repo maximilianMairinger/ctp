@@ -12,7 +12,7 @@ export const index = {
   },
   app: {
     // destination, will be injected in test runner
-    name: "testApp", 
+    name: "testAppo", 
     description: "This is an app description", 
     keywords: ["keyword123", "keyword456"],
     dependencies: ["tweenSvgPath"],
