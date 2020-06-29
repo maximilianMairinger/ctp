@@ -48,7 +48,7 @@ const swInjection = fs.readFileSync(pth.join(__dirname, "./../res/live-reload-in
 
 
 
-export default function init(publicPath: string = "./public", indexUrl: string = "/", streamUrl: string = "/updateStream") {
+export default function init(indexUrl: string = "/", publicPath: string = "./public", streamUrl: string = "/updateStream") {
   //@ts-ignore
   let sse = new SSE()
 
