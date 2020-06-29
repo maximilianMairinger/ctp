@@ -12,10 +12,9 @@ export default async function() {
 
 declare global {
   function log(...msg: any[]): void
-  const ce: {
-    <K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementCreationOptions) : HTMLElementTagNameMap[K];
-    (name: string) : HTMLElement;
-  };
+  
+  function ce<K extends keyof HTMLElementTagNameMap>(tagName: K, options?: ElementCreationOptions) : HTMLElementTagNameMap[K];
+  function ce(name: string) : HTMLElement;
 }
 
 
