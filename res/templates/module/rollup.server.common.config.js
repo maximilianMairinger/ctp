@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json'
 export default {
   input: 'test/src/test.ts',
   output: {
-    file: 'test/dist/josmSimpleWebSocket.js',
+    file: 'test/dist/${name}.js',
     format: 'cjs',
     sourcemap: true
   },
