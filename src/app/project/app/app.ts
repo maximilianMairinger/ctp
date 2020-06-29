@@ -105,7 +105,7 @@ export default async function(options: Options) {
       return octokit.actions.createOrUpdateSecretForRepo({
         owner: options.githubUsername,
         repo: options.name,
-        name: name,
+        secret_name: name,
         key_id,
         encrypted_value: naclUtil.encodeBase64(encrypt(secret))
       })
