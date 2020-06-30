@@ -15,23 +15,20 @@ export default abstract class Component extends HTMLElement {
 
     
     if (componentBodyExtention !== false) {
-      //@ts-ignore
-      let realElementBody = this.elementBody = ce("component-body")
       if (componentBodyExtention !== undefined) {
         //@ts-ignore
-        this.elementBody = componentBodyExtention
-        //@ts-ignore
-        realElementBody.apd(componentBodyExtention)
+        this.componentBody = componentBodyExtention
       }
+      else this.componentBody = ce("component-body")
 
 
       this.sr.html("<!--General styles--><style>" + require('./component.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>")
-      this.sr.append(realElementBody)
+      this.sr.append(this.componentBody)
       this.componentBody.html(this.pug(), lang)
     }
     else {
       //@ts-ignore
-      this.elementBody = this.sr
+      this.componentBody = this.sr
       this.sr.html("<!--General styles--><style>" + require('./component.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>").apd(this.pug(), lang)
     }
 
