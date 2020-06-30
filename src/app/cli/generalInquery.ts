@@ -82,7 +82,9 @@ export default async function(options: Options) {
           if (!options.githubPersonalAccessTokenStore) {
             options.githubPersonalAccessTokenStore = {}
           }
-          options.githubPersonalAccessTokenStore[options.githubUsername] = options.githubPersonalAccessToken || defaults.githubPersonalAccessTokenStore[options.githubUsername]
+
+          if (options.githubPersonalAccessToken) options.githubPersonalAccessTokenStore[options.githubUsername] = options.githubPersonalAccessToken
+          else if (defaults.githubPersonalAccessTokenStore && defaults.githubPersonalAccessTokenStore[options.githubUsername]) options.githubPersonalAccessTokenStore[options.githubUsername] = defaults.githubPersonalAccessTokenStore[options.githubUsername]
         }
       },
       () => {if (!!options.githubPersonalAccessToken) return {name: "public", message: "Create as public repo", type: "confirm"}}
