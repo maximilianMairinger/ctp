@@ -3,7 +3,7 @@ import ger from "./../res/lang/ger.json"
 
 interface Lang {
   "$[name]": {
-    "name": "$[nameAsHumanized]"
+    "longName": "$[nameAsHumanized]"
   }
 }
 
