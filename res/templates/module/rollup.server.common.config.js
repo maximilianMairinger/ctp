@@ -3,7 +3,6 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonJS from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 
-// not in use
 
 export default {
   input: 'repl/src/repl.ts',
