@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/$[githubUsername]/$[name]/issues"
   },
-  "homepage": "https://github.com/${githubUsername}/$[name]#readme",
+  "homepage": "https://github.com/$[githubUsername]/$[name]#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^13.0.0",
     "@rollup/plugin-json": "^4.1.0",
