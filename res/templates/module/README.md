@@ -4,6 +4,12 @@ $[description]
 
 > Please not that $[nameWithSpaces] is currently under development and not yet suited for production
 
+## Installation
+
+```shell
+ $ npm i $[nameAsDashCase]
+```
+
 ## Usage
 
 
@@ -12,12 +18,6 @@ $[description]
 import $[name] from "$[nameAsDashCase]"
 
 $[name]()
-```
-
-## Installation
-
-```shell
- $ npm i $[nameAsDashCase]
 ```
 
 ## Contribute
