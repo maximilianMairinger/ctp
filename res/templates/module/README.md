@@ -8,7 +8,7 @@ $[description]
 
 
 
-```js
+```ts
 import $[name] from "$[nameAsDashCase]"
 
 $[name]()
