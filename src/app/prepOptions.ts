@@ -129,7 +129,7 @@ export const index = {
     set("baseDomain", o.publishDomain.split(".").rmI(0).join("."))
   },
   web() {
-    set("defaultDevScript", o.web ? "devWeb" : "devServer")
+    set("defaultDevScript", o.web ? "devWeb" : "devNode")
   }
 }
 
