@@ -21,8 +21,7 @@ export const index = {
     let name = dashToCamelCase(o.name)
     await set("nameAsDashCase", camelCaseToDash(o.name), true)
     let nameWs = o.nameAsDashCase.split("-").join("_").split("_").join(" ")
-    await set("nameAsHumanized", nameWs.charAt(0).toUpperCase() + nameWs.substr(1))
-    await set("nameWithSpaces", nameWs.charAt(0).toUpperCase() + nameWs.substr(1), true)
+    await set(["nameWithSpaces", "nameAsHumanized"], nameWs.charAt(0).toUpperCase() + nameWs.substr(1))
     
     let nameAsShort = ""
     o.nameWithSpaces.split(" ").ea((e) => {
@@ -135,24 +134,34 @@ export const index = {
 
   
 
-export async function set(key: string, to: any, force = false, notify: boolean = true) {
+export async function set(keys: string | string[], to: any, force = false, notify: boolean = true) {
+  if (!(keys instanceof Array)) keys = [keys]
   if (force) {
-    o[key] = to
-    if (notify) {
-      if (index[key] !== undefined) {
-        let res = await index[key]()
-        if (res !== undefined) o[key] = res
+    await keys.ea(async (key) => {
+      o[key] = to
+      if (notify) {
+        if (index[key] !== undefined) {
+          let res = await index[key]()
+          if (res !== undefined) o[key] = res
+          return res
+        }
       }
-    }
+    })
   }
-  else if (o[key] === undefined) {
-    o[key] = to
-    if (notify) {
-      if (index[key] !== undefined) {
-        let res = await index[key]()
-        if (res !== undefined) o[key] = res
+  else {
+    await keys.ea(async (key) => {
+      if (o[key] === undefined) {
+        o[key] = to
+        if (notify) {
+          if (index[key] !== undefined) {
+            let res = await index[key]()
+            if (res !== undefined) o[key] = res
+            return res
+          }
+        }
       }
-    }
+    })
+    
   }
 }
 
