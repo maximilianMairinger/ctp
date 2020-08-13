@@ -1,4 +1,4 @@
-# [nameWithSpaces]
+# $[nameWithSpaces]
 
 $[description]
 
