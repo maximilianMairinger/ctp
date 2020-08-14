@@ -35,7 +35,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          cd /var/www/html/dev/$[ name ]
+          cd /var/www/html/$[ name ]/dev
           git pull
           source ~/.nvm/nvm.sh
           nvm use 14.0.0
