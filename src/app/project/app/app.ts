@@ -16,7 +16,7 @@ export default async function(options: Options) {
 
   
   let octokit = options.octokit as Octokit
-  let ssh = options.remoteSSHClient
+  let ssh = options.remoteSSHClient as SSH
 
   let publish = false
 
@@ -157,12 +157,16 @@ export default async function(options: Options) {
 
 
       info("ssh")
+      
       try {
-        await ssh.exec(`cd ~/nginxCdSetup && source ~/.nvm/nvm.sh && nvm use 14.0.0 && npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
+        let log = await ssh.spawn(`cd ~/nginxCdSetup && source ~/.nvm/nvm.sh && nvm use 14.0.0 && npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
+        log.on('data', (e) => {
+          info(e)
+        })
       }
       catch(e) {
-        warn("Warning from ssh")
-        warn(e.toString())
+        warn("Error from ssh")
+        warn(e)
       }
 
       ssh.close()
