@@ -163,7 +163,7 @@ export default async function(options: Options) {
       }
       catch(e) {
         warn("Error from ssh")
-        warn(e)
+        warn(e.toString())
       }
 
       ssh.close()
