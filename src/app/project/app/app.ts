@@ -159,10 +159,7 @@ export default async function(options: Options) {
       info("ssh")
       
       try {
-        let log = await ssh.spawn(`cd ~/nginxCdSetup && source ~/.nvm/nvm.sh && nvm use 14.0.0 && npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
-        log.on('data', (e) => {
-          info(e)
-        })
+        await ssh.exec(`cd ~/nginxCdSetup && source ~/.nvm/nvm.sh && nvm use 14.0.0 && npm run start -- --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
       }
       catch(e) {
         warn("Error from ssh")
