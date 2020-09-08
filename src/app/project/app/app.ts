@@ -2,7 +2,7 @@ import npmSetup from "../../setupCL/npmSetup"
 import SSH from "ssh2-promise"
 import { error, info, log, warn } from "../../lib/logger/logger"
 import { Octokit } from "@octokit/rest"
-import { setDestination as setShellDestination } from "./../../setupCL/shell"
+import shell, { setDestination as setShellDestination } from "./../../setupCL/shell"
 import path from "path"
 import gitSetup from "../../setupCL/gitSetup"
 import * as global from "./../../global"
@@ -150,6 +150,7 @@ export default async function(options: Options) {
       default_branch: "dev"
     })
 
+    shell("git checkout dev")
 
 
 
