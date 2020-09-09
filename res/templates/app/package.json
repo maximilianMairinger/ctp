@@ -1,5 +1,9 @@
 {
+  "version": "1.0.0-repl",
   "scripts": {
+    "setEnvRepl": "npm run setEnv -- --preset repl",
+    "setEnvProd": "npm run setEnv -- --preset prod",
+    "setEnv": "node setEnv.js",
     "devApp": "    concurrently \"npm run buildDevReplServer\" \"node devServerInit.js --dev repl\"        \"npm run buildDevApp\"      \"npm run buildDevSw\"          -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
     "devServer": " concurrently \"npm run buildDevServer\"     \"node devServerInit.js --dev server\"      \"npm run buildDevReplApp\"                                  -n \"serv,node,_app\"      -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
     "dev": "       concurrently \"npm run buildDevServer\"     \"node devServerInit.js --dev server\"      \"npm run buildDevApp\"      \"npm run buildDevSw\"          -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
