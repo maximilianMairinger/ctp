@@ -8,3 +8,7 @@ fs.writeFileSync(".deploy", preset)
 let packageJson = editJson("package.json")
 packageJson.set("version", "1.0.0-" + preset)
 packageJson.save()
+
+if (fs.existsSync("pm2Reload.js")) {
+  require("./pm2Reload.js")
+}
