@@ -10,6 +10,8 @@ public/sw.js
 public/sw.*.js
 
 ecosystem.config.js
+.ecosystemCache
+pm2Reload.js
 
 
 deploy.zip
