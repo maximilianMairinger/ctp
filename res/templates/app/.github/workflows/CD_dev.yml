@@ -44,4 +44,4 @@ jobs:
           rm package-lock.json
           npm i
           npm run build --if-present
-          pm2 reload ecosystem.config.js
+          node pm2Reload.js
