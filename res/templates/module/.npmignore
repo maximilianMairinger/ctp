@@ -3,6 +3,7 @@
 src
 ./index.html
 
+.github
 
 ./tsconfig.prod.json
 ./tsconfig.dev.json
