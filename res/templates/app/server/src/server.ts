@@ -7,9 +7,10 @@ const args = require("yargs").argv
 
 const port = args.port === undefined ? 6051 : args.port
 
-
-const url = 'mongodb://localhost:27017';
-const dbName = '$[name]';
+const dbConfig = {
+  url: "mongodb://localhost:27017",
+  dbName: "$[name]"
+};
 
 
 
@@ -18,8 +19,8 @@ const dbName = '$[name]';
   app.use(bodyParser.urlencoded({extended: false}));
   app.use(bodyParser.json());
 
-  let client = await MongoClient.connect(url, { useUnifiedTopology: true });
-  let db = client.db(dbName)
+  let client = await MongoClient.connect(dbConfig.url, { useUnifiedTopology: true });
+  let db = client.db(dbConfig.dbName)
   
 
   app.post("/call", (req, res) => {
