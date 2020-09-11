@@ -29,9 +29,9 @@ function formatPath (path: string) {
 const swInjection = fs.readFileSync(pth.join(__dirname, "./../res/live-reload-inject.js")).toString()
 
 
+const publicPath = "./public"
 
-
-export default function init(indexUrl: string = "/", publicPath: string = "./public", wsUrl: string = "/") {
+export default function init(indexUrl: string = "/", wsUrl: string = "/") {
 
   if (!wsUrl.startsWith("/")) wsUrl = "/" + wsUrl
 
