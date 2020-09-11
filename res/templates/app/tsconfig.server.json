@@ -8,6 +8,8 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
+    "./replServer/src",
     "./server/src"
   ]
 }
+ 
