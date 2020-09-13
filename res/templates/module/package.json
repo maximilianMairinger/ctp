@@ -10,7 +10,7 @@
     "devWeb": "rollup --config rollup.web.dev.config.js -w",
     "devNode": "rollup --config rollup.node.dev.config.js -w",
     "deploy": "npm run build && npm publish",
-    "test": "node ./test/dist/test-bundle"
+    "test": "node ./test/dist/$[name]-repl.js"
   },
   "repository": {
     "type": "git",
