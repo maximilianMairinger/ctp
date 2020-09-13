@@ -42,7 +42,7 @@ export default function init(indexUrl: string = "/", wsUrl: string = "/") {
   chokidar.watch(publicPath, { ignoreInitial: true }).on("all", (event, path) => {
     path = formatPath(path)
 
-    console.log("Change at: \"" + path + "\"; Restaring app.")
+    console.log("Change at: \"" + path + "\"; Restarting app.")
 
 
     clients.forEach((c) => {
