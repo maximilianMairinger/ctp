@@ -1,4 +1,4 @@
-const merge = require("webpack-merge")
+const { merge } = require("webpack-merge")
 const commonMod = require("./webpack.replApp.common.config")
 
 module.exports = (env) => {

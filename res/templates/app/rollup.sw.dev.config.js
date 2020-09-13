@@ -1,4 +1,4 @@
-import merge from "webpack-merge"
+import { merge } from "webpack-merge"
 import commonMod from "./rollup.sw.common.config"
 
 
