@@ -10,7 +10,7 @@ module.exports = (env) => {
         {
           test: /\.css$/,
           use: [
-            {loader: 'postcss-loader', options: {config: {path: "./"}}}
+            {loader: 'postcss-loader', options: {postcssOptions: {path: "./"}}}
           ]
         }
       ]
