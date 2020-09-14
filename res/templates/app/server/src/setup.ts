@@ -9,6 +9,7 @@ import fs from "fs"
 import detectPort from "detect-port"
 
 
+
 const defaultPortStart = 3050
 
 export type SendFileProxyFunc = (file: string, ext: string, fileName: string) => Promise<string | void | null> | string | void | null
@@ -24,6 +25,24 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
   app.use(bodyParser.urlencoded({extended: false}))
   app.use(bodyParser.json())
 
+
+  let sendFileProxyLoaded: Function =  (res: any) => (path: string) => {
+    res.old_sendFile(pth.join(pth.resolve(""), path))
+  }
+  if (sendFileProxy) {
+    (async () => {
+      let proxy = await sendFileProxy
+      sendFileProxyLoaded = (res: any) => async (path: string) => {
+        let file = fs.readFileSync(path).toString()
+        let extName = pth.extname(path)
+        let end = await proxy(file, pth.extname(path), pth.basename(path, extName))
+        if (end === undefined) res.send(file)
+        else if (end === null) res.status(400).end()
+        else res.send(end)
+      }
+    })()
+  }
+
   //@ts-ignore
   app.old_get = app.get
   //@ts-ignore
@@ -32,25 +51,7 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
     //@ts-ignore
     app.old_get(url, (req, res) => {
       res.old_sendFile = res.sendFile
-
-
-      res.sendFile = (path: string) => {
-        res.old_sendFile(pth.join(pth.resolve(""), path))
-      }
-      if (sendFileProxy) {
-        (async () => {
-          let proxy = await sendFileProxy
-          res.sendFile = async (path: string) => {
-            let file = fs.readFileSync(path).toString()
-            let extName = pth.extname(path)
-            let end = await proxy(file, pth.extname(path), pth.basename(path, extName))
-            if (end === undefined) res.send(file)
-            else if (end === null) res.status(400).end()
-            else res.send(end)
-          }
-        })()
-      }
-
+      res.sendFile = sendFileProxyLoaded(res)
       cb(req, res)
     })
   }
@@ -64,12 +65,15 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
   //@ts-ignore
   app.port = port
 
+  
 
-
-  app.use(express.static(pth.join(pth.resolve(""), publicPath)))
+  
   app.get(indexUrl, (req, res) => {
     res.sendFile("public/index.html")
   })
+  app.use(express.static(pth.join(pth.resolve(""), publicPath)))
+
+  
 
   port.then(app.listen.bind(app))
 

@@ -1,7 +1,4 @@
 const ws = new WebSocket(url);
-ws.addEventListener("open", () => {
-  ws.send("hello")
-})
 
 ws.addEventListener("message", reload)
 ws.addEventListener("error", reload)

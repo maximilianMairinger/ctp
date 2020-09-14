@@ -39,11 +39,12 @@ export default function init(indexUrl: string = "/", wsUrl: string = "/") {
 
   //@ts-ignore
   let clients: Set<WebSocket> = appWss.getWss(wsUrl).clients
+  app.ws(wsUrl, () => {})
+  
   chokidar.watch(publicPath, { ignoreInitial: true }).on("all", (event, path) => {
     path = formatPath(path)
 
     console.log("Change at: \"" + path + "\"; Restarting app.")
-
 
     clients.forEach((c) => {
       c.send("reload please")
