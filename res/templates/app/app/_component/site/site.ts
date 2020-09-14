@@ -1,4 +1,5 @@
 import Component from "../component"
+import declareComponent from "../../lib/declareComponent"
 
 export default class Site extends Component {
 
@@ -16,4 +17,4 @@ export default class Site extends Component {
   }
 }
 
-window.customElements.define('c-site', Site);
+declareComponent("site", Site)
