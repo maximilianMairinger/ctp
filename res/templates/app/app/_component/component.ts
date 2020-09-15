@@ -4,6 +4,8 @@ import { DataBase, Data } from "josm";
 type PrimElem = string | number | boolean | Element
 type Token = string | string[]
 
+const compCss = require('./component.css')
+
 
 export default abstract class Component extends HTMLElement {
   protected sr: ShadowRoot;
@@ -12,6 +14,13 @@ export default abstract class Component extends HTMLElement {
   constructor(componentBodyExtention?: HTMLElement | false) {
     super();
     this.sr = this.attachShadow({mode: "open"});
+
+    let thisStl = this.stl()
+    let thisPug = this.pug() as any
+    if (typeof thisPug === "object") {
+      if (typeof thisPug.default === "string") thisPug = thisPug.default
+      else thisPug = thisPug.toString()
+    }
 
     
     if (componentBodyExtention !== false) {
@@ -22,14 +31,14 @@ export default abstract class Component extends HTMLElement {
       else this.componentBody = ce("component-body")
 
 
-      this.sr.html("<!--General styles--><style>" + require('./component.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>")
+      this.sr.html("<!--General styles--><style>" + compCss + "</style><!--Main styles--><style>" + thisStl + "</style>")
       this.sr.append(this.componentBody)
-      this.componentBody.html(this.pug(), lang)
+      this.componentBody.html(thisPug, lang)
     }
     else {
       //@ts-ignore
       this.componentBody = this.sr
-      this.sr.html("<!--General styles--><style>" + require('./component.css').toString() + "</style><!--Main styles--><style>" + this.stl() + "</style>").apd(this.pug(), lang)
+      this.sr.html("<!--General styles--><style>" + compCss + "</style><!--Main styles--><style>" + thisStl + "</style>").apd(thisPug, lang)
     }
 
   }
@@ -51,8 +60,8 @@ export default abstract class Component extends HTMLElement {
   }
 
 
-  public abstract stl(): string;
-  public abstract pug(): string;
+  public stl?(): string;
+  public pug?(): string | object;
 }
 
 
