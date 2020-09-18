@@ -1,8 +1,8 @@
 import Serialize from "./serialize/serialize"
 import cloneShallow from "shallow-clone"
 
-export default async function(serilationName: string, func: (_default: GenericObject) => (GenericObject | Function)[], explicitlyInclude?: string[]) {
-  let ser = new Serialize(serilationName)
+export default async function(serializationName: string, func: (_default: GenericObject) => (GenericObject | Function)[], explicitlyInclude?: string[]) {
+  let ser = new Serialize(serializationName)
   let defaults = await ser.read()
   let ar = await func(defaults)
 
@@ -18,16 +18,16 @@ export default async function(serilationName: string, func: (_default: GenericOb
   })
 
   ar.add(async (options: any) => {
-    let optionsWithoutSensitiveInformations = cloneShallow(options)
+    let optionsWithoutSensitiveInformation = cloneShallow(options)
 
-    for (const key in optionsWithoutSensitiveInformations) {
-      if (!include.includes(key) || optionsWithoutSensitiveInformations[key] === "" || optionsWithoutSensitiveInformations[key] === null) delete optionsWithoutSensitiveInformations[key]
-      else if (defaults[key] !== undefined && optionsWithoutSensitiveInformations[key] === undefined) optionsWithoutSensitiveInformations[key] = defaults[key]
+    for (const key in optionsWithoutSensitiveInformation) {
+      if (!include.includes(key) || optionsWithoutSensitiveInformation[key] === "" || optionsWithoutSensitiveInformation[key] === null) delete optionsWithoutSensitiveInformation[key]
+      else if (defaults[key] !== undefined && optionsWithoutSensitiveInformation[key] === undefined) optionsWithoutSensitiveInformation[key] = defaults[key]
     }
 
     
     
-    await ser.write(optionsWithoutSensitiveInformations)
+    await ser.write(optionsWithoutSensitiveInformation)
   })
   return ar
 }
