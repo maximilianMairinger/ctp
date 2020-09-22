@@ -56,10 +56,10 @@ export default function init(indexUrl: string = "/", wsUrl: string = "/") {
   app.port.then((port) => {
   // inject
   const swInjUrl = `
-<!-- Code Injected By the live server -->
+<!-- Code Injected by the live server -->
 <script>
 (() => {
-let url = "ws://127.0.0.1:${port}${wsUrl}";
+let wsUrl = "${wsUrl}";
 ${swInjection}
 })()
 </script>`
