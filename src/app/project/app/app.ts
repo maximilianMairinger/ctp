@@ -150,6 +150,7 @@ export default async function(options: Options) {
       default_branch: "dev"
     })
 
+    shell("git pull")
     shell("git checkout dev")
 
 
