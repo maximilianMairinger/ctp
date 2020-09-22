@@ -2,7 +2,7 @@
 
 $[description]
 
-> Please not that $[nameWithSpaces] is currently under development and not yet suited for production
+> Please note that $[nameWithSpaces] is currently under development and not yet suited for production
 
 ## Installation
 
