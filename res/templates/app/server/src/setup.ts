@@ -3,7 +3,6 @@ import * as bodyParser from "body-parser"
 import xrray from "xrray"; xrray(Array);
 import * as MongoDB from "mongodb";
 const MongoClient = MongoDB.MongoClient
-const args = require("yargs").argv
 import pth from "path"
 import fs from "fs"
 import detectPort from "detect-port"
@@ -56,11 +55,12 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
     })
   }
 
-  let port = args.port
-  if (port === undefined) {
-    port = (detectPort(defaultPortStart) as Promise<number>).then((port) => {console.log("No port given, using fallback - Serving on http://127.0.0.1:" + port)})
+  let prt = process.env.port
+  let port: Promise<number>
+  if (prt === undefined) {
+    port = (detectPort(defaultPortStart) as Promise<number>).then((port) => {console.log("No port given, using fallback - Serving on http://127.0.0.1:" + port)}) as Promise<number>
   }
-  else port = Promise.resolve(port)
+  else port = Promise.resolve(+prt)
 
   //@ts-ignore
   app.port = port
