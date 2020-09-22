@@ -63,7 +63,9 @@ let appEntryPath = path.join(appDir, appEntryFileName);
   let server = nodemon({
     watch: serverDir,
     script: serverEntryPath,
-    args: ["--port", gotPort]
+    env: {
+      port: gotPort
+    }
   })
 
   server.on("restart", (e) => {
