@@ -37,7 +37,7 @@ module.exports = () => {
                 },
                 {
                     test: /\.(png|jpg|gif|jpeg|woff|woff2|eot|ttf|svg)$/,
-                    loader: 'url-loader?limit=100000'
+                    loader: 'url-loader?limit=100000000'
                 },
                 {
                     test: /\.pug$/,
