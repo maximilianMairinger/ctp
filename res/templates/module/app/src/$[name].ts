@@ -1,5 +1,7 @@
 $[dependencyImports]
 
-export default function() {
+export function $[name]() {
   
 }
+
+export default $[name]
