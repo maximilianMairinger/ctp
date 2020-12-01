@@ -176,7 +176,7 @@ export default async function(options: Options) {
 
       ssh.dispose()
     }
-    else info("Skipping remote CD setup. No valid authentication method available.")
+    else info("Skipping remote CD setup.")
 
     
   }
