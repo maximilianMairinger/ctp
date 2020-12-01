@@ -52,7 +52,6 @@
     "recursive-copy": "^2.0.11",
     "shallow-clone": "^3.0.1",
     "shelljs": "^0.8.4",
-    "ssh2-promise": "^0.1.7",
     "then-fs": "^2.0.0",
     "tweetnacl-util": "^0.15.1",
     "tweetsodium": "0.0.5",
