@@ -5,7 +5,7 @@ import { promises as fs } from "fs"
 import { Octokit }  from "@octokit/rest"
 import inq from "./cli/inquery/inq"
 import { error, info, log } from "./lib/logger/logger"
-import SSH from "ssh2-promise"
+import { NodeSSH as SSH } from "node-ssh"
 import delay from "delay"
 
 
@@ -101,24 +101,24 @@ export const index = {
   },
   async remoteSSHKeyPassphrase() {
 
-    let ssh = new SSH({
-      host: o.remote,
-      username: o.remoteUser,
-      privateKey : o.remoteSSHKey,
-      passphrase: o.remoteSSHKeyPassphrase
-    })
+    let ssh = new SSH()
   
     info("Connect to SSH remote at " + o.remote)
     
     try {
-      await ssh.connect()
+      await ssh.connect({
+        host: o.remote,
+        username: o.remoteUser,
+        privateKey : o.remoteSSHKey,
+        passphrase: o.remoteSSHKeyPassphrase
+      })
     }
     catch (e) {
       // error("SSH: Unable to connect to " + o.remote + ": ")
       // error(await e.message)
       // info(e)
       set("isSSHRemoteValid", false, true)
-      ssh.close()
+      ssh.dispose()
       return
     }
     set("remoteSSHClient", ssh, true)

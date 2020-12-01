@@ -1,5 +1,5 @@
 import npmSetup from "../../setupCL/npmSetup"
-import SSH from "ssh2-promise"
+import { NodeSSH as SSH } from "node-ssh"
 import { error, info, log, warn } from "../../lib/logger/logger"
 import { Octokit } from "@octokit/rest"
 import shell, { setDestination as setShellDestination } from "./../../setupCL/shell"
@@ -18,7 +18,7 @@ export default async function(options: Options) {
   let octokit = options.octokit as Octokit
   let ssh = options.remoteSSHClient as SSH
 
-  let publish = false
+  let isOkToPublish = false
 
   if (octokit) {
 
@@ -32,7 +32,7 @@ export default async function(options: Options) {
         homepage: `https://${options.publishDomain.toLowerCase()}`
       })
 
-      publish = true
+      isOkToPublish = true
 
       try {
         info("Setting topics")
@@ -46,7 +46,7 @@ export default async function(options: Options) {
         
       }
       catch(e) {
-        warn("Failed to set topics")
+        warn("Failed to set topics. Maybe you've used unsupported characters. Continuing anyway :D")
       }
 
 
@@ -61,12 +61,12 @@ export default async function(options: Options) {
         });
 
         
-        if (res.data.empty) publish = true
+        if (res.data.empty) isOkToPublish = true
         else warn("Unable to publish repo. Remote already exists and is a non empty repositotry.")
       }
       catch(e) {
         if (e.message === "Git Repository is empty.") {
-          publish = true
+          isOkToPublish = true
         }
         else {
           warn("Faild to publish repo")
@@ -84,7 +84,7 @@ export default async function(options: Options) {
 
   
 
-  if (publish) {
+  if (isOkToPublish) {
 
     let req = await octokit.actions.getRepoPublicKey({
       owner: options.githubUsername,
@@ -120,14 +120,14 @@ export default async function(options: Options) {
     ])
 
   }
-  else if (ssh) ssh.close()
+  else if (ssh) ssh.dispose()
 
 
 
-  await gitSetup(options, publish)
+  await gitSetup(options, isOkToPublish)
 
 
-  if (publish) {
+  if (isOkToPublish) {
     // create dev branch and set it as default
 
     let masterRef = (await octokit.git.getRef({
@@ -161,14 +161,20 @@ export default async function(options: Options) {
       info("ssh")
       
       try {
-        await ssh.exec(`cd ~/nginxCdSetup && source ~/.nvm/nvm.sh && nvm use 14.0.0 && node start --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`)
+        await ssh.exec(`cd ~/nginxCdSetup && source ~/.nvm/nvm.sh && nvm use 14.0.0 && node start --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`, [], {
+          onStdout(chunk) {
+            let str = chunk.toString('utf8')
+            if (str.endsWith("\n")) str.substr(0, str.length - 1)
+            info("ssh: ", str)
+          }
+        })
       }
       catch(e) {
         warn("Error from ssh")
         warn(e.toString())
       }
 
-      ssh.close()
+      ssh.dispose()
     }
     else info("Skipping remote CD setup. No valid authentication method available.")
 
