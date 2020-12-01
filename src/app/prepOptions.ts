@@ -59,7 +59,7 @@ export const index = {
   async remoteSSHKeyPath() {
     let pth = path.resolve(o.remoteSSHKeyPath)
     try {
-      set("remoteSSHKey", await fs.readFile(pth))
+      set("remoteSSHKey", (await fs.readFile(pth)).toString())
       set("isRemoteSSHKeyPathValid", true, true)
     }
     catch(e) {
