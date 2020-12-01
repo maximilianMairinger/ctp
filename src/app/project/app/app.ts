@@ -164,7 +164,7 @@ export default async function(options: Options) {
         await ssh.exec(`cd ~/nginxCdSetup && source ~/.nvm/nvm.sh && nvm use 14.0.0 && node start --name ${options.name} --domain ${options.publishDomain.toLowerCase()} --githubUsername ${options.githubUsername}`, [], {
           onStdout(chunk) {
             let str = chunk.toString('utf8')
-            if (str.endsWith("\n")) str.substr(0, str.length - 1)
+            if (str.endsWith("\n")) str = str.substr(0, str.length - 1)
             info("ssh: ", str)
           }
         })
