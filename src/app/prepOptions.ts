@@ -125,7 +125,7 @@ export const index = {
     set("remoteSSHClient", ssh, true)
     set("isSSHRemoteValid", true, true)
   },
-  async publishDomain() {
+  publishDomain() {
     let domain = o.publishDomain
     domain = domain.split(".").map(s => slugify(s)).join(".").toLowerCase()
     // just in case slugify changes its behaviour
