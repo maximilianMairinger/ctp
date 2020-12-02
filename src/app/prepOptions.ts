@@ -7,6 +7,7 @@ import inq from "./cli/inquery/inq"
 import { error, info, log } from "./lib/logger/logger"
 import { NodeSSH as SSH } from "node-ssh"
 import delay from "delay"
+import slugify from "slugify"
 
 
 let o: any
@@ -125,7 +126,13 @@ export const index = {
     set("isSSHRemoteValid", true, true)
   },
   async publishDomain() {
-    set("baseDomain", o.publishDomain.split(".").rmI(0).join("."))
+    let domain = o.publishDomain
+    domain = domain.split(".").map(s => slugify(s)).join(".").toLowerCase()
+    // just in case slugify changes its behaviour
+    domain = domain.split("|").join("or")
+
+    set("baseDomain", domain.publishDomain.split(".").rmI(0).join("."))
+    return domain
   },
   web() {
     set("defaultDevScript", o.web ? "devWeb" : "devNode")
