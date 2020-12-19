@@ -45,13 +45,13 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
   //@ts-ignore
   app.old_get = app.get
   //@ts-ignore
-  app.get = (url: string, cb: (req: any, res: any) => void) => {
+  app.get = (url: string, cb: (req: any, res: any, next) => void) => {
 
     //@ts-ignore
-    app.old_get(url, (req, res) => {
+    app.old_get(url, (req, res, next) => {
       res.old_sendFile = res.sendFile
       res.sendFile = sendFileProxyLoaded(res)
-      cb(req, res)
+      cb(req, res, next)
     })
   }
 
