@@ -131,7 +131,8 @@ export const index = {
     // just in case slugify changes its behaviour
     domain = domain.split("|").join("or")
 
-    set("baseDomain", domain.publishDomain.split(".").rmI(0).join("."))
+    let baseDomain = domain.split(".").rmI(0).join(".")
+    set("baseDomain", baseDomain)
     return domain
   },
   web() {
