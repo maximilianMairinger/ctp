@@ -26,14 +26,13 @@ const publicPath = "./public"
 export default function init(indexUrl: string = "*", wsUrl: string = "/") {
   if (!wsUrl.startsWith("/")) wsUrl = "/" + wsUrl
 
-  let appWss: any
 
   let activateSetFileProxy: (f: SendFileProxyFunc) => void
 
   let clients: Set<WebSocket>
   const ex = configureExpressApp(indexUrl, publicPath, new Promise((res) => {activateSetFileProxy = res}), (app) => {
-    appWss = expressWs(app)
-    clients = appWss.getWss(wsUrl).clients
+    let appWss = expressWs(app)
+    clients = appWss.getWss(wsUrl).clients;
     (app as any).ws(wsUrl, () => {})
   })
 
