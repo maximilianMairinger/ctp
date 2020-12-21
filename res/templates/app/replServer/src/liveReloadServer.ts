@@ -30,16 +30,15 @@ export default function init(indexUrl: string = "*", wsUrl: string = "/") {
 
   let activateSetFileProxy: (f: SendFileProxyFunc) => void
 
-  let ex = configureExpressApp(indexUrl, publicPath, new Promise((res) => {activateSetFileProxy = res}), (app) => {
+  let clients: Set<WebSocket>
+  const ex = configureExpressApp(indexUrl, publicPath, new Promise((res) => {activateSetFileProxy = res}), (app) => {
     appWss = expressWs(app)
+    clients = appWss.getWss(wsUrl).clients
+    (app as any).ws(wsUrl, () => {})
   })
 
-  let app = ex as typeof ex & { ws: (route: string, fn: (ws: WebSocket & {on: WebSocket["addEventListener"], off: WebSocket["removeEventListener"]}, req: any) => void) => void }
+  const app = ex as typeof ex & { ws: (route: string, fn: (ws: WebSocket & {on: WebSocket["addEventListener"], off: WebSocket["removeEventListener"]}, req: any) => void) => void }
   
-
-  //@ts-ignore
-  let clients: Set<WebSocket> = appWss.getWss(wsUrl).clients
-  app.ws(wsUrl, () => {})
   
   chokidar.watch(publicPath, { ignoreInitial: true }).on("all", (event, path) => {
     path = formatPath(path)

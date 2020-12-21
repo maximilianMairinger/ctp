@@ -13,12 +13,12 @@ const defaultPortStart = 3050
 
 export type SendFileProxyFunc = (file: string, ext: string, fileName: string) => Promise<string | void | null> | string | void | null
 
-export function configureExpressApp(indexUrl: string, publicPath: string, sendFileProxy?: Promise<SendFileProxyFunc> | SendFileProxyFunc, initProxy?: (app: express.Express) => express.Express | void): express.Express & { port: Promise<number> } {
+export function configureExpressApp(indexUrl: string, publicPath: string, sendFileProxy?: Promise<SendFileProxyFunc> | SendFileProxyFunc, middleware?: (app: express.Express) => express.Express | void): express.Express & { port: Promise<number> } {
   if (indexUrl !== "*") if (!indexUrl.startsWith("/")) indexUrl = "/" + indexUrl
 
   let app = express()
-  if (initProxy) {
-    let q = initProxy(app)
+  if (middleware) {
+    let q = middleware(app)
     if (q !== undefined && q !== null) app = q as any
   }
   app.use(bodyParser.urlencoded({extended: false}))
