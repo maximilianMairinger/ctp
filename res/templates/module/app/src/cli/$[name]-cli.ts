@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import $[name] from "../$[name]"
 import { program } from "commander"
-import config from "./packageJsonConfig"
+import config from "req-package-json"
 
 
 program
