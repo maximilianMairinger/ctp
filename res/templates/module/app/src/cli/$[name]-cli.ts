@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import $[name] from "../$[name]"
 import { program } from "commander"
-import config from "req-package-json"
-
+import reqPackageJson from "req-package-json"
+const config = reqPackageJson()
 
 program
   .version(config.version)
