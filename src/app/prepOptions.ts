@@ -5,8 +5,9 @@ import { promises as fs } from "fs"
 import { Octokit }  from "@octokit/rest"
 import inq from "./cli/inquery/inq"
 import { error, info, log } from "./lib/logger/logger"
-import SSH from "ssh2-promise"
+import { NodeSSH as SSH } from "node-ssh"
 import delay from "delay"
+import slugify from "slugify"
 
 
 let o: any
@@ -59,7 +60,7 @@ export const index = {
   async remoteSSHKeyPath() {
     let pth = path.resolve(o.remoteSSHKeyPath)
     try {
-      set("remoteSSHKey", await fs.readFile(pth))
+      set("remoteSSHKey", (await fs.readFile(pth)).toString())
       set("isRemoteSSHKeyPathValid", true, true)
     }
     catch(e) {
@@ -101,31 +102,38 @@ export const index = {
   },
   async remoteSSHKeyPassphrase() {
 
-    let ssh = new SSH({
-      host: o.remote,
-      username: o.remoteUser,
-      privateKey : o.remoteSSHKey,
-      passphrase: o.remoteSSHKeyPassphrase
-    })
+    let ssh = new SSH()
   
     info("Connect to SSH remote at " + o.remote)
     
     try {
-      await ssh.connect()
+      await ssh.connect({
+        host: o.remote,
+        username: o.remoteUser,
+        privateKey : o.remoteSSHKey,
+        passphrase: o.remoteSSHKeyPassphrase
+      })
     }
     catch (e) {
       // error("SSH: Unable to connect to " + o.remote + ": ")
       // error(await e.message)
       // info(e)
       set("isSSHRemoteValid", false, true)
-      ssh.close()
+      ssh.dispose()
       return
     }
     set("remoteSSHClient", ssh, true)
     set("isSSHRemoteValid", true, true)
   },
-  async publishDomain() {
-    set("baseDomain", o.publishDomain.split(".").rmI(0).join("."))
+  publishDomain() {
+    let domain = o.publishDomain
+    domain = domain.split(".").map(s => slugify(s)).join(".").toLowerCase()
+    // just in case slugify changes its behaviour
+    domain = domain.split("|").join("or")
+
+    let baseDomain = domain.split(".").rmI(0).join(".")
+    set("baseDomain", baseDomain)
+    return domain
   },
   web() {
     set("defaultDevScript", o.web ? "devWeb" : "devNode")

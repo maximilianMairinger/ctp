@@ -13,12 +13,12 @@ const defaultPortStart = 3050
 
 export type SendFileProxyFunc = (file: string, ext: string, fileName: string) => Promise<string | void | null> | string | void | null
 
-export function configureExpressApp(indexUrl: string, publicPath: string, sendFileProxy?: SendFileProxyFunc, initProxy?: (app: express.Express) => express.Express | void): express.Express & { port: Promise<number> } {
-  if (!indexUrl.startsWith("/")) indexUrl = "/" + indexUrl
+export function configureExpressApp(indexUrl: string, publicPath: string, sendFileProxy?: Promise<SendFileProxyFunc> | SendFileProxyFunc, middleware?: (app: express.Express) => express.Express | void): express.Express & { port: Promise<number> } {
+  if (indexUrl !== "*") if (!indexUrl.startsWith("/")) indexUrl = "/" + indexUrl
 
   let app = express()
-  if (initProxy) {
-    let q = initProxy(app)
+  if (middleware) {
+    let q = middleware(app)
     if (q !== undefined && q !== null) app = q as any
   }
   app.use(bodyParser.urlencoded({extended: false}))
@@ -45,13 +45,13 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
   //@ts-ignore
   app.old_get = app.get
   //@ts-ignore
-  app.get = (url: string, cb: (req: any, res: any) => void) => {
+  app.get = (url: string, cb: (req: any, res: any, next) => void) => {
 
     //@ts-ignore
-    app.old_get(url, (req, res) => {
+    app.old_get(url, (req, res, next) => {
       res.old_sendFile = res.sendFile
       res.sendFile = sendFileProxyLoaded(res)
-      cb(req, res)
+      cb(req, res, next)
     })
   }
 
@@ -66,12 +66,12 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
   app.port = port
 
   
-
+  app.use(express.static(pth.join(pth.resolve(""), publicPath)))
   
   app.get(indexUrl, (req, res) => {
     res.sendFile("public/index.html")
   })
-  app.use(express.static(pth.join(pth.resolve(""), publicPath)))
+  
 
   
 

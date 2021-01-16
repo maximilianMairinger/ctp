@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./app/dist/cjs",
+    "module": "CommonJS",
+    "target": "esnext",
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "./test",
+    "./app/dist"
+  ],
+  "include": [
+    "./app/src"
+  ]
+}
