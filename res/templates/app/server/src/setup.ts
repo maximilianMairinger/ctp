@@ -11,7 +11,7 @@ import detectPort from "detect-port"
 
 const defaultPortStart = 3050
 
-export type SendFileProxyFunc = (file: string, ext: string, fileName: string) => Promise<string | void | null> | string | void | null
+export type SendFileProxyFunc = (file: string, ext: string, fileName: string) => string | void | null
 
 export function configureExpressApp(indexUrl: string, publicPath: string, sendFileProxy?: Promise<SendFileProxyFunc> | SendFileProxyFunc, middleware?: (app: express.Express) => express.Express | void): express.Express & { port: Promise<number> } {
   if (indexUrl !== "*") if (!indexUrl.startsWith("/")) indexUrl = "/" + indexUrl
