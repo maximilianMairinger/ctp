@@ -9,14 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     
     steps: 
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@master
+    - name: "Checkout"
+      uses: actions/checkout@master
+    - name: "Setup node"
+      uses: actions/setup-node@master
       with:
-        node-version: '14.x'
-    - run: |
-        npm i
-        npm run build --if-present
-        npm test --if-present
-      env:
-        CI: true
-        
+        node-version: '15.x'
+
+    - name: Installing runner dependencies
+      run: npm i
+    
+    - name: "Building"
+      run: npm run build --if-present
+
+    - name: "Testing"
+      run: npm test --if-present

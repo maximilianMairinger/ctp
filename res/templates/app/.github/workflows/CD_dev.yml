@@ -5,30 +5,70 @@ on:
     branches:
     - dev
 
-jobs:
 
-  CI: 
-    name: CI
+jobs:
+  build: 
     runs-on: ubuntu-latest
     
     steps: 
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@master
-      with:
-        node-version: '14.x'
-    - run: |
-        npm i
-        npm run build --if-present
-        npm test --if-present
-      env:
-        CI: true
-  CD:
-    name: CD
-    runs-on: ubuntu-latest
-    needs: CI
+    - name: "checkout"
+      uses: actions/checkout@master
 
+    - name: Setting up node
+      uses: actions/setup-node@master
+      with:
+        node-version: '15.x'
+
+    - name: Installing runner dependencies
+      run: npm i
+
+    - name: set environment variables
+      uses: allenevans/set-env@v2.0.0
+      with:
+        GOOGLE_MAPS_API_KEY: '${{ secrets.MAPS_API_KEY }}'
+    
+    - name: "Building"
+      run: npm run build --if-present
+
+    - name: "Testing"
+      run: npm test --if-present
+
+    - name: "Copying files to remote"
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "public,server/dist,server/res,replServer/dist,replServer/res,.deploy"
+        target: /var/www/html/$[ name ]/dev
+        tar_tmp_path: true
+
+
+    
+    
+
+  dependencies: 
+    runs-on: ubuntu-latest
+
+    
     steps: 
-    - uses: appleboy/ssh-action@master
+    - name: "checkout"
+      uses: actions/checkout@master
+
+    - name: Copy dependency files
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "package.json"
+        target: /var/www/html/$[ name ]/dev
+        tar_tmp_path: true
+
+    - name: Installing dependencies on remote
+      uses: appleboy/ssh-action@master
       with: 
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
@@ -36,12 +76,25 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           cd /var/www/html/$[ name ]/dev
-          git pull
           source ~/.nvm/nvm.sh
-          nvm use 14.0.0
-          wait-on ecosystem.config.js
-          rm -r node_modules
-          rm package-lock.json
+          nvm use 15.11.0
           npm i
-          npm run build --if-present
+
+  deploy: 
+    runs-on: ubuntu-latest
+    needs: [build, dependencies]
+
+    steps:
+    - name: Starting process
+      uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        script: |
+          cd /var/www/html/$[ name ]/dev
+          source ~/.nvm/nvm.sh
+          nvm use 15.11.0
+          wait-on ecosystem.config.js
           node pm2Reload.js
