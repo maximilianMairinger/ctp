@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "outDir": "./app/dist/esm",
-    "module": "esnext",
-    "target": "esnext",
+    "module": "ES2020",
+    "target": "ES2020",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "declaration": true,
