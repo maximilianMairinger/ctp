@@ -9,6 +9,7 @@ on:
 jobs:
   build: 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     
     steps: 
     - name: "checkout"
@@ -45,11 +46,44 @@ jobs:
         tar_tmp_path: true
 
 
-    
+  compressImages: 
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps: 
+    - name: "checkout"
+      uses: actions/checkout@master
+      with:
+        lfs: "true"
+
+
+    - name: Setting up node
+      uses: actions/setup-node@master
+      with:
+        node-version: '15.x'
+
+    - name: Installing runner dependencies
+      run: npm i
+
+
+    - name: "Compressing images"
+      run: npm run compressImages
+
+    - name: "Copying files to remote"
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "public/res/img/dist"
+        target: /var/www/html/$[ name ]/dev
+        tar_tmp_path: true
     
 
   dependencies: 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     
     steps: 
@@ -82,7 +116,8 @@ jobs:
 
   deploy: 
     runs-on: ubuntu-latest
-    needs: [build, dependencies]
+    needs: [build, dependencies, compressImages]
+    timeout-minutes: 15
 
     steps:
     - name: Starting process
