@@ -31,7 +31,7 @@ export default async function(options: Options) {
   
   
     let recursiveCheckKeywords = recursiveCheckList("keywords")
-    let recursiveCheckDependencies = recursiveCheckList("dependencies")
+    // let recursiveCheckDependencies = recursiveCheckList("dependencies")
   
   
     
@@ -49,8 +49,8 @@ export default async function(options: Options) {
         return {name: "keywordsString", message: "Optional: Keywords", default: def}
       },
       recursiveCheckKeywords,
-      {name: "dependenciesString", message: "Dependencies: (None)"},
-      recursiveCheckDependencies,
+      // {name: "dependenciesString", message: "Dependencies: (None)"},
+      // recursiveCheckDependencies,
       {name: "author", message: "Author", default: true},
       () => {return {name: "githubUsername", message: "Github Username", default: defaults.githubUsername || camelCase(options.author) || undefined}},
       () => {

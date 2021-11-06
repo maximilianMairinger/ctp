@@ -58,7 +58,7 @@ export default async function(options: Options) {
 
   await gitSetup(options, publish)
 
-  await npmSetup(options.dependencies, options.public)
+  await npmSetup(options.public)
 }
 
 

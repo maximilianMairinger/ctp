@@ -186,7 +186,7 @@ export default async function(options: Options) {
   
   
 
-  await npmSetup(options.dependencies)
+  await npmSetup()
 }
 
 
