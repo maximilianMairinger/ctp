@@ -13,9 +13,7 @@
     "default": "./app/dist/esm/$[name].js"
   },
   "scripts": {
-    "build": "npm run buildCJS && npm run buildESM",
-    "buildCJS": "tsc -p ./tsconfig.prod.cjs.json",
-    "buildESM": "tsc -p ./tsconfig.prod.esm.json",
+    "build": "rollup --config rollup.prod.config.js -w",
     "dev": "npm run $[defaultDevScript]",
     "devWeb": "rollup --config rollup.web.dev.config.js -w",
     "devNode": "rollup --config rollup.node.dev.config.js -w",
