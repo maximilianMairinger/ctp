@@ -117,5 +117,5 @@ jobs:
           cd /var/www/html/$[ name ]/dev
           source ~/.nvm/nvm.sh
           nvm use default
-          wait-on ecosystem.config.js
+          npx --yes wait-on ecosystem.config.js
           node pm2Reload.js
