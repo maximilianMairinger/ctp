@@ -85,6 +85,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    steps:
     - name: Installing dependencies on remote
       uses: appleboy/ssh-action@master
       with: 
