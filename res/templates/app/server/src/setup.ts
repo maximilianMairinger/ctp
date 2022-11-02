@@ -58,7 +58,8 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
   let prt = process.env.port
   let port: Promise<number>
   if (prt === undefined) {
-    port = (detectPort(defaultPortStart) as Promise<number>).then((port) => {console.log("No port given, using fallback - Serving on http://127.0.0.1:" + port)}) as Promise<number>
+    port = (detectPort(defaultPortStart) as Promise<number>)
+    port.then((port) => {console.log("No port given, using fallback - Serving on http://127.0.0.1:" + port)}) as Promise<number>
   }
   else port = Promise.resolve(+prt)
 
