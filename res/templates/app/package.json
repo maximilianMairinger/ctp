@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "compressImages": "npx image-web app/res/img public/res/img/dist --resolutions 4K,2K,PREV --algorithms jpg,webp,avif",
+    "compressImages": "image-web app/res/img public/res/img/dist --resolutions 4K,2K,PREV --algorithms jpg,webp,avif",
     "setEnvRepl": "npm run setEnv -- --preset repl",
     "setEnvProd": "npm run setEnv -- --preset prod",
     "setEnv": "node setEnv.js",
@@ -50,6 +50,7 @@
     "express-ws": "^4.0.0",
     "fast-equals": "^2.0.0",
     "file-loader": "^6.2.0",
+    "image-web": "^1.2.4",
     "moment": "^2.29.1",
     "mongodb": "^3.6.3",
     "nodemon": "^2.0.7",
