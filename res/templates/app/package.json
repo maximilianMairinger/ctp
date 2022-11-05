@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "compressImages": "npx image-web app/res/img public/res/img/dist --resolutions 4K,2K,PREV --algorithms jpg,webp,avif",
     "setEnvRepl": "npm run setEnv -- --preset repl",
     "setEnvProd": "npm run setEnv -- --preset prod",
     "setEnv": "node setEnv.js",

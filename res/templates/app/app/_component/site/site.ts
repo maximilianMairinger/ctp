@@ -10,10 +10,10 @@ export default class Site extends Component {
   }
 
   stl() {
-    return require("./site.css")
+    return super.stl() + require("./site.css").toString()
   }
   pug() {
-    return require("./site.pug")
+    return require("./site.pug").default
   }
 }
 
