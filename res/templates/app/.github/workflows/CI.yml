@@ -15,7 +15,7 @@ jobs:
     - name: "Setup node"
       uses: actions/setup-node@master
       with:
-        node-version: '15.x'
+        node-version: '16.x'
 
     - name: Installing runner dependencies
       run: npm i
