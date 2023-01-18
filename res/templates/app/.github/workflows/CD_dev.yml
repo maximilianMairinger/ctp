@@ -10,6 +10,8 @@ jobs:
   detectChanges:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
+    # This should be enabled (?) But breaks when the repo is private. So just disable it then I guess?
     permissions:
       pull-requests: read
     outputs:
