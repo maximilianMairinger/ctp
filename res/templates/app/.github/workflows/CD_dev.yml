@@ -56,7 +56,7 @@ jobs:
     steps: 
     - name: "checkout"
       if: ${{ needs.detectChanges.outputs.app == 'true' }}
-      uses: actions/checkout@dev
+      uses: actions/checkout@master
 
     - name: Setting up node
       if: ${{ needs.detectChanges.outputs.app == 'true' }}
@@ -97,7 +97,7 @@ jobs:
     steps: 
     - name: "checkout"
       if: ${{ needs.detectChanges.outputs.server == 'true' }}
-      uses: actions/checkout@dev
+      uses: actions/checkout@master
 
     - name: Setting up node
       if: ${{ needs.detectChanges.outputs.server == 'true' }}
@@ -138,7 +138,7 @@ jobs:
     steps: 
     - name: "checkout"
       if: ${{ needs.detectChanges.outputs.replServer == 'true' }}
-      uses: actions/checkout@dev
+      uses: actions/checkout@master
 
     - name: Setting up node
       if: ${{ needs.detectChanges.outputs.replServer == 'true' }}
@@ -180,7 +180,7 @@ jobs:
     steps: 
     - name: "checkout"
       if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' }}
-      uses: actions/checkout@dev
+      uses: actions/checkout@master
 
     - name: Setting up node
       if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' }}
@@ -222,7 +222,7 @@ jobs:
     steps: 
     - name: "checkout"
       if: ${{ needs.detectChanges.outputs.images == 'true' }}
-      uses: actions/checkout@dev
+      uses: actions/checkout@master
       with:
         lfs: "true"
 
@@ -270,7 +270,7 @@ jobs:
     steps: 
     - name: "checkout"
       if: ${{ needs.detectChanges.outputs.public == 'true' }}
-      uses: actions/checkout@dev
+      uses: actions/checkout@master
       with:
         lfs: "true"
 
@@ -295,7 +295,7 @@ jobs:
     steps: 
     - name: "checkout"
       if: ${{ needs.detectChanges.outputs.dependencies == 'true' }}
-      uses: actions/checkout@dev
+      uses: actions/checkout@master
 
     - name: Upload dependency declaration
       if: ${{ needs.detectChanges.outputs.dependencies == 'true' }}
@@ -332,7 +332,7 @@ jobs:
     steps:
     - name: "checkout"
       if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
-      uses: actions/checkout@dev
+      uses: actions/checkout@master
 
     - name: Upload deploy option files
       if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
