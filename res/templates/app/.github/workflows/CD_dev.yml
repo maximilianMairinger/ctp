@@ -62,7 +62,7 @@ jobs:
 
     - name: Setting up node
       if: ${{ needs.detectChanges.outputs.app == 'true' }}
-      uses: actions/setup-node@dev
+      uses: actions/setup-node@master
       with:
         node-version: '16.x'
 
@@ -103,7 +103,7 @@ jobs:
 
     - name: Setting up node
       if: ${{ needs.detectChanges.outputs.server == 'true' }}
-      uses: actions/setup-node@dev
+      uses: actions/setup-node@master
       with:
         node-version: '16.x'
 
@@ -144,7 +144,7 @@ jobs:
 
     - name: Setting up node
       if: ${{ needs.detectChanges.outputs.replServer == 'true' }}
-      uses: actions/setup-node@dev
+      uses: actions/setup-node@master
       with:
         node-version: '16.x'
 
@@ -186,7 +186,7 @@ jobs:
 
     - name: Setting up node
       if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' }}
-      uses: actions/setup-node@dev
+      uses: actions/setup-node@master
       with:
         node-version: '16.x'
 
@@ -230,7 +230,7 @@ jobs:
 
     - name: Setting up node
       if: ${{ needs.detectChanges.outputs.images == 'true' }}
-      uses: actions/setup-node@dev
+      uses: actions/setup-node@master
       with:
         node-version: '16.x'
 
@@ -313,7 +313,7 @@ jobs:
 
     - name: Installing dependencies on remote
       if: ${{ needs.detectChanges.outputs.dependencies == 'true' }}
-      uses: appleboy/ssh-action@dev
+      uses: appleboy/ssh-action@master
       with: 
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
@@ -351,7 +351,7 @@ jobs:
 
     - name: Moving files from temp storage 
       if: ${{ (needs.detectChanges.outputs.images == 'true') || (needs.detectChanges.outputs.server == 'true') || (needs.detectChanges.outputs.replServer == 'true') || (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.serviceWorker == 'true') || (needs.detectChanges.outputs.public == 'true') }}
-      uses: appleboy/ssh-action@dev
+      uses: appleboy/ssh-action@master
       with: 
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
@@ -365,7 +365,7 @@ jobs:
     
     - name: Restarting server
       if: ${{ (needs.detectChanges.outputs.deployOption == 'true') || (needs.detectChanges.outputs.server == 'true') || (needs.detectChanges.outputs.replServer == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
-      uses: appleboy/ssh-action@dev
+      uses: appleboy/ssh-action@master
       with: 
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
