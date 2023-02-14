@@ -1,14 +1,10 @@
 import { DataBase } from "josm"
-import ger from "./../res/lang/ger.json"
+import de from "../res/lang/de"
+import en from "../res/lang/en"
 
-interface Lang {
-  "$[name]": {
-    "longName": "$[nameAsHumanized]"
-  }
-}
+type Lang = typeof en
 
 
-
-export const lang = new DataBase<Lang>(ger as Lang)
+export const lang = new DataBase<Lang>(en)
 export default lang
 
