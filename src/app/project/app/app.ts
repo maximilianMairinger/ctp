@@ -15,7 +15,7 @@ export * from "./schema"
 export default async function(options: Options) {
 
   
-  let octokit = options.octokit as Octokit
+  let octokit = options.octokit as Octokit as any
   let ssh = options.remoteSSHClient as SSH
 
   let isOkToPublish = false
@@ -186,7 +186,7 @@ export default async function(options: Options) {
   
   
 
-  await npmSetup()
+  await npmSetup(options)
 }
 
 
