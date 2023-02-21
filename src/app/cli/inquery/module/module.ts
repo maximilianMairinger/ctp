@@ -72,7 +72,7 @@ export const pre = (options: any) => {
 }
 
 export const post = [
-  
+  {name: "npmOtp", message: "Npm OTP (leave empty to skip)"},
 ]
 
 
