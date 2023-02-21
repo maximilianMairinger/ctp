@@ -6,6 +6,15 @@ const fs = require("fs")
 const open = require("open")
 const waitOn = require("wait-on")
 const del = require("del")
+const chokidar = require("chokidar")
+const delay = require("tiny-delay")
+let imageWeb
+try {
+  imageWeb = require("image-web")
+}
+catch(e) {
+  console.log("Unable to load image-web, skipping image compression. This is probably due to the fact that sharp not able to properly install.")
+}
 
 // configureable
 const serverEntryFileName = "server.js"
@@ -60,6 +69,28 @@ let appEntryPath = path.join(appDir, appEntryFileName);
     return
   }
   
+  if (imageWeb) {
+    const compressImages = imageWeb.constrImageWeb(["jpg", "webp", "avif"], ["3K", "PREV"])
+    const imgDistPath = "public/res/img/dist" 
+    const imgSrcPath = "app/res/img"
+    const imgChangeF = async (path, override) => {
+      console.log("Compressing images")
+      await delay(1000)
+      await compressImages(path, imgDistPath, { override, silent: false })
+    }
+    
+  
+    
+    imgChangeF(imgSrcPath, false)
+    chokidar.watch(imgSrcPath, { ignoreInitial: true }).on("change", (path) => imgChangeF(path, true))
+    chokidar.watch(imgSrcPath, { ignoreInitial: true }).on("add", (path) => imgChangeF(path, false))
+  }
+  
+
+
+
+
+
   let server = nodemon({
     watch: serverDir,
     script: serverEntryPath,
