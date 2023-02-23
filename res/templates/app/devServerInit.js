@@ -7,7 +7,8 @@ const open = require("open")
 const waitOn = require("wait-on")
 const del = require("del")
 const chokidar = require("chokidar")
-const delay = require("tiny-delay")
+const mkdirp = require("mkdirp")
+const {default: delay} = require("tiny-delay")
 let imageWeb
 try {
   imageWeb = require("image-web")
@@ -73,6 +74,7 @@ let appEntryPath = path.join(appDir, appEntryFileName);
     const compressImages = imageWeb.constrImageWeb(["jpg", "webp", "avif"], ["3K", "PREV"])
     const imgDistPath = "public/res/img/dist" 
     const imgSrcPath = "app/res/img"
+    mkdirp.sync(imgSrcPath)
     const imgChangeF = async (path, override) => {
       console.log("Compressing images")
       await delay(1000)
