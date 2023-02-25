@@ -51,6 +51,6 @@
     "webpack-merge": "^5.0.9"
   },
   "dependencies": {
-    "req-package-json": "^2.0.0"
+
   }
 }
