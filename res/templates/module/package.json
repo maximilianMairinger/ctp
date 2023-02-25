@@ -2,15 +2,15 @@
   "name": "$[nameAsDashCase]",
   "version": "0.0.1",
   "description": "$[description]",
-  "main": "./app/dist/esm/$[name].js",
+  "main": "./app/dist/esm/$[name].mjs",
   "types": "./app/dist/esm/$[name].d.ts",
   "bin": "./app/dist/esm/cli/$[name]-cli.js",
   "exports": {
     "node": {
-      "import": "./app/dist/esm/$[name].js",
+      "import": "./app/dist/esm/$[name].mjs",
       "require": "./app/dist/cjs/$[name].js"
     },
-    "default": "./app/dist/esm/$[name].js"
+    "default": "./app/dist/esm/$[name].mjs"
   },
   "scripts": {
     "build": "del-cli app/dist && rollup --config rollup.prod.config.js && renamer --find /\\.js$/i --replace .mjs app/dist/esm/**",
