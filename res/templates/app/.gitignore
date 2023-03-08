@@ -3,6 +3,7 @@ test.js
 dist/
 .DS_Store
 .idea*
+.deploy
 
 package-lock.json
 
