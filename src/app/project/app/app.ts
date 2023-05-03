@@ -1,4 +1,3 @@
-import npmSetup from "../../setupCL/npmSetup"
 import { NodeSSH as SSH } from "node-ssh"
 import { error, info, log, warn } from "../../lib/logger/logger"
 import { Octokit } from "@octokit/rest"
@@ -182,11 +181,6 @@ export default async function(options: Options) {
   }
     
 
-
-  
-  
-
-  await npmSetup(options)
 }
 
 
