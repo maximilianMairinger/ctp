@@ -16,12 +16,12 @@
     "buildESM": "tsc -p ./tsconfig.prod.esm.json && mjsify app/dist esm cjs",
     "buildCJS": "tsc -p ./tsconfig.prod.cjs.json",
     "dev": "npm run $[defaultDevScript]",
-    "devWeb": "rollup --config rollup.web.dev.config.js -w",
-    "devNode": "rollup --config rollup.node.dev.config.js -w",
+    "devWeb": "rollup --config rollup.web.dev.config.mjs -w",
+    "devNode": "rollup --config rollup.node.dev.config.mjs -w",
     "deploy": "npm run build && npm publish",
     "repl": "node ./repl/dist/$[name]-repl.js",
     "start": "npm run repl",
-    "buildTest": "rollup --config rollup.node.test.config.js",
+    "buildTest": "rollup --config rollup.node.test.config.mjs",
     "test": "npm run buildTest && jest"
   },
   "repository": {

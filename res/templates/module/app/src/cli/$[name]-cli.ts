@@ -14,10 +14,10 @@ program
   .option('-s, --silent', 'silence stdout')
   // .argument('<required example>', "description of required example")
   // .argument('[optional example]', "description of optional example")
-  .action((...args, options) => {
+  .action((arg1, args2, options) => {
     console.setVerbose(!options.silent)
     
-    $[name](...args)
+    // $[name](arg1, args2)
     
     
   })

@@ -5,7 +5,7 @@ import json from '@rollup/plugin-json'
 
 
 export default {
-  input: 'repl/src/repl.ts',
+  input: './repl/src/repl.ts',
   output: {
     file: 'repl/dist/$[name]-repl.js',
     format: 'cjs',
