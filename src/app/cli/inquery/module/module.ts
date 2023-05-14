@@ -64,8 +64,8 @@ export const pre = (options: any) => {
     ls.add(
       {name: "name", message: "Project name", default: projectFolderName},
       recursiveCheckNpmName,
-      {name: "cli", message: "Does " + options.name + " have a cli interface", type: "confirm"},
-      () => {return {name: "web", message: "What is the primary runtime (used in dev) of " + options.name + "?" + (options.cli ? "Node (Y) or web (n)" : "Web (Y) or node (n)"), type: "confirm"}},
+      () => {return {name: "cli", message: "Does " + options.name + " have a cli interface", type: "confirm"}},
+      () => {return {name: "web", message: "What is the primary runtime (used in dev) of " + options.name + "? " + (options.cli ? "Node (Y) or web (n)" : "Web (Y) or node (n)"), type: "confirm"}},
       () => {if (options.cli) options.web = !options.web},
       () => {
         options.cliBinImport = `\n  "bin": "./app/dist/cjs/cli/${options.name}-cli.js",\n`
