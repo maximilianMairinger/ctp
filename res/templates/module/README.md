@@ -12,7 +12,7 @@ $[description]
 
 ## Usage
 
-
+$[cliUsageReadme]
 
 ```ts
 import $[name] from "$[nameAsDashCase]"

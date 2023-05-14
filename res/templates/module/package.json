@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "description": "$[description]",
   "main": "./app/dist/esm/$[name].mjs",
-  "types": "./app/dist/esm/$[name].d.ts",
-  "bin": "./app/dist/cjs/cli/$[name]-cli.js",
+  "types": "./app/dist/esm/$[name].d.ts",$[cliBinImport]
   "exports": {
     "node": {
       "import": "./app/dist/esm/$[name].mjs",
