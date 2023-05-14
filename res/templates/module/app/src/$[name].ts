@@ -1,5 +1,3 @@
-$[dependencyImports]
-
 export function $[name]() {
   
 }
