@@ -9,7 +9,7 @@ app.use(express.static('./'));
 
 waitOn({
   resources: ["repl/dist/$[name]-repl.js"]
-}).then(() => detectPort(5500)).then((port) => {
+}).then(() => detectPort(6500)).then((port) => {
   app.listen(port, () => {
     console.log("")
     console.log(`Listening at http://127.0.0.1:${port}`)
