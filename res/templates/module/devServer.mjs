@@ -5,7 +5,7 @@ import open from "open"
 
 const app = express();
 
-app.use(express.static('repl'));
+app.use(express.static('./'));
 
 waitOn({
   resources: ["repl/dist/$[name]-repl.js"]
