@@ -1,4 +1,4 @@
-import $[name] from "../../app/src/$[name]"
+// import $[name] from "../../app/src/$[name]"
 
 describe("core", () => {
   

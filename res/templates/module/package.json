@@ -15,7 +15,7 @@
     "build": "del-cli app/dist && concurrently \"npm run buildESM\" \"npm run buildCJS\" --raw",
     "buildESM": "tsc -p ./tsconfig.prod.esm.json && mjsify app/dist esm cjs",
     "buildCJS": "tsc -p ./tsconfig.prod.cjs.json && npm run buildCJS2",
-    "buildCJS2": "rollup --config rollup.cjs.prod.config.mjs",
+    "buildCJS2": "rollup --config rollup.node.prod.config.mjs",
     "dev": "npm run $[defaultDevScript]",
     "devWeb": "concurrently \"rollup --config rollup.web.dev.config.mjs -w\" \"node devServer.mjs\" --raw ",
     "devNode": "concurrently \"rollup --config rollup.node.dev.config.mjs -w\" \"wait-on repl/dist/crossPlatformSpecs-repl.js && echo && echo Run \\'npm run repl\\' to run repl.\" --raw",
