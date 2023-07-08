@@ -1,3 +1,6 @@
+/// <reference lib="webworker" />
+declare const self: ServiceWorkerGlobalScope;
+
 const cacheName = "$[name]Cache"
 
 
