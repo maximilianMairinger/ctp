@@ -86,7 +86,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         source: "public/dist"
-        target: /var/www/html/xcenic/master/_${{github.sha}}
+        target: /var/www/html/$[name]/master/_${{github.sha}}
         overwrite: true
 
   buildServer: 
@@ -127,7 +127,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         source: "server"
-        target: /var/www/html/xcenic/master/_${{github.sha}}
+        target: /var/www/html/$[name]/master/_${{github.sha}}
         overwrite: true
 
   buildReplServer: 
@@ -168,7 +168,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         source: "replServer"
-        target: /var/www/html/xcenic/master/_${{github.sha}}
+        target: /var/www/html/$[name]/master/_${{github.sha}}
         overwrite: true
 
 
@@ -211,7 +211,7 @@ jobs:
         # todo service worker dist
         passphrase: ${{ secrets.PASSPHRASE }}
         source: "public/sw.js"
-        target: /var/www/html/xcenic/master/_${{github.sha}}
+        target: /var/www/html/$[name]/master/_${{github.sha}}
         overwrite: true
 
   compressImages: 
@@ -257,7 +257,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         source: "public/res/img/dist"
-        target: /var/www/html/xcenic/master/_${{github.sha}}
+        target: /var/www/html/$[name]/master/_${{github.sha}}
         overwrite: true
 
 
@@ -281,7 +281,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         source: "public"
-        target: /var/www/html/xcenic/master/_${{github.sha}}
+        target: /var/www/html/$[name]/master/_${{github.sha}}
         overwrite: true
 
   dependencies: 
@@ -304,7 +304,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         source: "package.json"
-        target: /var/www/html/xcenic/master
+        target: /var/www/html/$[name]/master
         overwrite: true
 
     - name: Installing dependencies on remote
@@ -316,7 +316,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          cd /var/www/html/xcenic/master
+          cd /var/www/html/$[name]/master
           source ~/.nvm/nvm.sh
           nvm use default
           npm i
@@ -341,7 +341,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         source: ".deploy"
-        target: /var/www/html/xcenic/master
+        target: /var/www/html/$[name]/master
         overwrite: true
 
 
@@ -355,8 +355,8 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         # https://unix.stackexchange.com/a/182155/431792
         script: |
-          cp -rlf /var/www/html/xcenic/master/_${{github.sha}}/* /var/www/html/xcenic/master
-          rm -r /var/www/html/xcenic/master/_${{github.sha}}
+          cp -rlf /var/www/html/$[name]/master/_${{github.sha}}/* /var/www/html/$[name]/master
+          rm -r /var/www/html/$[name]/master/_${{github.sha}}
 
     
     - name: Restarting server
@@ -368,7 +368,7 @@ jobs:
         key: ${{ secrets.KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          cd /var/www/html/xcenic/master
+          cd /var/www/html/$[name]/master
           source ~/.nvm/nvm.sh
           nvm use default
           npx wait-on ecosystem.config.js
