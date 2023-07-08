@@ -5,7 +5,7 @@ import json from '@rollup/plugin-json'
 
 
 export default {
-  input: 'serviceWorker/index.ts',
+  input: 'serviceWorker/serviceWorker.ts',
   output: {
     file: 'public/sw.js',
     format: 'cjs'
