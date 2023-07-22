@@ -15,6 +15,4 @@ tsconfig.json
 devServer.mjs
 jest.config.js
 .DS_Store
-
-
-
+app/dist/**
