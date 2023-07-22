@@ -41,11 +41,7 @@ const config = {
       }
 
       const json = JSON.parse(fs.readFileSync(path.join("node_modules", mod, "package.json"), "utf8"))
-
-      if (json.type === "module") {
-        console.error("resolved module:", mod)
-        return true
-      }
+      const { type } = json
 
       
 
@@ -72,13 +68,21 @@ const config = {
 
       for (let val of vals) {
         if (typeof val !== "string") continue
+        
+        if (val.endsWith(".cjs")) return false
+        if (val.endsWith(".js") && type === "commonjs") return false
+        
         if (val.endsWith(".mjs")) continue
         if (fs.existsSync(path.join("node_modules", mod, val))) {
           if (fs.statSync(path.join("node_modules", mod, val)).isDirectory()) val = path.join(val, "index.js")
           else if (!val.endsWith(".js")) val = val + ".js"
+
           if (!fs.existsSync(path.join("node_modules", mod, val))) continue
         }
         if (!val.endsWith(".js")) continue
+        if (type === "module") continue
+        
+
 
         const fileContent = fs.readFileSync(path.join("node_modules", mod, val), "utf8")
         const isCjs = isCjsRegex.test(fileContent)
