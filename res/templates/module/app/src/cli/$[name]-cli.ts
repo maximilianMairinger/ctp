@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import $[name] from "../$[name]"
 import { program } from "commander"
 import reqPackageJson, { reqPackagePath } from "req-package-json"
