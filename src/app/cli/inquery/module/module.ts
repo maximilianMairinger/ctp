@@ -66,7 +66,7 @@ export const pre = (options: any) => {
       recursiveCheckNpmName,
       () => {return {name: "cli", message: "Does " + options.name + " have a cli interface", type: "confirm"}},
       () => {return {name: "web", message: "What is the primary runtime (used in dev) of " + options.name + "? " + (options.cli ? "Node (Y) or web (n)" : "Web (Y) or node (n)"), type: "confirm"}},
-      () => {if (options.cli) options.web = !options.web},
+      () => {if (options.cli) setOption("web", !options.web)},
       () => {
         options.cliBinImport = options.cli ? `\n  "bin": "./app/dist/cjs/cli/${options.name}-cli.js",` : ""
         options.cliUsageReadme = options.cli ? `### CLI\n\n\`\`\`shell\n${options.name} --help\n\`\`\`\n\n### API\n` : ""
