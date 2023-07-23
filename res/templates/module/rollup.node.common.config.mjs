@@ -16,9 +16,10 @@ for (const mod of nonPrefixedBuiltinModules) {
 }
 const builtinModules = new Set([...nonPrefixedBuiltinModules, ...prefixedBuiltinModules])
 
-const isCjsRegex = /(((module)((\[[`"'])|\.))?exports([`"']\])?((\.|(\[[`"']))[^\s\n"`']+([`"']\])?)?\s*=\s*[^\s\n]+)|require\(["'`][^\s\n"'`]+["'`]\)/gm
+const isCjsRegex = /(((module)((\[[`"'])|\.))?exports([`"']\])?((\.|(\[[`"']))[^\s\n"`']+([`"']\])?)?\s*=\s*[^\s\n]+)|require\(["'`][^\s\n"'`]+["'`]\)/m
 
-
+const loggedAlready = new Set()
+let nth = -1
 
 const config = {
   input: './repl/src/repl.ts',
@@ -32,11 +33,14 @@ const config = {
   plugins: [
     typescript({tsconfig: "./tsconfig.json", noEmitOnError: false, sourceMap: false}), 
     // these resolve options do not matter if resolveOnly is used. ModulesOnly does currently not prefer cjs exports if they exists, instead it finds the first esm version and transpiles it, which we want to avoid if we can.
-    resolve({modulesOnly: true, preferBuiltins: true, resolveOnly(mod) {
+    resolve({modulesOnly: true, preferBuiltins: true, exportConditions: ["node", 'default', 'module', 'import'], resolveOnly(mod) {
+      nth++
       if (builtinModules.has(mod)) return false
       // this can happen when a module defines custom imports (e.g. chalk) in its package.json. We have no way tho to know here from where it was imported, so we just assume it was imported from a esm module and that it is esm as well. The only case that is known to not be covered here is when this module itself uses custom imports in package.json, to include this we would have to check if the given module is in local in this package. But I don't think that is worth the effort.
       if (!fs.existsSync(path.join("node_modules", mod))) {
-        console.warn("may be resolved sub module:", mod)
+        if (nth === 0 && (mod === "app" || mod === "repl")) return true 
+        if (!loggedAlready.has(mod)) console.warn("may be resolved sub module:", mod)
+        else loggedAlready.add(mod)
         return true
       }
 
@@ -62,36 +66,43 @@ const config = {
         ["exports", "node"],
         ["exports", "default"],
         ["exports", ".", "default"],
+        "files",
         "exports",
         "main"
       ])
 
-      for (let val of vals) {
-        if (typeof val !== "string") continue
+      for (let _val of vals) {
+        let _vals = _val instanceof Array ? _val : [_val]
         
-        if (val.endsWith(".cjs")) return false
-        if (val.endsWith(".js") && type === "commonjs") return false
+        for (let val of _vals) {
+          if (typeof val !== "string") continue
         
-        if (val.endsWith(".mjs")) continue
-        if (fs.existsSync(path.join("node_modules", mod, val))) {
-          if (fs.statSync(path.join("node_modules", mod, val)).isDirectory()) val = path.join(val, "index.js")
-          else if (!val.endsWith(".js")) val = val + ".js"
+          if (val.endsWith(".cjs")) return false
+          if (val.endsWith(".js") && type === "commonjs") return false
+          
+          if (val.endsWith(".mjs")) continue
+          if (fs.existsSync(path.join("node_modules", mod, val))) {
+            if (fs.statSync(path.join("node_modules", mod, val)).isDirectory()) val = path.join(val, "index.js")
+            else if (!val.endsWith(".js")) val = val + ".js"
 
-          if (!fs.existsSync(path.join("node_modules", mod, val))) continue
+            if (!fs.existsSync(path.join("node_modules", mod, val))) continue
+          }
+          if (!val.endsWith(".js")) continue
+          if (type === "module") continue
+          
+
+
+          const fileContent = fs.readFileSync(path.join("node_modules", mod, val), "utf8")
+          const isCjs = isCjsRegex.test(fileContent)
+
+          
+          if (isCjs) return false
         }
-        if (!val.endsWith(".js")) continue
-        if (type === "module") continue
-        
-
-
-        const fileContent = fs.readFileSync(path.join("node_modules", mod, val), "utf8")
-        const isCjs = isCjsRegex.test(fileContent)
-        
-        
-        if (isCjs) return false
       }
 
-      console.error("resolved module:", mod)
+      
+      if (!loggedAlready.has(mod)) console.error("resolved module:", mod)
+      else loggedAlready.add(mod)
 
       return true
     }}),
