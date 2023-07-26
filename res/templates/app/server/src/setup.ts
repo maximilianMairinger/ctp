@@ -6,17 +6,28 @@ const MongoClient = MongoDB.MongoClient
 import pth from "path"
 import fs from "fs"
 import detectPort from "detect-port"
-
+import ws, { WebSocketServer, WebSocket } from "ws"
+import keyIndex from "key-index"
 
 
 const defaultPortStart = 3050
 
+
+
+
 export type SendFileProxyFunc = (file: string, ext: string, fileName: string) => string | void | null
 
-export function configureExpressApp(indexUrl: string, publicPath: string, sendFileProxy?: Promise<SendFileProxyFunc> | SendFileProxyFunc, middleware?: (app: express.Express) => express.Express | void): express.Express & { port: Promise<number> } {
+export async function configureExpressApp(indexUrl: string, publicPath: string, sendFileProxy?: Promise<SendFileProxyFunc> | SendFileProxyFunc, middleware?: (app: express.Express) => express.Express | void) {
   if (indexUrl !== "*") if (!indexUrl.startsWith("/")) indexUrl = "/" + indexUrl
 
-  let app = express()
+  let app = express() as express.Express & { 
+    port: number, 
+    getWebSocketServer: (url: `/${string}`) => WebSocketServer,
+    ws: (url: `/${string}`, cb: (ws: WebSocket & {on: WebSocket["addEventListener"], off: WebSocket["removeEventListener"]}, req: any) => void) => void,
+  }
+  
+  
+
   if (middleware) {
     let q = middleware(app)
     if (q !== undefined && q !== null) app = q as any
@@ -25,7 +36,7 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
   app.use(bodyParser.json())
 
 
-  let sendFileProxyLoaded: Function =  (res: any) => (path: string) => {
+  let sendFileProxyLoaded: Function = (res: any) => (path: string) => {
     res.old_sendFile(pth.join(pth.resolve(""), path))
   }
   if (sendFileProxy) {
@@ -42,11 +53,14 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
     })()
   }
 
+  app.use(express.static(pth.join(pth.resolve(""), publicPath), {index: false}))
+
+
+
   //@ts-ignore
   app.old_get = app.get
   //@ts-ignore
   app.get = (url: string, cb: (req: any, res: any, next) => void) => {
-
     //@ts-ignore
     app.old_get(url, (req, res, next) => {
       res.old_sendFile = res.sendFile
@@ -56,30 +70,47 @@ export function configureExpressApp(indexUrl: string, publicPath: string, sendFi
   }
 
   let prt = process.env.port
-  let port: Promise<number>
+  let _port: Promise<number>
   if (prt === undefined) {
-    port = (detectPort(defaultPortStart) as Promise<number>)
-    port.then((port) => {console.log("No port given, using fallback - Serving on http://127.0.0.1:" + port)}) as Promise<number>
+    _port = (detectPort(defaultPortStart) as Promise<number>)
+    _port.then((port) => {console.log("No port given, using fallback - Serving on http://127.0.0.1:" + port)}) as Promise<number>
   }
-  else port = Promise.resolve(+prt)
-
-  //@ts-ignore
-  app.port = port
+  else _port = Promise.resolve(+prt)
+  
 
   
-  app.use(express.static(pth.join(pth.resolve(""), publicPath)))
+  
   
   app.get(indexUrl, (req, res) => {
     res.sendFile("public/index.html")
-  })
-  
+  });
+
+  app.port = await _port
+  const port = app.port
+
+  const webSocketServerMap = keyIndex((url: `/${string}`) => new ws.Server({ noServer: true, path: url }))
+  const expressServer = app.listen(port)
+  app.ws = (url: `/${string}`, cb: (ws: WebSocket & {on: WebSocket["addEventListener"], off: WebSocket["removeEventListener"]}, req: any) => void) => {
+    const websocketServer = webSocketServerMap(url)
+    websocketServer.on("connection", (ws, req) => {
+      cb(ws, req)
+    })
+  }
+
+  expressServer.on("upgrade", (request, socket, head) => {
+    const url= request.url as `/${string}`
+    webSocketServerMap(url).handleUpgrade(request, socket, head, (websocket) => {
+      webSocketServerMap(url).emit("connection", websocket, request);
+    });
+  });
+
+  app.getWebSocketServer = webSocketServerMap
 
   
 
-  port.then(app.listen.bind(app))
 
 
-  return app as any
+  return app
 }
 
 type DBConfig = {
@@ -90,8 +121,8 @@ type DBConfig = {
 
 const publicPath = "./public"
 
-export default function (dbName_DBConfig: string | DBConfig, indexUrl?: string): Promise<{ db: MongoDB.Db, app: express.Express & { port: Promise<number> } }>;
-export default function (dbName_DBConfig?: undefined | null, indexUrl?: string): express.Express & { port: Promise<number> };
+export default function (dbName_DBConfig: string | DBConfig, indexUrl?: string): Promise<{ db: MongoDB.Db, app: Awaited<ReturnType<typeof configureExpressApp>> }>
+export default function (dbName_DBConfig?: undefined | null, indexUrl?: string): ReturnType<typeof configureExpressApp>;
 export default function (dbName_DBConfig?: string | null | undefined | DBConfig, indexUrl: string = "/"): any {
   const app = configureExpressApp(indexUrl, publicPath)
 
@@ -101,18 +132,15 @@ export default function (dbName_DBConfig?: string | null | undefined | DBConfig,
     else dbConfig = dbName_DBConfig
 
     return new Promise((res) => {
-      MongoClient.connect(dbConfig.url, { useUnifiedTopology: true }).then((client) => {
+      MongoClient.connect(dbConfig.url, { useUnifiedTopology: true }).then(async (client) => {
         let db = client.db(dbConfig.dbName)
-        res({db, app})
-      }).catch(() => {
+        res({db, app: await app})
+      }).catch(async () => {
         console.error("Unable to connect to MongoDB")
 
-        res({app})
+        res({app: await app})
       })
     })
   }
   else return app
 }
-
-
-

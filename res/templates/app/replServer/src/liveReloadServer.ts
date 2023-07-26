@@ -9,13 +9,12 @@ import { configureExpressApp, SendFileProxyFunc } from "./../../server/src/setup
 
 
 function formatPath (path: string) {
-  let localPath = path.substr(7)
+  let localPath = path.substring(7)
   localPath = localPath.split("\\").join("/")
   if (pth.extname(localPath) === "") localPath += "/"
   return localPath
 }
 
-const swInjection = fs.readFileSync(pth.join(__dirname, "./../res/live-reload-inject.js")).toString()
 
 
 
@@ -23,20 +22,22 @@ const swInjection = fs.readFileSync(pth.join(__dirname, "./../res/live-reload-in
 const publicPath = "./public"
 
 
-export default function init(indexUrl: string = "*", wsUrl: string = "/") {
-  if (!wsUrl.startsWith("/")) wsUrl = "/" + wsUrl
+export default async function init(indexUrl: string = "*", _wsUrl: string = "/reloadWs") {
+  let wsUrl: `/${string}`
+  if (!_wsUrl.startsWith("/")) wsUrl = ("/" + _wsUrl) as `/${string}`
+  else wsUrl = _wsUrl as `/${string}`
 
 
-  let activateSetFileProxy: (f: SendFileProxyFunc) => void
-
-  let clients: Set<WebSocket>
-  const ex = configureExpressApp(indexUrl, publicPath, new Promise((res) => {activateSetFileProxy = res}), (app) => {
-    let appWss = expressWs(app)
-    clients = appWss.getWss(wsUrl).clients;
-    (app as any).ws(wsUrl, () => {})
+  const app = await configureExpressApp(indexUrl, publicPath, (file, ext) => {
+    if (ext === ".html" || ext === ".htm") {
+      let injectAt = file.lastIndexOf("</body>")
+      return file.splice(injectAt, 0, swInjTxt())
+    }
   })
 
-  const app = ex as typeof ex & { ws: (route: string, fn: (ws: WebSocket & {on: WebSocket["addEventListener"], off: WebSocket["removeEventListener"]}, req: any) => void) => void }
+  const { clients } = app.getWebSocketServer(wsUrl)
+  // app.ws(wsUrl, () => {})
+
   
   
   chokidar.watch(publicPath, { ignoreInitial: true }).on("all", (event, path) => {
@@ -45,30 +46,23 @@ export default function init(indexUrl: string = "*", wsUrl: string = "/") {
     console.log("Change at: \"" + path + "\"; Restarting app.")
 
     clients.forEach((c) => {
-      c.send("reload please")
+      c.send(JSON.stringify({reeee: "reload please"}))
     })
   })
 
 
   
-  app.port.then((port) => {
+
   // inject
-  const swInjUrl = `
+  const swInjTxt = () => `
 <!-- Code Injected by the live server -->
 <script>
 (() => {
 let wsUrl = "${wsUrl}";
-${swInjection}
+${fs.readFileSync(pth.join(__dirname, "./../res/live-reload-inject.js")).toString()}
 })()
 </script>`
 
-    activateSetFileProxy((file, ext) => {
-      if (ext === ".html" || ext === ".htm") {
-        let injectAt = file.lastIndexOf("</body>")
-        return file.splice(injectAt, 0, swInjUrl)
-      }
-    })
-  })
 
   
   return app
