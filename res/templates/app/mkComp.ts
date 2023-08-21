@@ -28,6 +28,7 @@ export default class ${capitalize(name)} extends ${capitalize(parentCompName)} {
   constructor() {
     super()
 
+
   }
 
   stl() {
@@ -43,7 +44,12 @@ declareComponent("c-${paramCase(name)}", ${capitalize(name)})
 
   const cssContent = 
 `:host {
+  display: block;
+  position: relative;
+}
 
+component-body {
+  
 }
 `
 
