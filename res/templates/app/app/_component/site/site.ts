@@ -1,7 +1,9 @@
 import Component from "../component"
 import declareComponent from "../../lib/declareComponent"
+import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
 export default class Site extends Component {
+  protected body: BodyTypes
 
   constructor() {
     super()

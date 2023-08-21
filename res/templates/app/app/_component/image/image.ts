@@ -3,6 +3,7 @@ import declareComponent from "./../../lib/declareComponent"
 import { loadRecord } from "../_themeAble/_frame/frame"
 import { Data } from "josm"
 import ResablePromise from "../../lib/resablePromise"
+import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
 const unionSymbol = "@"
 const typePrefix = "image/"
@@ -66,6 +67,7 @@ export default class Image extends Component {
   public readonly loaded: {[key in typeof resesList[number]]?: ResablePromise<void>} = {}
   private elems: {[key in typeof resesList[number]]?: {picture: HTMLPictureElement, sources: {setSource: (src: string) => void}[], img: HTMLImageElement &  {setSource: (src: string) => void}}} = {}
   private myWantedRes = this.resizeData().tunnel(({width, height}) => Math.sqrt(width * height * ratio))
+  protected body: BodyTypes
   constructor(src?: string, forceLoad?: boolean) {
     //@ts-ignore
     super(false)

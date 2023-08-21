@@ -8,7 +8,7 @@ type Token = string | string[]
 export default abstract class Component<T extends HTMLElement | HTMLAnchorElement | false | never = HTMLElement> extends HTMLElement {
   protected sr: ShadowRoot;
   protected componentBody: T extends (HTMLElement | HTMLAnchorElement) ? T : T extends false ? ShadowRoot : HTMLElement
-  protected body: {[name: string]: Element | ElementList} = {}
+  protected body: any = {}
 
 
   constructor(bodyExtension?: T, indexName = true) {
