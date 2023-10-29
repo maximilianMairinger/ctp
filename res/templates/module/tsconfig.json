@@ -7,5 +7,6 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "skipLibCheck": true
-  }
+  },
+  "exclude": ["app/dist", "**.js", "repl/dist", "**.mjs"]
 }
