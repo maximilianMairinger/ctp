@@ -3,7 +3,12 @@ export default {
     short: "$[name]",
     long: "$[nameAsHumanized]"
   },
-  links: [],
+  links: {
+    contact: "Contact",
+    imprint: "Imprint",
+    privacy: "Privacy",
+    terms: "Terms"
+  },
   confirm: "Confirm",
   copiedFeedback: "Copied!",
 }

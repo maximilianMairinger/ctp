@@ -1,0 +1,11 @@
+component-body {
+  background: #d6fffe;
+  height: max-content;
+  overflow: hidden;
+  min-width: 300px;
+}
+
+:host {
+  overflow-y: auto;
+  overflow-x: auto;
+}

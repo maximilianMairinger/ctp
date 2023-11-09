@@ -7,13 +7,17 @@ module.exports = () => {
     return {
         entry: './app/app.ts',
         output: {
-            filename: 'dist/$[name].js',
+            filename: 'dist/ko50.js',
             chunkFilename: 'dist/[name].js',
             path: path.resolve(path.dirname(''), "public"),
             publicPath: "/",
         },
         resolve: {
-            extensions: ['.ts', '.js']
+            extensions: ['.ts', '.js'],
+            fallback: {
+                fs: false,
+                path: false
+            }
         },
         module: {
             rules: [

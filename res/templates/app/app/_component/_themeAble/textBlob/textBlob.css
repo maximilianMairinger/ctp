@@ -1,0 +1,64 @@
+:host {
+  --font-size: 16px;
+  --theme: var(--primary-theme);
+  display: inline-block;
+  margin-bottom: 20px;
+  --body-size: 70%;
+  --header-fontsize-factor: 2.5;
+
+  --pop-underline-opacity: 1;
+  --pop-underline-color: rgba(var(--theme), .8);
+}
+
+h1 {
+  font-size: calc(var(--font-size) * var(--header-fontsize-factor));
+  position: relative;
+  margin-bottom: .2em;
+  margin-top: .15em;
+  line-height: 1.13em;
+  display: inline-block;
+}
+h1 > span {
+  position: relative;
+}
+
+:host([center]) {
+  text-align: center;
+}
+
+p {
+  margin-top: 0;
+  font-size: var(--font-size);
+  position: relative;
+  width: var(--body-size);
+  margin-bottom: 0;
+}
+
+note-header {
+  font-size: var(--font-size);
+  font-weight: bold;
+  color: rgb(var(--theme));
+  position: relative;
+  display: block
+}
+
+note-header::selection {
+  background: rgba(var(--theme), 0.15);
+}
+
+
+pop-underline {
+  display: none;
+  background-color: var(--pop-underline-color);
+  width: 100%;
+  height: 27px;
+  left: 0;
+  bottom: 0;
+  position: absolute;
+
+}
+
+:host([popUnderline]) pop-underline {
+  display: inline-block;
+}
+
