@@ -1,5 +1,6 @@
 const InjectPlugin = require("webpack-inject-plugin")
 const path = require("path")
+const Dotenv = require('dotenv-webpack');
 
 
 
@@ -7,7 +8,7 @@ module.exports = () => {
     return {
         entry: './app/app.ts',
         output: {
-            filename: 'dist/ko50.js',
+            filename: 'dist/$[name].js',
             chunkFilename: 'dist/[name].js',
             path: path.resolve(path.dirname(''), "public"),
             publicPath: "/",
@@ -21,6 +22,10 @@ module.exports = () => {
         },
         module: {
             rules: [
+                {
+                    test: /\.less$/i,
+                    use: ["to-string-loader", "css-loader", "less-loader",],
+                },
                 {
                     test: /([a-zA-Z0-9\s_\\.\-\(\):])+\.static\.([a-zA-Z0-9])+$/,
                     use: 'raw-loader',
@@ -44,6 +49,11 @@ module.exports = () => {
                     use: ['raw-loader', 'pug-html-loader']
                 }
             ]
-        }
+        },
+        plugins: [
+            new Dotenv({
+                systemvars: true
+            })
+        ]
     }
 };
