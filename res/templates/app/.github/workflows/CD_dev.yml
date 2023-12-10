@@ -364,7 +364,7 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         # https://unix.stackexchange.com/a/182155/431792
         script: |
-          cp -rlf /var/www/html/$[name]/dev/_${{github.sha}}/* /var/www/html/forju/dev
+          cp -rlf /var/www/html/$[name]/dev/_${{github.sha}}/* /var/www/html/$[name]/dev
           rm -r /var/www/html/$[name]/dev/_${{github.sha}}
 
     
