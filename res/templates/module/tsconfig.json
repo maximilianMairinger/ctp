@@ -6,7 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "lib": ["ES2022", "DOM"]
   },
   "exclude": ["app/dist", "**.js", "repl/dist", "**.mjs"]
 }

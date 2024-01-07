@@ -6,7 +6,8 @@
     "allowJs": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "lib": ["ES2022", "DOM"]
   },
   "include": [
     "./app"
