@@ -3,7 +3,7 @@ const agrs = yargs.argv
 const preset = agrs.preset ? agrs.preset : "repl"
 const fs = require("fs")
 
-if (!fs.existsSync(".ecosystem.config.js")) {
+if (!fs.existsSync("ecosystem.config.js")) {
   console.error("This is only allowed on the server")
 }
 else {
