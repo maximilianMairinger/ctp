@@ -4,5 +4,5 @@ import terser from "@rollup/plugin-terser"
 
 
 export default merge(commonMod, {
-  plugins: [terser()]
+  // plugins: [terser()]
 })
