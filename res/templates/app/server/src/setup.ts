@@ -6,7 +6,7 @@ const MongoClient = MongoDB.MongoClient
 import pth from "path"
 import fs from "fs"
 import detectPort from "detect-port"
-import ws, { WebSocketServer, WebSocket } from "ws"
+import { WebSocketServer, WebSocket } from "ws"
 import keyIndex from "key-index"
 
 
@@ -88,7 +88,7 @@ export async function configureExpressApp(indexUrl: string, publicPath: string, 
   app.port = await _port
   const port = app.port
 
-  const webSocketServerMap = keyIndex((url: `/${string}`) => new ws.Server({ noServer: true, path: url }))
+  const webSocketServerMap = keyIndex((url: `/${string}`) => new WebSocketServer({ noServer: true, path: url }))
   const expressServer = app.listen(port)
   app.ws = (url: `/${string}`, cb: (ws: WebSocket & {on: WebSocket["addEventListener"], off: WebSocket["removeEventListener"]}, req: any) => void) => {
     const websocketServer = webSocketServerMap(url)
