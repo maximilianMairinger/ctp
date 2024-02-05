@@ -5,6 +5,7 @@
   width: 32px;
   height: 32px;
   --color: #000;
+  --transition: .4s fill, .4s stroke;
 }
 
 
@@ -14,6 +15,6 @@ svg {
   display: block;
 }
 
-:host svg *:not(tspan) {
-  transition: inherit
+svg *:not(tspan) {
+  transition: var(--transition);
 }

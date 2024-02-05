@@ -14,12 +14,12 @@ move-me {
   right: 13px;
   opacity: 0;
   margin-right: -5px;
-  fill: rgb(var(--text))
+  fill: var(--text)
 }
 
 loading-circle {
   border-radius: 50%;
-  border: 2.5px solid rgb(var(--text));
+  border: 2.5px solid var(--text);
   border-left-color: hsl(0deg 0% 0% / 0%);
   animation: spin 1s linear infinite;
   box-sizing: border-box;

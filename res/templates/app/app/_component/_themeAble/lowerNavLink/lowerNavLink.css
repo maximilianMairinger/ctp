@@ -33,7 +33,7 @@ icon-container > * {
 }
 
 :host(.highlight) text-container {
-  color: rgb(var(--theme))
+  color: var(--theme)
 }
 
 component-body {
@@ -45,7 +45,7 @@ component-body {
 text-container {
   pointer-events: none;
   transition: .1s color;
-  color: rgb(var(--primary-text));
+  color: var(--primary-text);
   z-index: 10;
 }
 

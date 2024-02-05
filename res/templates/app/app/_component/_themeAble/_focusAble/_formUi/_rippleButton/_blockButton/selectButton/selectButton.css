@@ -2,7 +2,7 @@
   /* private */
   --wave-opacity: 1;
 
-  --wave-color: rgb(var(--text));
+  --wave-color: var(--text);
   --counter-wave-color: var(--background-color);
 }
 
@@ -27,7 +27,7 @@ button-text {
 } */
 
 :host(:not(.selected):not(.preSelected).rippleSettled) button-text {
-  color: rgb(var(--primary-text));
+  color: var(--primary-text);
   color: black;
   mix-blend-mode: normal;
 }

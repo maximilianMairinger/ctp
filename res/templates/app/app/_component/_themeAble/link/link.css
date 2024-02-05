@@ -1,10 +1,10 @@
 :host {
-  --text: var(--primary-text);
+  --text-values: var(--primary-text-values);
 }
 
 
 :host {
-  color: rgb(var(--text));
+  color: rgb(var(--text-values));
   user-select: text;
   display: inline-block;
 }
@@ -14,7 +14,7 @@
 }
 
 :host(.pressed) a {
-  color: rgba(var(--text), .7);
+  color: rgba(var(--text-values), .7);
 }
 
 
@@ -27,7 +27,7 @@ slot {
   align-items: center;
 }
 
-::slotted(*) {
+::slotted(*.icon) {
   height: min-content;
   width: 1.1119em;
   display: inline-block;
@@ -40,7 +40,7 @@ slot {
 
 
 a {
-  color: rgb(var(--text));
+  color: rgb(var(--text-values));
   font-weight: inherit;
   cursor: inherit;
   position: relative;
@@ -74,7 +74,7 @@ slidy-underline {
   display: block;
   position: absolute;
   bottom: 0;
-  background: rgb(var(--text));
+  background: rgb(var(--text-values));
   border-radius: 2px;
   height: 2px;
 }

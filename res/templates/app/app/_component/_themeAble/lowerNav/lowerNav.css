@@ -10,8 +10,8 @@ component-body {
   overflow: hidden;
   display: none;
   box-sizing: border-box;
-  box-shadow: 0 0 20px 0 rgba(var(--plain-text), .16);
-  background: rgb(var(--plain-background));
+  box-shadow: 0 0 20px 0 rgba(0,0,0, .16);
+  background: var(--plain-background);
   border-radius: 20px;
 
   /* display: flex; */

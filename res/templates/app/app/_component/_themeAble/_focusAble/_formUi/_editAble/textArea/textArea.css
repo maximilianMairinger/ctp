@@ -29,7 +29,7 @@ placeholder-gradient {
   position: relative;
   opacity: 0;
   transition: .2s;
-  background: linear-gradient(0deg, rgba(var(--background), 0), rgba(var(--background), 1));
+  background: linear-gradient(0deg, rgba(var(--background-values), 0), rgba(var(--background-values), 1));
 }
 
 bottom-gradient {
@@ -40,7 +40,7 @@ bottom-gradient {
   position: absolute;
   opacity: 0;
   transition: .2s;
-  background: linear-gradient(180deg, rgba(var(--background), 0), rgba(var(--background), 1));
+  background: linear-gradient(180deg, rgba(var(--background-values), 0), rgba(var(--background-values), 1));
 }
 
 

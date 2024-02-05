@@ -35,7 +35,7 @@ blurry-background {
   opacity: 0;
 
   /* Only when browser does not support blur */
-  background-color: rgba(var(--plain-background), .9);
+  background-color: rgba(var(--plain-background-values), .9);
 
   
 }
@@ -89,10 +89,14 @@ additional-path-display > * {
   pointer-events: all;
 }
 
+.appNameLink {
+  font-weight: bold;
+  font-size: 18px;
+}
 
 
 left-content > .logo {
-  height: 28px;
+  height: 30px;
   width: 55px;
   position: relative;
   float: left;
@@ -101,7 +105,7 @@ left-content > .logo {
 c-button#homeButton {
   position: absolute;
   left: 0;
-  height: 28px;
+  height: 30px;
   width: 55px;
   opacity: .2;
 }
@@ -197,7 +201,7 @@ additional-path-display > * {
 
 
 split-line {
-  background: rgba(var(--primary-text), .3);
+  background: rgba(var(--primary-text-values), .3);
   width: 1px;
   height: 25px;
   margin: 0 15px;

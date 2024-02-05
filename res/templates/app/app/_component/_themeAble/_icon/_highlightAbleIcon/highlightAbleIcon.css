@@ -8,6 +8,8 @@
 }
 
 :host(.highlight) svg > g, :host(.highlight) svg > path {
-  fill: rgb(var(--highlight)) !important
+  fill: var(--highlight) !important
+
+  
 }
 

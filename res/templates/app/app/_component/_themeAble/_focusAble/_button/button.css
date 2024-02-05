@@ -5,7 +5,7 @@
 
 :host {
   position: relative;
-  color: rgb(var(--text));
+  color: var(--text);
   text-align: left;
   user-select: none;
   font-weight: bold;

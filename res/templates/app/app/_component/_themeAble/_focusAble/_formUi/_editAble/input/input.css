@@ -6,7 +6,7 @@ left-gradient {
   position: absolute;
   opacity: 0;
   transition: .2s;
-  background: linear-gradient(270deg, rgba(var(--background), 0), rgba(var(--background), 1));
+  background: linear-gradient(270deg, rgba(var(--background-values), 0), rgba(var(--background-values), 1));
 }
 
 right-gradient {
@@ -17,7 +17,7 @@ right-gradient {
   position: absolute;
   opacity: 0;
   transition: .2s;
-  background: linear-gradient(90deg, rgba(var(--background), 0), rgba(var(--background), 1));
+  background: linear-gradient(90deg, rgba(var(--background-values), 0), rgba(var(--background-values), 1));
 }
 
 component-body:not(.scrollStart) left-gradient, component-body:not(.scrollEnd) right-gradient {

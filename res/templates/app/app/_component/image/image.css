@@ -1,4 +1,9 @@
 :host {
+  --inner-width: 100%;
+  --inner-height: 100%;
+  --inner2-width: 100%;
+  --inner2-height: 100%;
+
   width: 100%;
   height: 100%;
   
@@ -11,8 +16,8 @@
 
 picture {
   display: var(--display);
-  width: inherit;
-  height: inherit;
+  width: var(--inner-width);
+  height: var(--inner-height);
   position: absolute;
   top: 0;
   left: 0;
@@ -30,8 +35,8 @@ img {
   opacity: 0;
   object-fit: cover;
   object-position: var(--object-position);
-  width: inherit;
-  height: inherit;
+  width: var(--inner2-width);
+  height: var(--inner2-height);
   user-select: none;
   user-drag: none; 
   -moz-user-select: none;
