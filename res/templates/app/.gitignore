@@ -21,3 +21,5 @@ debug.log
 pugBody.gen.ts
 
 .env
+
+.github/workflows
