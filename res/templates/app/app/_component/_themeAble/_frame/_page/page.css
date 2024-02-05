@@ -1,5 +1,5 @@
 component-body {
-  background: #d6fffe;
+  background-color: var(--normal-background);
   height: max-content;
   overflow: hidden;
   min-width: 300px;
