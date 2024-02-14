@@ -9,7 +9,7 @@ import { ElementList } from "extended-dom"
 import HighlightAbleIcon from "../_themeAble/_icon/_highlightAbleIcon/highlightAbleIcon"
 import { Data, DataSubscription } from "josm"
 import { linkRecord } from "../_themeAble/link/link"
-import "./pugBody.gen"
+import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
 const topLimit = 0
 const scrollTrendActivationCount = 20
@@ -18,6 +18,7 @@ const scrollTrendActivationCount = 20
 linkRecord.record()
 
 export default class Site extends Component {
+  protected body: BodyTypes
 
   constructor() {
     super()
