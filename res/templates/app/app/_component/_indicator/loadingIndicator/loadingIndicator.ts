@@ -1,7 +1,7 @@
 import Indecator from "../indecator";
 import { declareComponent } from "../../../lib/declareComponent"
 
-export default declareComponent("loading-indecator", class LoadingIndicator extends Indecator {
+export default declareComponent("loading-indicator", class LoadingIndicator extends Indecator {
   constructor(start: boolean = true, public dimension?: {width: number, height: number}) {
     super(ce("loading-element"));
     if (start) this.start();

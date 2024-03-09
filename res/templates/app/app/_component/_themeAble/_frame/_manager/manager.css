@@ -14,7 +14,7 @@ manager-body > * {
   height: 100%;
 }
 
-c-loading-indecator {
+c-loading-indicator {
   display: block;
   opacity: 1;
 }

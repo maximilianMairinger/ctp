@@ -34,8 +34,8 @@ export default abstract class LazySectionedPage extends SectionedPage {
 
 
     
-    this.componentBody.apd(this.loadingIndecatorTop = ce("loading-indecator"))
-    this.componentBody.apd(this.loadingIndecatorBot = ce("loading-indecator"))
+    this.componentBody.apd(this.loadingIndecatorTop = ce("loading-indicator"))
+    this.componentBody.apd(this.loadingIndecatorBot = ce("loading-indicator"))
 
     
     const loadedElementsIndex = {"-1": this.loadingIndecatorTop}
