@@ -1,5 +1,6 @@
 import FormUi from "./formUi";
-import animationFrame from "animation-frame-delta";
+import _animationFrame from "animation-frame-delta";
+const animationFrame = _animationFrame as any
 import Easing from "waapi-easing"
 
 const dragImpactEaseFunc = new Easing("easeIn").function
