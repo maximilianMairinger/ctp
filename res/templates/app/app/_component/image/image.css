@@ -1,9 +1,4 @@
 :host {
-  --inner-width: 100%;
-  --inner-height: 100%;
-  --inner2-width: 100%;
-  --inner2-height: 100%;
-
   width: 100%;
   height: 100%;
   
@@ -12,36 +7,78 @@
   --display: block;
   position: relative;
   --object-position: 50% 50%;
+  --object-fit: cover;
 }
 
 picture {
   display: var(--display);
-  width: var(--inner-width);
-  height: var(--inner-height);
+  width: 100%;
+  height: 100%;
+  max-width: inherit;
+  max-height: inherit;
   position: absolute;
   top: 0;
   left: 0;
   overflow: hidden;
   border-radius: inherit;
+  padding: inherit;
+  box-sizing: border-box;
+  aspect-ratio: inherit;
 }
-picture:first-of-type {
+picture:last-of-type {
   position: relative;
   top: initial;
   left: initial;
+  padding: unset;
 }
+
+
 
 img {
   display: var(--display);
   opacity: 0;
-  object-fit: cover;
+  object-fit: var(--object-fit);
   object-position: var(--object-position);
-  width: var(--inner2-width);
-  height: var(--inner2-height);
+  /* max-width: 100%;
+  max-height: 100%;
+  width: max-content;
+  height: max-content;
+  min-width: auto;
+  min-height: auto; */
+
+  /* width: 100%;
+  height: 100%;
+  min-width: max-content;
+  min-height: max-content;
+   */
+  
+  
   user-select: none;
   user-drag: none; 
+  aspect-ratio: inherit;
   -moz-user-select: none;
   -webkit-user-drag: none;
   -webkit-user-select: none;
   -ms-user-select: none;
 }
 
+
+:host(.sizeRestrictedWidth) img {
+  width: 100%;
+  /* height: max-content; */
+}
+
+:host(.sizeRestrictedHeight) img {
+  /* width: max-content; */
+  height: 100%;
+}
+
+:host(.sizeRestrictedBoth) img {
+  width: 100%;
+  height: 100%;
+}
+
+:host(.sizeRestrictedNone) img {
+  /* width: max-content;
+  height: max-content; */
+}
