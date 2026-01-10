@@ -5,11 +5,14 @@ on:
     branches:
     - dev
 
+    
 jobs:
   # JOB to run change detection
   detectChanges:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      pull-requests: read
     outputs:
       CD: ${{ steps.filter.outputs.CD }}
       images: ${{ steps.filter.outputs.images }}
@@ -30,7 +33,7 @@ jobs:
         list-files: 'csv'
         filters: |
           CD:
-            - '.github/workflows/CD_dev.yml'
+            - '.github/workflows/**'
           images:
             - added|modified: 'app/res/img/**'
           server:
@@ -72,7 +75,7 @@ jobs:
 
     - name: Installing runner dependencies
       if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.CD == 'true') }}
-      run: npx -y pnpm i
+      run: npm i
 
     # - name: set environment variables
     #   uses: allenevans/set-env@v2.0.0
@@ -113,7 +116,7 @@ jobs:
 
     - name: Installing runner dependencies
       if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
-      run: npx -y pnpm i
+      run: npm i
 
     # - name: set environment variables
     #   uses: allenevans/set-env@v2.0.0
@@ -154,7 +157,7 @@ jobs:
 
     - name: Installing runner dependencies
       if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
-      run: npx -y pnpm i
+      run: npm i
 
     # - name: set environment variables
     #   uses: allenevans/set-env@v2.0.0
@@ -196,7 +199,7 @@ jobs:
 
     - name: Installing runner dependencies
       if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
-      run: npx -y pnpm i
+      run: npm i
 
     # - name: set environment variables
     #   uses: allenevans/set-env@v2.0.0
@@ -274,7 +277,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detectChanges]
     timeout-minutes: 15
-
     
     steps: 
     - name: "checkout"
@@ -330,7 +332,7 @@ jobs:
           cd /var/www/html/$[name]/dev
           source ~/.nvm/nvm.sh
           nvm use default
-          npx -y pnpm update
+          npm i
 
   deploy: 
     runs-on: ubuntu-latest
@@ -340,11 +342,20 @@ jobs:
 
     steps:
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
+      if: ${{ needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
+    - name: Check .deploy existence
+      id: check_deploy
+      run: |
+        if [ -f .deploy ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Upload deploy option files
-      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
+      if: ${{ (needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true')) && steps.check_deploy.outputs.exists == 'true' }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
