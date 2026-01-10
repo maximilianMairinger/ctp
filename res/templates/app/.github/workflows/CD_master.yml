@@ -4,7 +4,7 @@ on:
   push:
     branches:
     - master
-
+    
 jobs:
   # JOB to run change detection
   detectChanges:
@@ -234,33 +234,45 @@ jobs:
       with:
         lfs: "true"
 
+
+    - name: Check ./app/res/img existence
+      id: check_img
+      run: |
+        if [ -d ./app/res/img ] && [ "$(ls -A ./app/res/img)" ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Setting up node
-      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') && steps.check_img.outputs.exists == 'true' }}
       uses: actions/setup-node@master
       with:
         node-version: '20.x'
 
     - name: Installing runner dependencies
-      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') && steps.check_img.outputs.exists == 'true' }}
       run: npm i image-web -g
 
     - name: Setting environment variables
-      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') && steps.check_img.outputs.exists == 'true' }}
       uses: allenevans/set-env@v2.0.0
       with:
         UV_THREADPOOL_SIZE: '1' # otherwise may take up too much memory and cause action to be canceled.
 
+
     - name: Debug log
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') && steps.check_img.outputs.exists == 'true' }}
       run: "echo eval `node -e \"let a = JSON.parse(fs.readFileSync('package.json').toString()).scripts.compressImages.split(' '); let i = a.indexOf('image-web'); assert(i !== -1); assert(a[0] === 'image-web' || (a[0] === 'npx' && (a[1] === 'image-web' || ((a[1] === '--yes' || a[1] === '-y') && a[2] === 'image-web')))); let inp = require('process').argv[1]; if (inp !== undefined && inp !== '') a[i + 1] = inp; console.log(a.join(' ') + (a.includes('--legacyLogs') ? '' : ' --legacyLogs'));\" \"${{ needs.detectChanges.outputs.imagesFiles }}\"`"
 
 
     - name: "Compressing images"
-      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') && steps.check_img.outputs.exists == 'true' }}
       # replace the input of the compressImage command (hopefully using image-web) with the image diffs of this commit. Also add legacyLogs option
       run: "eval `node -e \"let a = JSON.parse(fs.readFileSync('package.json').toString()).scripts.compressImages.split(' '); let i = a.indexOf('image-web'); assert(i !== -1); assert(a[0] === 'image-web' || (a[0] === 'npx' && (a[1] === 'image-web' || ((a[1] === '--yes' || a[1] === '-y') && a[2] === 'image-web')))); let inp = require('process').argv[1]; if (inp !== undefined && inp !== '') a[i + 1] = inp; console.log(a.join(' ') + (a.includes('--legacyLogs') ? '' : ' --legacyLogs'));\" \"${{ needs.detectChanges.outputs.imagesFiles }}\"`"
 
     - name: "Uploading files to remote"
-      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') && steps.check_img.outputs.exists == 'true' }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
@@ -285,8 +297,17 @@ jobs:
       with:
         lfs: "true"
 
+    - name: Check public existence
+      id: check_public
+      run: |
+        if [ -d ./public ] && [ "$(ls -A ./public)" ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Upload public files
-      if: ${{ needs.detectChanges.outputs.public == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.public == 'true' || needs.detectChanges.outputs.CD == 'true') && steps.check_public.outputs.exists == 'true' }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
