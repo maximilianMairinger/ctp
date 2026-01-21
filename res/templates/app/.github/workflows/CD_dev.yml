@@ -12,6 +12,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       pull-requests: read
+      contents: read # for private repo read access
     outputs:
       CD: ${{ steps.filter.outputs.CD }}
       images: ${{ steps.filter.outputs.images }}
