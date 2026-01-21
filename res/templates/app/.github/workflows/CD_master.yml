@@ -354,7 +354,7 @@ jobs:
           cd /var/www/html/$[name]/master
           source ~/.nvm/nvm.sh
           nvm use default
-          npm i
+          npx -y pnpm i --prod
 
   deploy: 
     runs-on: ubuntu-latest
