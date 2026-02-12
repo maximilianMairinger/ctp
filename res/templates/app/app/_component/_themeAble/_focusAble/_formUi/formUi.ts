@@ -5,6 +5,11 @@ import declareComponent from "../../../../lib/declareComponent";
 import Button from "../_button/button";
 import FocusAble from "../focusAble"
 import { Theme } from "../../themeAble"
+import { getCurrentLoadRecord } from "../../_frame/frame";
+import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
+import { waitUntilDataEquals } from "../../../../lib/waitUntilDataEquals";
+
+
 
 if (window.TouchEvent === undefined) window.TouchEvent = class SurelyNotTouchEvent {} as any
 
@@ -20,6 +25,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
   private rippleElements: HTMLElement;
   private waveElement: HTMLElement;
   public validMouseButtons = new Set([0])
+  protected body: BodyTypes
 
   protected moveBody = this.q("move-me") as HTMLElement;
 
@@ -178,15 +184,19 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
       }
     }, true)
     this.componentBody.prepend(hovPreDet);
-    const root = ce("root-bounds")
-    this.apd(root);
 
-    if (window.matchMedia && window.matchMedia("(hover:hover)").matches) {
-      import("./preHoverInteraction").then(({default: f}) => {
-        this.preHoverAnimations = f(root as any, hovPreDet, this.moveBody as any, this.componentBody as any)
-        if (!this.userFeedbackMode.preHover.get()) this.preHoverAnimations.disable()
-      })
-    }
+    getCurrentLoadRecord().content.add(async () => {
+      await delay(0)
+      if (window.matchMedia && window.matchMedia("(hover:hover)").matches && await waitUntilDataEquals(this.userFeedbackMode.preHover, a => a)) {
+        await import("./preHoverInteraction").then(({default: f}) => {
+          const root = ce("root-bounds");
+          this.apd(root);
+          this.preHoverAnimations = f(this as any, hovPreDet, this.moveBody as any, this.q(".cover") as ElementList<HTMLElement>, this.componentBody as any)
+          if (!this.userFeedbackMode.preHover.get()) this.preHoverAnimations.disable()
+        })
+      }
+    })
+    
 
 
 
@@ -202,7 +212,15 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
 
 
   }
-  private preHoverAnimations: {disable: () => void, enable: () => void}
+  private prePreHoverAnimEnabled = true
+  public preHoverAnimations: {disable: () => void, enable: () => void} = {
+    enable() {
+      this.prePreHoverAnimEnabled = true
+    },
+    disable() {
+      this.prePreHoverAnimEnabled = false
+    }
+  }
 
 
   protected fadeRipple: ((anim?: boolean) => void)[] = []

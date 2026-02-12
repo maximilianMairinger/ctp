@@ -13,6 +13,8 @@ import HighlightAbleIcon from "../../_icon/_highlightAbleIcon/highlightAbleIcon"
 import { Data } from "josm";
 import { linkRecord } from "../../link/link";
 import * as isSafari from "is-safari"
+import keyIndex from "key-index";
+import { ResablePromise, latestLatent } from "more-proms";
 
 
 
@@ -66,10 +68,17 @@ export default abstract class Manager extends Frame {
 
 
   private resourcesMap: ResourcesMap
+  private domainNeedsSomeSubDomain = new Set<Import<string, any>>()
 
   constructor(private importanceMap: ImportanceMap<() => Promise<any>, any>, public domainLevel: number, private pageChangeCallback?: (page: string, sectiones: {[link: string]: HighlightAbleIcon}[], domainLevel: number) => void, private pushDomainDefault: boolean = true, private onScroll?: (scrollProgress: number) => void, private onUserScroll?: (scrollProgress: number, userInited: boolean) => void, public blurCallback?: Function, public preserveFocus?: boolean) {
     super(null);
 
+    for (const key of this.importanceMap.keys()) {
+      if (key.val.endsWith("/*")) {
+        key.val = key.val.slice(0, -2)
+        this.domainNeedsSomeSubDomain.add(key)
+      }
+    }
     this.bod = ce("manager-body");
     this.loadingElem = new LoadingIndecator();
     
@@ -109,26 +118,48 @@ export default abstract class Manager extends Frame {
     this.resourcesMap = resourcesMap
     this.domainSubscription = domain.get(this.domainLevel, this.setDomain.bind(this), false, "")
   }
+  private linkRecording: {
+    link: string;
+    level: number;
+  }[]
+
   private async setDomain(to: string) {
-    const linkRecording = linkRecord.record()
-    await this.setElem(to)
-    this.currentPageFullyLoaded.then(() => {
-      this.preloadLinks(linkRecording())
+    const prom = this.setElem(to)
+    const { pageProm, suc } = await prom
+    pageProm.priorityThen(suc.domain, () => {}, "completePaint").then(() => {
+      this.preloadLinks(linkRecord.flush())
     })
   }
 
   private scrollEventListener: EventListener
   private domainSubscription: domain.DomainSubscription
 
-  private currentPageFullyLoaded: Promise<any>
 
-  async minimalContentPaint() {
-    await this.setDomain(this.domainSubscription.domain)
-    await super.minimalContentPaint()
+  async minimalContentPaint(loadId: string) {
+    // console.log("start minimal")
+    await super.minimalContentPaint(loadId)
+    await this.setElem(this.domainSubscription.domain)
+  }
+
+  async fullContentPaint(loadId: string): Promise<void> {
+    // console.log("start content")
+    await super.fullContentPaint(loadId);
+    await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(this.lastFoundPageParams.suc.domain, () => {}, "fullContentPaint")
+    
+  }
+
+  async completePaint(loadId: string) {
+    // console.log("start complete")
+    await super.completePaint(loadId);
+    await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(this.lastFoundPageParams.suc.domain, () => {}, "completePaint")
+    this.preloadLinks(linkRecord.flush())
+    
   }
 
 
+
   async preloadLinks(links: {link: string, level: number}[]) {
+    // maybe also consider preloading history back and forwards links
     const toBePreloadedLocally = [] as string[]
     const toBePreloadedExternally = [] as string[]
     
@@ -141,13 +172,20 @@ export default abstract class Manager extends Frame {
       
     }
 
-    const el = await Promise.all(toBePreloadedLocally.map(async (url) => 
-      (await this.findSuitablePage(url)).pageProm.imp
-    ))
-    await this.importanceMap.whiteList(el, "minimalContentPaint")
+
+    // we cant parallelize this, because loadRecord (potentually in trynavigate (like in ghostblogsection)) is expecting, synchronous execution.
+    const els = []
+    for (const url of toBePreloadedLocally) {
+      const page = await this.findSuitablePage(url)
+      const el = {domainFrag: page.suc.domain, imp: page.pageProm.imp}
+      els.push(el)
+    }
+
+    await this.importanceMap.whiteList(els, "minimalContentPaint")
     
     
-    await Promise.all(toBePreloadedExternally.map((url) => fetch(url).catch(() => {})))
+    // Always cors an issue
+    // await Promise.all(toBePreloadedExternally.map((url) => fetch(url).catch(() => {})))
     
     
   }
@@ -193,9 +231,9 @@ export default abstract class Manager extends Frame {
   }
   /**
    * Swaps to given Frame
-   * @param to frame to be swaped to
+   * @param to frame to be swapped to
    */
-  private async swapFrame(to: Page): Promise<void> {
+  private async swapFrame(to: Page, domainFrag: string): Promise<void> {
     if (this.busySwaping) {
       console.warn("was busy, unable to execute pageswap")
       // maybe retry, or cancel ...
@@ -207,13 +245,11 @@ export default abstract class Manager extends Frame {
     this.wantedFrame = to;
     let from = this.currentPage;
 
-    
-    
 
     if (from === to) {
       //Focus even when it is already the active frame
       if (!this.preserveFocus) to.focus()
-      to.navigate()
+      to.navigate(domainFrag)
       this.busySwaping = false
       return
     }
@@ -226,13 +262,14 @@ export default abstract class Manager extends Frame {
     
     if (from !== undefined) from.deactivate()
     if (this.active) {
-      to.navigate()
+      to.navigate(domainFrag)
       to.activate()
     }
 
 
   
     this.currentPage = to;
+    this.pageChanged(to);
 
 
     
@@ -286,14 +323,16 @@ export default abstract class Manager extends Frame {
       }
   
   
-      to.css("zIndex", 0)
+      to.css("zIndex", "auto")
       this.busySwaping = false;
       if (this.wantedFrame !== to) {
-        await this.swapFrame(this.wantedFrame);
+        await this.swapFrame(this.wantedFrame, domainFrag);
         return
       }
     })()
   }
+
+  protected pageChanged(page: Page): void {}
 
   private currentUrl: string
   private nextPageToken: Symbol
@@ -319,14 +358,15 @@ export default abstract class Manager extends Frame {
 
     let accepted = false
     let pageProm = this.resourcesMap.get(to, 0)
+
     while(!accepted) {
       let nthTry = 0
       
       
       while(pageProm === undefined) {
         if (to === "") {
-          const msg = "421 Misdirected request"
-          document.body.html(`<b>${msg}</b>`)
+          const msg = "421 Misdirected request - No page found for domain " + fullDomain
+          // document.body.html(`<b>${msg}</b>`)
           throw new Error(msg)
         }
         to = to.substr(0, to.lastIndexOf("/")) as any
@@ -342,10 +382,14 @@ export default abstract class Manager extends Frame {
 
       while(pageProm !== undefined) {
         nthTry++
-
-        let suc: boolean = await pageProm.priorityThen(async (page: Page | SectionedPage) => {
+        let suc: boolean
+        
+        if (this.domainNeedsSomeSubDomain.has(pageProm.imp) && rootDomainFragment.length === 0) {
+          suc = false
+        }
+        else suc = await pageProm.priorityThen(undefined, async (page: Page | SectionedPage) => {
           sucPage = page
-          page.domainLevel = domainLevel
+          if (page.domainLevel === undefined) page.domainLevel = domainLevel
           domainFragment = rootDomainFragment === "" ? page.defaultDomain : rootDomainFragment
           return await this.canSwap(page, domainFragment)
         }, false)
@@ -361,7 +405,9 @@ export default abstract class Manager extends Frame {
       }
     }
 
-    return { to, pageProm, fullDomainHasTrailingSlash, suc: {
+
+    
+    return this.lastFoundPageParams = { to, pageProm, fullDomainHasTrailingSlash, suc: {
         domain: sucDomainFrag,
         page: sucPage,
         level: sucDomainLevel
@@ -369,50 +415,50 @@ export default abstract class Manager extends Frame {
     }
   }
 
-  private async setElem(fullDomain: string) {
-    let nextPageToken = Symbol("nextPageToken")
-    this.nextPageToken = nextPageToken;
-    const { to, pageProm, fullDomainHasTrailingSlash, suc } = await this.findSuitablePage(fullDomain)
-    if (this.nextPageToken !== nextPageToken) return
-    
-    this.currentPageFullyLoaded = new Promise((doneLoading) => {
-      domain.set(domain.dirString + suc.domain + (fullDomainHasTrailingSlash && suc.domain !== "" ? domain.dirString : ""), suc.level, false).then(() => {
+  private lastFoundPageParams: { to: string, pageProm: PriorityPromise<any>, fullDomainHasTrailingSlash: boolean, suc: { domain: string, page: any, level: number } }
 
-        pageProm.priorityThen(() => {
-          if (this.currentUrl !== to) {
-            this.currentUrl = to;
-            let page = this.currentPage;
-            (async () => {
-              if (this.pageChangeCallback) {
-                try {
-                  if ((page as SectionedPage).sectionList) {
-                    (page as SectionedPage).sectionList.tunnel(e => e.filter(s => s !== "")).get((sectionListNested) => {
-                      let ob = {} as any
-                      for (let e of sectionListNested) {
-                        let ic = (page as SectionedPage).iconIndex[e]
-                        while (!ic) {
-                          if (e === "") break
-                          e = e.substr(0, e.lastIndexOf("/"))
-                          ic = (page as SectionedPage).iconIndex[e]
-                        }
-                        ob[e] = ic
-                      }
-                      
-                      this.pageChangeCallback(to, ob, page.domainLevel)
-                    })
+
+  private setElem = latestLatent(this.findSuitablePage.bind(this)).then(async ({ to, pageProm, fullDomainHasTrailingSlash, suc }) => {
+    // dont await this, setElem may be called by domain.set itself (from e.g. link) and we would be waiting for ourselves here, this call is just here to fixup the set domain with the corrected one (e.g. default subdomain added)
+
+    domain.set(domain.dirString + suc.domain + (fullDomainHasTrailingSlash && suc.domain !== "" ? domain.dirString : ""), suc.level, false)
+
+
+    await pageProm.priorityThen(suc.domain, (page: Page) => {
+      if (this.currentUrl !== to) {
+        this.currentUrl = to;
+        (async () => {
+          if (this.pageChangeCallback) {
+            try {
+              if ((page as SectionedPage).sectionList) {
+                (page as SectionedPage).sectionList.tunnel(e => e.filter(s => s !== "")).get((sectionListNested) => {
+                  let ob = {} as any
+                  for (let e of sectionListNested) {
+                    let ic = (page as SectionedPage).iconIndex[e]
+                    while (!ic) {
+                      if (e === "") break
+                      e = e.substr(0, e.lastIndexOf("/"))
+                      ic = (page as SectionedPage).iconIndex[e]
+                    }
+                    ob[e] = ic
                   }
-                  else this.pageChangeCallback(to, [], page.domainLevel)
-                }
-                catch(e) {}
+                  
+                  this.pageChangeCallback(to, ob, page.domainLevel)
+                })
               }
-            })()
+              else this.pageChangeCallback(to, [], page.domainLevel)
+            }
+            catch(e) {}
           }
-        }, "completePaint")
-  
-        this.swapFrame(suc.page)
-      }).then(doneLoading)
-    })
-  }
+        })()
+      }
+    }, "minimalContentPaint")
+
+    this.swapFrame(suc.page, suc.domain)
+    return { to, pageProm, fullDomainHasTrailingSlash, suc }
+      
+  })
+
 
   protected async activationCallback(active: boolean) {
     if (this.currentPage) if (this.currentPage.active !== active) this.currentPage.vate(active as any)

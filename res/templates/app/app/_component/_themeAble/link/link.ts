@@ -6,10 +6,10 @@ import delay from "delay"
 import ExternalLinkIcon from "../_icon/externalLink/externalLink"
 import { Prim, EventListener } from "extended-dom";
 
-import { PrimitiveRecord } from "../../../lib/record";
+import { BasicRecord } from "../../../lib/record";
+import { parseEscapedValues } from "../../../lib/txtParse";
 
-export const linkRecord = new PrimitiveRecord<{link: string, level: number}>()
-
+export const linkRecord = new BasicRecord<{link: string, level: number}>()
 
 export default class Link extends ThemeAble {
   private linkBodyElem = this.q("link-body")
@@ -360,7 +360,7 @@ export default class Link extends ThemeAble {
   content(): string
   content(to?: string | Data<string>): void
   content(to?: string | Data<string>): any {
-    if (to !== undefined) return this.text(to as any, true, false)
+    if (to !== undefined) return this.text(parseEscapedValues(to) as any, true, false)
     return this.text()
   }
 
