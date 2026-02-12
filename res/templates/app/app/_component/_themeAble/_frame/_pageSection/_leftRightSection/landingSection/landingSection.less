@@ -1,0 +1,189 @@
+left-side {
+  padding-left: 12%;
+  z-index: 1;
+  width: min(50%, 700px);
+}
+
+c-text-blob {
+  --body-size: 80%;
+  --header-fontsize-factor: 5;
+  width: min-content;
+}
+
+@media (max-width: 1250px) {
+  left-side {
+    padding-left: 10%;
+  }
+  c-text-blob {
+    --header-fontsize-factor: 4.5;
+  }
+}
+
+@media (max-width: 1070px) {
+  left-side {
+    padding-left: 8%;
+  }
+  c-text-blob {
+    --header-fontsize-factor: 4;
+  }
+}
+
+@media (max-width: 980px) {
+  left-side {
+    padding-left: 6%;
+  }
+}
+
+
+
+
+right-side {
+  padding: 0 !important;
+  height: 95vh;
+  z-index: 1;
+}
+
+
+c-image {
+  width: 100%;
+  height: calc(100% - 30px);
+  --object-position: 25% 50%;
+}
+
+
+x-bar {
+  width: 80%;
+  height: 5px;
+  background-color: var(--plain-text);
+  border-radius: 5px;
+  opacity: 0.15;
+  margin: 0 auto;
+  margin-top: 25px;
+}
+
+left-side-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+shadow-box {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  bottom: 0px;
+  height: 100vh;
+  left: 295px;
+  background-color: var(--dark-background);
+}
+
+c-block-button {
+  position: relative;
+  float: left;
+  --background-color: var(--plain-background);
+  --box-shadow: var(--soft-shadow);
+}
+
+
+view-btn {
+  padding-left: 24px;
+  // margin-left: 24px;
+
+  padding-right: 24px;
+  padding-top: 13px;
+  padding-bottom: 13px;
+
+  background-color: var(--primary-theme);
+  color: var(--plain-background);
+}
+
+
+
+
+component-body.mobile x-bar {
+  display: none;
+}
+
+component-body.mobile c-image {
+  height: 100%;
+}
+
+component-body.mobile right-side {
+  height: 70vh;
+}
+component-body.mobile c-text-blob {
+  --header-fontsize: calc(5vw + 30px);
+  width: max-content;
+  max-width: min(490px, 100%);
+}
+
+component-body.mobile shadow-box {
+  top: -100px;
+  left: -50px;
+  width: calc(100% + 50px);
+}
+
+
+@media (max-width: 550px) {
+  component-body.mobile shadow-box {
+    top: -125px;
+    left: -100px;
+    width: unset;
+    right: calc(100% - 295px);
+  }
+}
+
+@media (max-width: 450px) {
+  span.bz {
+    display: none;
+  }
+  component-body.mobile shadow-box {
+    right: calc(100% - 255px);
+  }
+}
+
+@media (max-width: 390px) {
+  span.bz {
+    display: unset;
+  }
+  view-btn {
+    display: none;
+  }
+
+  c-block-button {
+    --background-color: var(--primary-theme);
+    --text: white;
+  }
+
+  component-body.mobile shadow-box {
+    right: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  span.bz {
+    display: none;
+  }
+}
+
+
+
+
+@media (max-width: 300px) {
+  component-body.mobile c-text-blob {
+    --header-fontsize: 45px;
+  }
+}
+
+
+
+component-body.mobile right-side {
+  margin-top: 0;
+}
+c-block-button > * {
+  position: relative;
+  float: left;
+}

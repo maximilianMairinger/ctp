@@ -1,0 +1,99 @@
+
+left-side.frameSide {
+  width: 55%;
+}
+
+left-side:not(.frameSide) {
+  width: 45%;
+}
+
+
+
+
+
+
+left-side.frameSide {
+  padding-left: 0;
+}
+
+right-side:not(.frameSide) {
+  padding-left: 75px;
+}
+
+right-side.frameSide {
+  padding-right: 0;
+}
+
+left-side:not(.frameSide) {
+  padding-right: 75px;
+}
+
+.frameSide {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+
+frame-wrapper {
+  height: 75svh;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: var(--strong-shadow);
+}
+
+left-side.frameSide frame-wrapper {
+  border-radius: 0 30px 30px 0;
+}
+
+right-side.frameSide frame-wrapper {
+  border-radius: 30px 0 0 30px;
+}
+
+
+
+left-side:not(.frameSide), right-side:not(.frameSide) {
+  align-items: flex-start;
+}
+
+
+c-text-blob {
+  --header-fontsize-factor: 3;
+  --body-size: 70%;
+}
+
+
+@media (max-width: 1400px) {
+  left-side.frameSide {
+    width: 60%;
+  }
+
+  left-side:not(.frameSide) {
+    width: 40%;
+  }
+  
+  c-text-blob {
+    --body-size: 100%;
+  }
+
+  right-side:not(.frameSide) {
+    padding-left: 3%
+  }
+
+  left-side:not(.frameSide) {
+    padding-right: 3%;
+  }
+}
+
+component-body.mobile .frameSide {
+  padding: 0;
+}
+
+component-body.mobile {
+  padding-bottom: 0;
+}
+
+component-body.mobile frame-wrapper {
+  border-radius: 0;
+  height: 65svh;
+}
+

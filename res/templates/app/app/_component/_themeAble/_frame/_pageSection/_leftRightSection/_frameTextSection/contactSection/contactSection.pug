@@ -1,0 +1,41 @@
+left-side.frameSide
+  frame-wrapper
+    image-wrapper
+      c-image(src="maps").mapsPlaceholder
+      image-overlay.mapsPlaceholder
+        content-wrapper
+          confirmation-text 
+            h2(style="margin-bottom: 5px") Google Maps laden
+            span Ich bin damit einverstanden, dass Inhalte von Google Maps angezeigt werden. Dabei werden personenbezogene Daten (z.B. IP-Adresse) an Google übermittelt und ggf. in die USA transferiert. Weitere Informationen finden Sie in unserer <c-link link='datenschutz'>Datenschutzerklärung</c-link>.
+          c-load-button(name="consentMaps").consentMaps.themed
+            span Einverstanden
+    iframe(
+      width="100%" 
+      height="100%" 
+      style="border:0" 
+      loading="eager" 
+      allowfullscreen 
+      name="iframe"
+    )
+
+right-side 
+  c-text-blob(note="WIE MAN UNS ERREICHT" heading="Kontakt" text="Kontaktieren sie unsere Direktion mit den unten angeführten Daten. Oder kontaktieren sie den entsprechenden Lehrer direkt über ihre <c-link link='contact/teachers'>E-Mail Adresse</c-link>. ") 
+    b Adresse: 
+    c-copy-link Konstanziagasse 50, 1220 Wien 
+
+    h3 Sekretariat
+    contact-table
+      b Email: 
+      c-copy-link office.922032@schule.wien.gv.at
+      b Tel:
+      c-copy-link +43 1 4000560142
+
+    h3 LehrerInnezimmer
+    contact-table
+      b Altbau tel: 
+      c-copy-link +43 1 4000 5601430
+      b Neubau tel:
+      c-copy-link +43 1 4000 5601440
+
+
+  
