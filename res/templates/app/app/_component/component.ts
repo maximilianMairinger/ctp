@@ -1,6 +1,5 @@
 import "../global"
 import lang from "./../lib/lang"
-import { DataBase, Data } from "josm";
 import { ElementList, ElementListOrElement, PrimElem, VariableLibrary } from "extended-dom";
 
 type Token = string | string[]
@@ -29,13 +28,13 @@ export default abstract class Component<T extends HTMLElement | HTMLAnchorElemen
       this.componentBody = this.sr
       this.sr.html("<style>" + this.stl() + "</style>")
     }
-    this.componentBody.apd(this.pug(), lang as any)
+    this.componentBody.apd(this.pug(), [lang, this.lib()])
 
 
     if (indexName) {
       this.componentBody.childs("*", true).ea((e: any) => {
         const name = e.getAttribute("name")
-        if (name !== undefined) {
+        if (name !== null) {
           if (this.body[name] === undefined) this.body[name] = e
           else if (this.body[name] instanceof ElementList) (this.body[name] as ElementList).add(e)
           else this.body[name] = new ElementList(this.body[name], e)
@@ -46,6 +45,9 @@ export default abstract class Component<T extends HTMLElement | HTMLAnchorElemen
     }
   }
 
+  protected lib(): VariableLibrary {
+    return {}
+  }
 
   public stl(): string {
     return require('./component.css').toString()

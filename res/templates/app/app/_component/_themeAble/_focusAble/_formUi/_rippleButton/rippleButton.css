@@ -1,9 +1,12 @@
 :host {
   display: block;
   --_focus: var(--focus);
+  --background: 0, 0, 0,0;
+  cursor: pointer;
 }
 
 c-button {
+  cursor: inherit;
   width: inherit;
   height: inherit;
   max-height: inherit;
@@ -15,10 +18,11 @@ c-button {
 
 }
 
-move-me {
-  background-color: transparent;
+slot {
+  position: relative;
 }
 
 ::slotted(*) {
   z-index: 1;
+  position: relative;
 }

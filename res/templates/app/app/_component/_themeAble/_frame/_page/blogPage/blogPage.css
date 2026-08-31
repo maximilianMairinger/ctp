@@ -1,0 +1,26 @@
+::slotted(*) {
+  opacity: 1;
+  padding-top: 200px;
+}
+
+
+
+c-footer-section {
+  opacity: 1;
+  width: 100%;
+  /* --padding: 0 var(--side-padding); */
+  /* --align-x: flex-start; */
+  background-color: transparent;
+  margin-top: 100px;
+  display: inline-block;
+  background-color: var(--normal-background);
+}
+
+component-body {
+  background-color: var(--normal-background);
+}
+
+bottom-spacer {
+  height: 100px;
+  display: block;
+}

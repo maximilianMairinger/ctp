@@ -32,13 +32,10 @@ export default class LowerNavLink extends ThemeAble {
     this.link(link, domainLevel)
   }
 
-  public addActivationCallback<CB extends (e?: MouseEvent | KeyboardEvent) => void>(cb: CB): CB {
+  public addActivationCallback<CB extends (e?: MouseEvent | KeyboardEvent) => void>(cb: CB): () => void {
     return this.buttonElem.addActivationCallback(cb)
   }
 
-  public removeActivationCallback<CB extends (e?: MouseEvent | KeyboardEvent) => void>(cb: CB): CB {
-    return this.buttonElem.removeActivationCallback(cb)
-  }
 
 
   public link(link: string, domainLevel?: number): any {

@@ -1,5 +1,7 @@
 :host {
   --padding: 13px 24px;
+
+  --theme: var(--primary-theme);
 }
 
 :host {
@@ -10,20 +12,22 @@
 
 
 :host(.themed) {
-  --background-color: var(--primary-theme);
+  --background-color: var(--theme);
   --text: var(--plain-background); 
-  --focus: var(--complementary-theme);
+  --focus: var(--theme);
 }
 
 
 move-me {
   width: inherit;
   height: inherit;
+  overflow: hidden;
   background-color: var(--background-color);
 }
 
-slot {
-  overflow: hidden;
+
+::slotted(*) {
+  /* overflow: hidden; */
   display: block;
   font-size: 1em;
   margin: auto 0;

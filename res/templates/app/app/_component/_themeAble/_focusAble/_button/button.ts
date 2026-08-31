@@ -5,12 +5,13 @@ import { PrimElem, Token, VariableLibrary } from "extended-dom";
 import Component from "../../../component";
 import { Data } from "josm";
 import { linkRecord } from "../../link/link";
+import LinkedList from "fast-linked-list";
 
 
-
+type RemoveCB = () => void
 
 export default class Button extends FocusAble<HTMLAnchorElement> {
-  private callbacks: ((e: MouseEvent | KeyboardEvent) => void)[] = [];
+  private callbacks: LinkedList<((e: MouseEvent | KeyboardEvent) => void)> = new LinkedList();
   public preventOnClickFocus = false
 
   private preferedTabIndex: number = 0
@@ -92,7 +93,7 @@ export default class Button extends FocusAble<HTMLAnchorElement> {
   }
 
   private _link: string
-  private linkFn: any
+  private removeLinkFn: any
   public link(): string
   public link(to: null): this
   public link(to: string, domainLevel?: number, push?: boolean, notify?: boolean): this
@@ -106,8 +107,8 @@ export default class Button extends FocusAble<HTMLAnchorElement> {
         this.componentBody.href = link.href
         linkRecord.add({link: to, level: domainLevel})
         this._link = link.link
-        if (this.linkFn !== undefined) this.removeActivationCallback(this.linkFn)
-        this.linkFn = this.click((e) => {
+        if (this.removeLinkFn !== undefined) this.removeLinkFn()
+        this.removeLinkFn = this.click((e) => {
           if (e) e.preventDefault()
 
           domain.set(to, domainLevel, push, notify)
@@ -122,7 +123,7 @@ export default class Button extends FocusAble<HTMLAnchorElement> {
       else {
         this.validMouseButtons.delete(1)
 
-        if (this.linkFn !== undefined) this.removeActivationCallback(this.linkFn)
+        if (this.removeLinkFn !== undefined) this.removeLinkFn()
       }
 
       return this
@@ -131,19 +132,15 @@ export default class Button extends FocusAble<HTMLAnchorElement> {
     else return this._link
   }
 
-  public addActivationCallback<CB extends (e: MouseEvent | KeyboardEvent | undefined) => void>(cb: CB): CB {
-    this.callbacks.add(cb);
+  public addActivationCallback<CB extends (e: MouseEvent | KeyboardEvent | undefined) => void>(cb: CB): RemoveCB {
+    const tok = this.callbacks.push(cb);
     this.enabled.set(true)
-    return cb
-  }
-  public removeActivationCallback<CB extends (e: MouseEvent | KeyboardEvent | undefined) => void>(cb: CB): CB {
-    this.callbacks.removeV(cb);
-    if (this.callbacks.empty) this.enabled.set(false)
-    return cb
+    return tok.remove.bind(tok)
   }
 
 
-  public click<CB extends (e?: MouseEvent | KeyboardEvent) => void>(f: CB): CB
+
+  public click<CB extends (e?: MouseEvent | KeyboardEvent) => void>(f: CB): RemoveCB
   public click(e?: MouseEvent | KeyboardEvent): Promise<any[]>
   public click(e_f?: MouseEvent | KeyboardEvent | ((e?: MouseEvent | KeyboardEvent) => void)) {
     if (e_f instanceof Function) {

@@ -1,0 +1,4 @@
+:host {
+  --color: var(--primary-theme);
+  --stroke-width: 2;
+}

@@ -1,6 +1,8 @@
 :host {
   --primary-text: rgb(45, 30, 30);
   --primary-text-values: 45, 30, 30;
+  --secondary-text: rgb(72, 67, 67);
+  --secondary-text-values: 72, 67, 67;
   --plain-text: rgb(0, 0, 0);
   --primary-theme: color(display-p3 0.298 0.8353 0.0863);
   --primary-theme-srgb: rgb(0% 84.128% 0%);

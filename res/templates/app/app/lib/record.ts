@@ -24,7 +24,7 @@ export class FutureRecord<R> {
   // name is just for debugging purposes
   constructor(public name: string | PromiseLike<string>) {}
   add<T extends R>(f: () => PromiseLike<T>): PromiseLike<T> {
-    return this.prom.then(() => f())  
+    return this.prom.then(f)  
   }
   flush() {
     return this.prom.res() as any as ResableSyncPromise<R[]>

@@ -1,0 +1,32 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+component-body {
+  position: relative;
+}
+
+header.sx__calendar-header {
+  /* background: rgba(var(--primary-theme-srgb-values) / 0.10); */
+}
+
+.sx__calendar {
+  border: none;
+  border-radius: 0;
+}
+
+:host {
+  --sx-color-primary: var(--primary-theme);
+  --sx-color-primary-container: var(--primary-theme-selection);
+  --sx-color-on-primary-container: var(--primary-text);
+  --sx-color-surface-container-low: #ecfbe9;
+  --sx-color-surface-container-low: rgba(var(--primary-theme-srgb-values) / 0.20);
+  --sx-color-surface-container-low: #cceac9;
+  --sx-color-surface-dim: rgba(var(--primary-theme-srgb-values) / 0.10);
+  
+  
+  --sx-color-background: var(--dark-background);
+  --sx-color-neutral: var(--secondary-text) 
+ 
+}

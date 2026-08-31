@@ -1,6 +1,6 @@
 import FormUi from "./formUi";
-import _animationFrame from "animation-frame-delta";
-const animationFrame = _animationFrame as any
+import animationFrame from "animation-frame-delta";
+import { ElementList } from "extended-dom";
 import Easing from "waapi-easing"
 
 const dragImpactEaseFunc = new Easing("easeIn").function
@@ -22,19 +22,19 @@ const dragImpactEaseFunc = new Easing("easeIn").function
 // } */
 
 const maxPxPerFrame = .75
-const overShoot = 11
-const targetOverflow = 15
+const overShoot = 15
+const targetOverflow = 20
 const targetOverflowWidthStr = `calc(100% + ${targetOverflow * 2}px)`
 const activeTargetOverflow = 30
 const activeTargetOverflowWidthStr = `calc(100% + ${activeTargetOverflow * 2}px)`
 const qlance = .4
-
+const backgroundOvershootFactor = -.3
 
 
 const halfQlance = qlance / 2
 
 
-export default function(root: HTMLElement, target: HTMLElement, moveElement: HTMLElement, evTarget: HTMLElement) {
+export default function(root: HTMLElement, target: HTMLElement, moveElement: HTMLElement, coverElems: ElementList<HTMLElement>, evTarget: HTMLElement) {
 
 
 
@@ -65,7 +65,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
   const mouseLeaveF = () => {
     relX = relY = 0
 
-    root.css({zIndex: 6})
+    // root.css({zIndex: 6})
 
 
     target.css({
@@ -130,8 +130,8 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
 
   evTarget.on("mousemove", mouseMoveF)
 
-  const mouseEneterF = (e) => {
-    root.css({zIndex: -1})
+  const mouseEnterF = (e) => {
+    // root.css({zIndex: -1})
 
     target.css({
       left: -activeTargetOverflow,
@@ -147,10 +147,10 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
     followRuntime.resume()
   }
 
-  evTarget.on("mouseenter", mouseEneterF)
+  evTarget.on("mouseenter", mouseEnterF)
 
   const rootMouseEnterF = () => {
-    root.css({zIndex: -1})
+    // root.css({zIndex: -1})
     target.css({
       zIndex: 3
     })
@@ -186,24 +186,25 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
 
 
     moveElement.css({translateX: renderedX, translateY: renderedY})
+    coverElems.css({translateX: renderedX * backgroundOvershootFactor, translateY: renderedY * backgroundOvershootFactor})
   }
 
 
-  const followRuntime = animationFrame(followRuntimeFunc)
+  const followRuntime = animationFrame(followRuntimeFunc) as any
   followRuntime.cancel()
   // let currentlyActiveRuntime = followRuntime
   const snapBackRuntime = animationFrame((delta: number) => {
     followRuntimeFunc(delta)
 
     if (curDistance < .4) snapBackRuntime.cancel()
-  })
+  }) as any
   snapBackRuntime.cancel()
 
   return {
     disable() {
       evTarget.off("mouseleave", mouseLeaveF)
       evTarget.off("mousemove", mouseMoveF)
-      evTarget.off("mouseenter", mouseEneterF)
+      evTarget.off("mouseenter", mouseEnterF)
       root.off("mouseenter", rootMouseEnterF)
       mouseLeaveF()
       target.css({pointerEvents: "none"})
@@ -211,7 +212,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
     enable() {
       evTarget.on("mouseleave", mouseLeaveF)
       evTarget.on("mousemove", mouseMoveF)
-      evTarget.on("mouseenter", mouseEneterF)
+      evTarget.on("mouseenter", mouseEnterF)
       root.on("mouseenter", rootMouseEnterF)
       target.css({pointerEvents: "all"})
     }

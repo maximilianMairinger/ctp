@@ -306,7 +306,6 @@ export default class Image extends Component {
     }
 
 
-    if (src === "WhatsApp-Image-2026-01-15-at-5.43.50-PM-1") debugger
     this._src = src
     
     if (forceLoad) {

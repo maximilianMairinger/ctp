@@ -3,10 +3,12 @@ import * as global from "./../global"
 import slugify from "slugify"
 import getBaseUrl from "get-base-url";
 import lang from "./../lib/lang"
+import { parseEscapedValues } from "./txtParse"
 
 
 const commonTitle = lang.appName.short;
-const commonTitleSeperator = " - "
+const longTitle = lang.appName.long;
+const commonTitleSeperator = " | "
 const commonSubtileSeperator = " > "
 const maxCharactersInTitle = 20
 const toMuchSubtitlesTruncate = "..."
@@ -58,22 +60,29 @@ function parselocalUrlToDomainIndex() {
 parselocalUrlToDomainIndex()
 
 
+
 function renderSubtitle(myDomainIndex: string[] = domIndex) {
-  return myDomainIndex.Replace((k) => {
+  return myDomainIndex.map((k) => {
     try {
       return lang.links[k].get()
     }
     catch (e) {
       return k
     }
-    
   }).join(commonSubtileSeperator)
 }
 
 
 commonTitle.get(updateTitle, false)
+longTitle.get(updateTitle, false)
 
 function updateTitle() {
+  if (domIndex.length === 0) {
+    const t = longTitle.get()
+    titleElement.txt(t)
+    return t
+  }
+
   let title = commonTitle.get()
 
   let originalSubtitle: string, subtitle: string
@@ -96,7 +105,7 @@ function updateTitle() {
 
   
   titleElement.txt(title + subtitle)
-  return title + originalSubtitle
+  return title + parseEscapedValues(originalSubtitle)
 }
 updateTitle()
 
@@ -106,6 +115,7 @@ export function parseDomainIndexToDomain(domainIndex: Readonly<string[]>) {
 
 
 export function parseDomainToDomainIndex(domainIndex: string[], domain: string, level: number) {
+  domain = domain[domain.length-1] === dirString ? domain.slice(0, -1) : domain
 
   let originalLength = domainIndex.length
   

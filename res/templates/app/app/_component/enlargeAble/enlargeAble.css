@@ -1,0 +1,90 @@
+:host {
+  display: block;
+  position: relative;
+  width: 100%;
+  cursor: zoom-in;
+  transform-origin: center;
+}
+
+:host(.open) {
+  cursor: zoom-out;
+}
+
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) scale(0.96);
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms ease, visibility 0ms linear 220ms;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.gallery-nav chevron-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, .05);
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  backdrop-filter: blur(2px);
+}
+
+.gallery-nav c-chevron-icon {
+  --color: white;
+  width: 24px;
+  height: 24px;
+}
+
+.gallery-nav-prev c-chevron-icon {
+  transform: rotate(180deg) translateX(2px);
+}
+
+.gallery-nav-next c-chevron-icon {
+  transform: translateX(2px);
+}
+
+:host(.open.in-gallery.has-prev) .gallery-nav-prev {
+  left: 12px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+  transition-duration: 120ms;
+  transition-delay: 0ms;
+}
+
+:host(.open.in-gallery.has-next) .gallery-nav-next {
+  right: 12px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+  transition-duration: 120ms;
+  transition-delay: 0ms;
+}
+
+.gallery-nav:hover {
+  opacity: 0.92;
+}
+
+:host(.closing) .gallery-nav {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: none !important;
+}
+
+::slotted(*) {
+  display: block;
+  width: 100%;
+}

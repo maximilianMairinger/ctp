@@ -1,21 +1,25 @@
 :host {
-  --background-values: var(--dark-background-values);
-  --background-color: var(--dark-background);
+  --background: 242, 242, 242;
+  --background-color: rgb(var(--background));
+  
   /* z-index: initial !important; */
   border-radius: 20px;
   text-align: left;
-  --cover: rgba(0, 0, 0, .04);
-
+  --cover-background: rgba(0, 0, 0, .04);
+  --cover-shadow: none;
+  
   --box-shadow: none;
+
+  --transition: .5s;
+  --active-cover-zIndex: unset;
+
 }
 
 move-me {
-  display: flex;
+  display: inline-block;
   justify-content: center;
   position: relative;
-  background-color: var(--background-color);
   border-radius: inherit;
-  z-index: 4;
   width: inherit;
   height: inherit;
   max-width: inherit;
@@ -23,47 +27,59 @@ move-me {
   box-shadow: var(--box-shadow);
 }
 
-root-bounds {
+/* root-bounds {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 6;
-  /* background-color: yellow; */
+} */
+
+.cover {
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+}
+
+background-cover {
+  background-color: var(--background-color);
+}
+
+.activeCover {
+  background: var(--cover-background);
+  box-shadow: var(--cover-shadow);
+  opacity: 0;
+  transition: var(--transition);
+  border-radius: inherit;
+  display: none;
+  z-index: var(--active-cover-zIndex);
+}
+
+active-cover.activeCover {
+  display: block;
 }
 
 
 @media (hover: hover) {
-  .cover {
-    background: var(--cover);
-    opacity: 0;
-    transition: opacity .2s, background-color .3s;
-    border-radius: inherit;
-    pointer-events: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    display: none;
-  }
-
-  .cover.active {
+  hover-cover.activeCover {
     display: block;
-  }
+  }  
+}
+
+/* :not(.afterClickFocus) */
+:host(:hover:not(.disabled)) hover-cover.active {
+  opacity: 1;
+}
 
 
-
-  /* :not(.afterClickFocus) */
-  :host(:hover:not(.disabled)) hover-cover {
-    opacity: 1;
-  }
-
-
-  :host(:hover:active:not(.disabled)) active-cover {
-    background: rgba(0, 0, 0, .07);
-  }
+:host(:hover:active:not(.disabled)) active-cover.active {
+  opacity: 1;
 }
 
 
@@ -86,11 +102,12 @@ root-bounds {
 }
 
 :host {
+  --wave: var(--text);
   --wave-opacity: .07;
   --drag: none;
 
   /* private */
-  --wave-color: rgba(0, 0, 0, var(--wave-opacity));
+  --wave-color: rgba(var(--wave), var(--wave-opacity));
 }
 
 :host {
@@ -111,6 +128,7 @@ button-waves {
   top: 0;
   left: 0;
   z-index: 2;
+  pointer-events: none;
 }
 
 button-wave-container {
@@ -152,9 +170,10 @@ prehover-detector {
 }
 
 
-:host(.disabled) #componentBody {
+:host(.disabled) {
   opacity: .5;
   filter: grayscale(10%);
+  cursor: not-allowed;
 }
 
 /* :host(.disabled) #componentBody {

@@ -17,8 +17,8 @@ export default class UiButton extends FormUi<Button> {
     super(button)
 
 
-    this.moveBody.append(this.mySlotElem)
 
+    this.moveBody.append(this.mySlotElem)
     this.button = button
     button.userFeedbackMode.focus.set(false)
 
@@ -75,7 +75,7 @@ export default class UiButton extends FormUi<Button> {
 
 for (const f of ["link", "addActivationCallback", "removeActivationCallback", "click", "hotkey"]) {
   UiButton.prototype[f] = function (...args: any[]) {
-    return this.button[f](...args)
+    return this.componentBody[f](...args)
   }
 }
 

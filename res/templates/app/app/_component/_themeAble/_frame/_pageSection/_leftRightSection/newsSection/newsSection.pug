@@ -1,0 +1,18 @@
+
+left-side
+  side-wrapper
+  
+    c-text-blob(note="Dummy Text" heading="Aktuelles" text="Dummy Text") 
+    c-block-button.themed(name="switchBtn" content="Termine")
+
+right-side
+  c-scroll-body(center x scrollSnap fadeInOnScroll name="newsScroll")
+    c-ripple-button
+      c-news-bubble(link="" number="1" heading="Loading..." content="")
+    //- c-ripple-button
+    //-   c-news-bubble(link="news/renewableEnergy" number="2" heading="Erneuerbare Energien" content="Der Ausbau Erneuerbarer Energien ist ein wichtiger Teil auf dem Weg zur Reduktion der Treibhausgasemissionen und somit letztlich zum Schutz des Klimas. Was das genau heißt und wie solche erneuerbaren Energien überhaupt aussehen, durften 26 Schüler*Innen aus den ersten Klassen  am Donnerstag an der TU Wien erforschen. Was ist Biomasse")
+    //- c-ripple-button
+    //-   c-news-bubble(link="news/mentalHealth" number="3" heading="Mental Health Days" content="Eine stabile psychische Gesundheit ist, ebenso wie die körperliche Gesundheit, ein wesentlicher Bestandteil des Lebens, weshalb bei uns Am 25.10. bei uns zum ersten Mal die Mental Health Days stattfanden. Am Vormittag gab es für jeden Jahrgang einen Workshop („Mobbing“ für die 1. Klassen, „Körperbewusstsein“ für die 2. Klassen, „Handy")
+    
+
+  c-schedule-x(src="/api/calendar" name="cal")

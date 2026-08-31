@@ -14,7 +14,9 @@ move-me {
   right: 13px;
   opacity: 0;
   margin-right: -5px;
-  fill: var(--text)
+  fill: var(--text);
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 loading-circle {
@@ -25,11 +27,16 @@ loading-circle {
   box-sizing: border-box;
 }
 
+:host(.disabled) {
+  opacity: 1;
+  /* filter: grayscale(25%); */
+}
+
 @keyframes spin {
   0% {
-    transform: rotate(0deg);
+    transform: translateY(-50%) rotate(0deg);
   }
   100% {
-    transform: rotate(360deg);
+    transform: translateY(-50%) rotate(360deg);
   }
 }

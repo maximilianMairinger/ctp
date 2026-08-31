@@ -1,1 +1,66 @@
+component-body {
+    z-index: 1;
+}
 
+.kg-gallery-container {
+    display: flex;
+    flex-direction: column;
+
+    --subtle-oversized: calc(var(--oversized) / 1.3);
+    width: var(--subtle-oversized) ;
+    margin-left: calc((100% - var(--subtle-oversized)) / 2);
+}
+
+.kg-gallery-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.kg-gallery-image {
+    position: relative;
+    /* Aspect ratio and flex is set dynamically */
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.kg-gallery-image c-enlarge-able {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: inherit;
+    overflow: hidden;
+}
+
+.kg-gallery-image c-enlarge-able > c-parallax {
+    border-radius: inherit;
+}
+
+.kg-gallery-image c-enlarge-able > c-parallax > c-image {
+    border-radius: inherit;
+}
+
+.kg-gallery-image c-parallax {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.kg-gallery-image c-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.kg-gallery-card {
+    margin: 1rem 0;
+}
+
+@media (max-width: 900px) {
+    .kg-gallery-container {
+        width: 100%;
+        margin-left: 0;
+    }
+}

@@ -1,5 +1,5 @@
 :host {
-  background-color: rgb(var(--tertiary-themed-background-soft));
+  background-color: var(--normal-background);
   display: inline-block;
 }
 
@@ -29,6 +29,7 @@ content-container {
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+  z-index: 1;
 }
 
 
@@ -44,7 +45,6 @@ blog-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1;
 }
 
 @media (max-width: 620px) {
@@ -103,7 +103,7 @@ title-container {
 }
 
 
-title-container > c-image, title-container > c-parallax {
+title-container > c-image, title-container > c-parallax, title-container > c-enlarge-able {
   width: max(60%, 200px);
   flex-grow: 1;
 }
@@ -152,13 +152,18 @@ title-container c-text-blob {
   }
 }
 
-title-container > c-image, title-container > c-parallax {
+title-container > c-image, title-container > c-parallax, title-container > c-enlarge-able {
   aspect-ratio: 10 / 9;
   max-height: 600px;
   margin-bottom: 60px;
 }
 
 title-container > c-parallax > c-image {
+  width: 100%;
+  height: 100%;
+}
+
+title-container > c-enlarge-able > c-parallax > c-image {
   width: 100%;
   height: 100%;
 }
@@ -239,6 +244,11 @@ c-parallax {
   box-shadow: 20px 20px 0px 0px rgba(0, 0, 0, 0.2);
 }
 
+c-enlarge-able > c-parallax {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 hr {
   margin: 0;
   margin-top: calc(2 * var(--margin));
@@ -309,4 +319,8 @@ content-inner-container {
 
 content-container {
   align-items: center;
+}
+
+:host {
+  min-height: calc(100vh - 460px);
 }

@@ -1,0 +1,79 @@
+:host {
+  display: block;
+  position: relative;
+  --height: 250px;
+  height: var(--height) !important;
+  aspect-ratio: 708 / 332;
+  --line-clamp: 6;
+  --line-height: 1.3em;
+}
+
+component-body {
+  position: relative;
+}
+
+c-bubble-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+}
+
+heading-body {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: calc(var(--height) * .12);
+  font-weight: bold;
+  padding: 3% 8%;
+  padding-left: 15%;
+  padding-bottom: 0px;
+  box-sizing: border-box;
+  display: block;
+  /* ellipses */
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+content-body {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: min(calc(90% - 28px), calc(24.5% + calc(var(--line-height) * var(--line-clamp))));
+  line-height: var(--line-height);
+  box-sizing: border-box;
+  padding: 8%;
+  padding-bottom: 0;
+  padding-top: 11.5%;
+  font-size: 16.5px;
+  /* ellipses */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: var(--line-clamp); /* Number of lines you want to display */
+  -webkit-box-orient: vertical;
+  line-clamp: var(--line-clamp);
+  box-orient: vertical;
+}
+
+big-number {
+  color: var(--primary-theme);
+  display: block;
+  position: absolute;
+  top: -15%;
+  left: -5%;
+  font-size: calc(var(--height) * .32);
+  font-weight: bold;
+  user-select: none;
+}
+
+c-link {
+  font-size: 17px;
+  padding-left: 8%;
+  padding-top: 5px;
+}

@@ -1,9 +1,12 @@
 export default {
   appName: {
-    short: "$[name]",
-    long: "$[nameAsHumanized]"
+    short: "Ko50",
+    long: "Konstanziagasse 50"
   },
   links: {
+    features: "Über uns",
+    news: "Aktuelles",
+    register: "Anmeldung",
     contact: "Kontakt",
     imprint: "Impressum",
     privacy: "Datenschutz",

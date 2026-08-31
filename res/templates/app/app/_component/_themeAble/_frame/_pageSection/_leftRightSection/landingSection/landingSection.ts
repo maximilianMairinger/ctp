@@ -6,19 +6,17 @@ export default class LandingSection extends LeftRightSection {
   protected body: BodyTypes
 
   constructor() {
-    super(905)
-    this.componentBody.addClass("mobileInverse")
+    super()
 
-    this.body.btn.userFeedbackMode.hover.set(false)
-   
+
   }
 
   stl() {
-    return super.stl() + require("./landingSection.less").toString()
+    return super.stl() + require("./landingSection.css").toString()
   }
   pug() {
     return require("./landingSection.pug").default
   }
 }
 
-declareComponent("landing-section", LandingSection)
+declareComponent("c-landing-section", LandingSection)

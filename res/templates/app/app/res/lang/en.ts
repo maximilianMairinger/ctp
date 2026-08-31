@@ -1,7 +1,7 @@
 export default {
   appName: {
-    short: "$[name]",
-    long: "$[nameAsHumanized]"
+    short: "ko50",
+    long: "Ko50"
   },
   links: {
     contact: "Contact",

@@ -1,0 +1,148 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+
+
+under-section {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
+
+under-section.a {
+  margin: 100px 0;
+  padding: 0 calc(5% - 12px);
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+}
+
+under-section.a h2 {
+  margin-bottom: 0px;
+  margin-top: 0;
+  text-align: center;
+  z-index: 1;
+}
+
+h2.a {
+  font-size: 60px;
+}
+h2.b {
+  color: var(--primary-theme);
+  font-size: 40px;
+}
+
+h2.b::selection {
+  background-color: var(--primary-theme-selection);
+}
+
+bg-box {
+  background-color: var(--primary-themed-background-transparent);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+
+bg-boxbox {
+  display: inline-block;
+  position: relative;
+  width: 700px;
+  height: 190px;
+  position: absolute;
+  margin-top: -20px;
+  margin-left: -830px;
+}
+
+bg-box.a {
+  margin-top: -55px;
+  margin-left: -340px;
+}
+
+
+.serviceCard {
+  margin: 20px 30px;
+  --padding: 40px;
+}
+
+
+service-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: transparent;
+  box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.08);
+  width: 100%;
+  height: 100%;
+
+  transition: .4s;
+  border-radius: 20px;
+  width: 300px;
+  height: 200px;
+  font-weight: normal;
+  box-sizing: border-box;
+  padding: 35px 20px;
+}
+
+.serviceCard:hover service-card-wrapper {
+  background: var(--primary-themed-background-fill);
+  box-shadow: var(--soft-shadow);
+  transform: scale(1.02);
+}
+
+service-card-wrapper h2 {
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
+service-card-wrapper p {
+  margin-top: 0;
+  text-align: center;
+}
+
+/* icon-wrapper {
+  width: 50px;
+  height: 50px;
+} */
+
+.icon {
+  width: 75px;
+  height: 75px;
+  margin-bottom: 7px;
+  --color: var(--primary-text);
+}
+
+.serviceCard:hover .icon {
+  --color: var(--primary-theme);
+}
+
+
+
+under-section.b {
+  margin-bottom: 70px;
+}
+
+
+
+component-body {
+  padding-bottom: 20px;
+}
+under-section.a {
+  padding-bottom: 20px;
+}
+
+@media (max-width: 1439px) {
+  component-body {
+    padding-bottom: 0;
+  }
+  under-section.a {
+    padding-bottom: 0;
+  }
+}

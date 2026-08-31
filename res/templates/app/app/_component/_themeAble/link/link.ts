@@ -357,6 +357,11 @@ export default class Link extends ThemeAble {
     if (this.cbs.empty && this._link === null) this.addClass("active")
   }
 
+  noTabIndex(to: boolean = true) {
+    if (to) this.aElem.tabIndex = -1
+    else this.aElem.tabIndex = 0
+  }
+
   content(): string
   content(to?: string | Data<string>): void
   content(to?: string | Data<string>): any {

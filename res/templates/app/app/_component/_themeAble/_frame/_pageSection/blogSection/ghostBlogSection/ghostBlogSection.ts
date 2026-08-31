@@ -9,6 +9,7 @@ import { lang } from "../../../../../../lib/lang"
 import { ghostApi } from "../../../../../../lib/ghostApi";
 import "../../../../link/link"
 import "../../../../../image/image"
+import "../../../../../enlargeAble/enlargeAble"
 import "../../../../textBlob/textBlob"
 import "../../../../../parallax/parallax"
 import TextBlob from "../../../../textBlob/textBlob"
@@ -18,6 +19,7 @@ import { memoize } from "key-index"
 import Parallax from "../../../../../parallax/parallax"
 import { parseEscapedValues } from "../../../../../../lib/txtParse"
 import { ResablePromise } from "more-proms";
+import EnlargeAble from "../../../../../enlargeAble/enlargeAble";
 
 const parallaxLength = 100
 
@@ -32,6 +34,16 @@ function parseContentHTML(html: string) {
 
   html = html ?? ""
 
+  let parser = new DOMParser();
+  let htmlDOM = parser.parseFromString(html, 'text/html');
+  htmlDOM.querySelectorAll(".kg-gallery-image").forEach((imgWrapper) => {
+    let img = imgWrapper.querySelector("img");
+    if (img && img.hasAttribute("width") && img.hasAttribute("height")) {
+      let ratio = parseFloat(img.getAttribute("width")) / parseFloat(img.getAttribute("height"));
+      imgWrapper.setAttribute("style", `flex: ${ratio} 1 0; aspect-ratio: ${ratio};`);
+    }
+  });
+  html = htmlDOM.body.innerHTML;
 
   html = html
     //@ts-ignore
@@ -43,7 +55,7 @@ function parseContentHTML(html: string) {
     // delete imgs with empty src
     .replaceAll(/<img\s.*?src(\s|(=(""|''))).*?>(<\/img>)?/gi, "")
     // img to c-image
-    .replaceAll(/<(?:img.*?\ssrc=(?:"|')(.*?)(?:"|').*?>)(.*?)(?:<\/img>)?/gi, "<c-parallax y='y'><c-image src='$1'></c-image></c-parallax>")
+    .replaceAll(/<(?:img.*?\ssrc=(?:"|')(.*?)(?:"|').*?>)(.*?)(?:<\/img>)?/gi, "<c-enlarge-able><c-parallax y='y'><c-image src='$1'></c-image></c-parallax></c-enlarge-able>")
     // heading (but not toggle headings which contain HTML)
     .replaceAll(/<(?:h(1|2|3|4|5|6|7).*?>)(.*?)<\/h.>/gi, (match, level, content) => {
       if (match.includes('kg-toggle-heading-text')) return match;
@@ -51,15 +63,6 @@ function parseContentHTML(html: string) {
     })
 
   return parseEscapedValues(html)
-  // console.log(html)
-  // let parser = new DOMParser();
-  // let htmlDOM = parser.parseFromString(html, 'text/html');
-  // htmlDOM.querySelectorAll(".kg-gallery-image").forEach((img) => {
-  //   let ratio = parseInt(img.childs().getAttribute("width"), 10) / parseInt(img.childs().getAttribute("height"), 10);
-  //   img.css({"flex": ratio + "1 0"});
-  // });
-
-  // return (htmlDOM.firstChild as HTMLElement).innerHTML;
 }
 
 
@@ -122,11 +125,12 @@ export default class GhostBlogSection extends BlogSection {
       imgParallaxElem.append(imgElem)
       imgParallaxElem.y("y")
       imgParallaxElem.autoHook(this.parentElement as any)
+      const imgEnlargeAble = new EnlargeAble(imgParallaxElem)
 
 
       if (headingElem) {
         const titleContainer = ce("title-container")
-        titleContainer.apd(headingElem as any, imgParallaxElem)
+        titleContainer.apd(headingElem as any, imgEnlargeAble)
         retArr.push(titleContainer)
       }
       

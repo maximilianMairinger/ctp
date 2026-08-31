@@ -164,7 +164,7 @@ export default abstract class Manager extends Frame {
     const toBePreloadedExternally = [] as string[]
     
     for (const {link, level} of links) {
-      const { href, isOnOrigin} = domain.linkMeta(link, level)
+      const { href, isOnOrigin } = domain.linkMeta(link, level)
       if (isOnOrigin) {
         toBePreloadedLocally.add(href)
       }

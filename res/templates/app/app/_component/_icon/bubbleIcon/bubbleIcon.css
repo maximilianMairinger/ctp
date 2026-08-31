@@ -1,0 +1,12 @@
+:host {
+  --color: #fff;
+}
+
+
+svg {
+  position: absolute;
+  height: 114%;
+  width: 108.35%;
+  top: -6.8%;
+  left: -4.175%;
+}

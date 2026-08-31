@@ -5,7 +5,7 @@ export default createLocalSetting
 
 
 
-export const cookieSettings = createLocalSetting<boolean>("allowCookies", undefined)
+export const cookieSettings = /*#__PURE__*/createLocalSetting<string>("allowCookies", "unknown")
 
 
 
